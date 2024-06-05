@@ -80,12 +80,12 @@ function HeaderBar() {
               }}
             >
               {pages.map((page, index) => (
-                <>
+                <div key={index}> 
                   {index != 0 ? <hr /> : <></>}
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
-                </>
+                </div>
               ))}
             </Menu>
           </Box>
