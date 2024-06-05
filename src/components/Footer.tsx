@@ -28,7 +28,7 @@ const Footer = () => {
       sx={{ backgroundColor: "dark.main", color: "dark.contrastText", p: 2 }}
     >
       <Container maxWidth="lg">
-        <Box display={"flex"} flexWrap={"wrap"} gap={1}>
+        <Box display={"flex"} flexWrap={"wrap"} justifyContent={"space-between"} maxWidth={"50rem"}>
           <Box display={"flex"} flexDirection={"column"} maxWidth={"18rem"}>
             <Typography
               sx={{
@@ -47,7 +47,7 @@ const Footer = () => {
           </Box>
 
           <Box display={"flex"} flexDirection={"column"}
-          sx={{margin: "auto", minWidth: "12rem"}}>
+          sx={{ minWidth: "12rem"}}>
             <Typography
               sx={{
                 fontSize: "1.1rem",
