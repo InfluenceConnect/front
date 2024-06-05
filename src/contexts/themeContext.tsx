@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useMemo, useState } from "react";
 import { ThemeProvider } from "@emotion/react";
 import { Box } from "@mui/system";
 import { lightTheme, darkTheme } from "../themes/themes";
@@ -39,4 +34,4 @@ const ThemeContextProvider: React.FC<any> = ({ children }) => {
   );
 };
 
-export {ThemeContext, ThemeContextProvider}
+export { ThemeContext, ThemeContextProvider };
