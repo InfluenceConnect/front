@@ -6,10 +6,13 @@ import Footer from "./components/Footer";
 import AccessibilityBar from "./components/AccessibilityBar";
 import RegisterNicheCompany from "./pages/company/register/RegisterNiche";
 
+import { CssBaseline } from "@mui/material";
+
 const Router = ()=>{
 
     return(
         <BrowserRouter>
+            <CssBaseline /> {/* O CSS RESET DO MUI */}
             <AccessibilityBar/>
             <Header />
             <Routes>

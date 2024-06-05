@@ -1,7 +1,8 @@
-import { Container } from "react-bootstrap";
+import { Container } from "@mui/material";
+
 const LoginPage = () => {
     return ( 
-        <Container fluid="lg">
+        <Container maxWidth="lg">
             <h1>Página de Login</h1>
         </Container>
      );
