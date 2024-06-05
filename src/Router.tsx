@@ -10,6 +10,7 @@ import AccessibilityDrawer from "./components/AccessibilityDrawer";
 import { Container, CssBaseline } from "@mui/material";
 import Register from "./pages/company/register/Register";
 import RegisterNicheInfluencer from "./pages/influencer/register/RegisterNiche";
+import AccountStatus from './pages/login/AccountStatus';
 
 const Router = () => {
   return (
@@ -30,6 +31,7 @@ const Router = () => {
             path="/registerNicheInfluence"
             element={<RegisterNicheInfluencer />}
           />
+          <Route path="/accountStatus" element={<AccountStatus />} />
           <Route path="*" element={<h1>not found</h1>} />
         </Routes>
       </Container>
