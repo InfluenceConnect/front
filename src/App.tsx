@@ -1,8 +1,11 @@
 import Router from "./Router";
+import { ThemeContextProvider } from "./contexts/themeContext";
 
 function App() {
   return (
-    <Router />
+    <ThemeContextProvider>
+      <Router />
+    </ThemeContextProvider>
   );
 }
 
