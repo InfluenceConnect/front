@@ -6,6 +6,7 @@ import AccessibilityBar from "./components/AccessibilityBar";
 import RegisterNicheCompany from "./pages/company/register/RegisterNiche";
 import AccessibilityDrawer from "./components/AccessibilityDrawer";
 import { Container, CssBaseline } from "@mui/material";
+import Register from "./pages/company/register/Register";
 import RegisterNicheInfluencer from "./pages/influencer/register/RegisterNiche";
 import AccountStatus from "./pages/login/AccountStatus"; //rota adiciona pelo zuvanov para account status
 
@@ -19,6 +20,7 @@ const Router = () => {
       <Container sx={{minHeight: "69vh"}}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/registerNicheCompany" element={<RegisterNicheCompany />} />
           <Route path="/registerNicheInfluence" element={<RegisterNicheInfluencer />} />
           <Route path="/accountStatus" element={<AccountStatus />} /> {/* Nova rota  adiciona pelo zuvanov, posteriormente aqui ira bloquear as outras rotas  caso o status diga*/}
