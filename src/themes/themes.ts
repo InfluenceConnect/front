@@ -1,5 +1,29 @@
 import { createTheme } from "@mui/material";
 
+declare module '@mui/material/styles' {
+  interface Theme {
+    dark?: {
+      main?: string;
+    };
+  }
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    dark?: {
+      main?: string;
+    };
+  }
+}
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    dark: Palette['primary'];
+  }
+
+  interface PaletteOptions {
+    dark?: PaletteOptions['primary'];
+  }
+}
+
 const lightTheme = createTheme({
   palette:{
     primary: {
@@ -9,6 +33,10 @@ const lightTheme = createTheme({
     background: {
       paper: "#fff",
       default: "#fff"
+    },
+    dark: {
+      main: "#343a40",
+      contrastText: "#fff"
     }
   }
 })
