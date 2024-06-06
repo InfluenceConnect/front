@@ -1,14 +1,26 @@
 import { useState, useContext } from "react";
 
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
-import { ButtonGroup, Button, Container, Box, Drawer, Switch} from "@mui/material";
-import DarkModeSwitch from "./DarkModeSwitch"
-import {ThemeContext} from "../contexts/themeContext.tsx"
+import {
+  ButtonGroup,
+  Button,
+  Container,
+  Box,
+  Drawer,
+  Switch,
+} from "@mui/material";
+import DarkModeSwitch from "./DarkModeSwitch";
+import { ThemeContext } from "../contexts/themeContext.tsx";
 
 export default function AccessibilityDrawer() {
   const [open, setOpen] = useState(false);
 
-  const {changeFontSizeByFactor, toggleTheme, themeName} = useContext(ThemeContext);
+  const {
+    increaseFontSizeFactor,
+    descreaseFontSizeFactor,
+    toggleTheme,
+    themeName,
+  } = useContext(ThemeContext);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -17,7 +29,7 @@ export default function AccessibilityDrawer() {
   const DrawerContent = (
     <Container>
       <Box
-        sx={{ width: '150px', p: 1 }}
+        sx={{ width: "150px", p: 1 }}
         role="presentation"
         display={"flex"}
         flexDirection={"column"}
@@ -41,16 +53,14 @@ export default function AccessibilityDrawer() {
         >
           X
         </Button>
-        
+
         <ButtonGroup>
-          <Button variant="contained"
-            onClick={()=>changeFontSizeByFactor(-1)}
-          ><strong>-A</strong></Button>
-          <Button
-            onClick={()=>changeFontSizeByFactor(1)}
-          >+A</Button>
+          <Button variant="contained" onClick={() => descreaseFontSizeFactor()}>
+            <strong>-A</strong>
+          </Button>
+          <Button onClick={() => increaseFontSizeFactor()}>+A</Button>
         </ButtonGroup>
-        
+
         <Box>
           <label>
             <Switch edge="start" /> Moldura
@@ -61,10 +71,8 @@ export default function AccessibilityDrawer() {
           <label>
             <DarkModeSwitch
               edge="start"
-              checked={themeName=="light"?false:true}
-              onClick={()=>
-                  toggleTheme()
-              }
+              checked={themeName == "light" ? false : true}
+              onClick={() => toggleTheme()}
             />
             Modo
           </label>
@@ -87,10 +95,10 @@ export default function AccessibilityDrawer() {
           width: "2rem",
           height: "2rem",
           minWidth: "0px",
-          p:0
+          p: 0,
         }}
       >
-          <AccessibilityIcon />
+        <AccessibilityIcon />
       </Button>
       <Drawer
         open={open}
@@ -98,8 +106,8 @@ export default function AccessibilityDrawer() {
         hideBackdrop={false}
         variant="temporary"
         anchor="left"
-        onClick={(evt)=>{
-          if(evt.clientX > 180){
+        onClick={(evt) => {
+          if (evt.clientX > 180) {
             setOpen(false);
           }
         }}
