@@ -7,9 +7,8 @@ import {ThemeContext} from "../contexts/themeContext.tsx"
 
 export default function AccessibilityDrawer() {
   const [open, setOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(1);
 
-  const {changeFontSizeByFactor, toggleTheme, themeName, setThemeName} = useContext(ThemeContext);
+  const {changeFontSizeByFactor, toggleTheme, themeName} = useContext(ThemeContext);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -64,7 +63,7 @@ export default function AccessibilityDrawer() {
               edge="start"
               checked={themeName=="light"?false:true}
               onClick={()=>
-                  setThemeName((prevValue)=>prevValue=="light"?"dark":"light")
+                  toggleTheme()
               }
             />
             Modo
@@ -78,8 +77,8 @@ export default function AccessibilityDrawer() {
     <div style={{ position: "absolute", top: "40%", left: "1%" }}>
       <Button
         onClick={toggleDrawer(true)}
+        variant="contained"
         sx={{
-          backgroundColor: "#14C0DE",
           border: "0.15rem solid #343a40",
           borderRadius: "100%",
           display: "flex",
@@ -88,9 +87,10 @@ export default function AccessibilityDrawer() {
           width: "2rem",
           height: "2rem",
           minWidth: "0px",
+          p:0
         }}
       >
-        <AccessibilityIcon sx={{ color: "white" }} />
+          <AccessibilityIcon />
       </Button>
       <Drawer
         open={open}

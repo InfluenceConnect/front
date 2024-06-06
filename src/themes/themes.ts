@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material";
+import { create } from "@mui/material/styles/createTransitions";
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -30,6 +31,28 @@ const lightTheme = createTheme({
       main: "#14C0DE",
       contrastText: "#fff"
     },
+    dark: {
+      main: "#343a40",
+      contrastText: "#fff"
+    }
+  },
+  typography: {
+    fontSize: 12
+  }
+})
+
+const darkTheme = createTheme({
+  palette:{
+    mode: "dark"
+  }
+})
+
+const old_lightTheme = createTheme({
+  palette:{
+    primary: {
+      main: "#14C0DE",
+      contrastText: "#fff"
+    },
     background: {
       paper: "#fff",
       default: "#fff"
@@ -46,17 +69,23 @@ const lightTheme = createTheme({
   },
 })
 
-const darkTheme = createTheme({
+const old_darkTheme = createTheme({
   palette: {
     primary: {
       main: "#14C0DE",
+      contrastText: "#fff"
     },
     secondary: {
-      main: "#828282"
+      main: "#828282",
+      contrastText: "#fff"
     },
     background:{
-      paper: "#000",
-      default: "#343a40"
+      paper: "#aaa",
+      default: "#343a40",
+    },
+    dark:{
+      main: "#343a40",
+      contrastText: "#fff"
     }
   }
 })
