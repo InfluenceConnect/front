@@ -2,12 +2,12 @@ import * as React from "react";
 import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -31,12 +31,19 @@ function Copyright(props: any) {
   );
 }
 
-const defaultTheme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#03a9f4",
+    },
+  },
+});
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [changeLogin, setChangeLogin] = useState("Influencer");
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -56,19 +63,28 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     data.append("profilePicture", profilePicture as Blob);
-    console.log({
-      profilePicture: data.get("profilePicture"),
-      name: data.get("name"),
-      cpf: data.get("cpf"),
-      state: data.get("state"),
-      email: data.get("email"),
-      birthdate: data.get("birthdate"),
-      password: data.get("password"),
-    });
+    if (changeLogin === "Influencer") {
+      console.log({
+        profilePicture: data.get("profilePicture"),
+        name: data.get("name"),
+        cpf: data.get("cpf"),
+        state: data.get("state"),
+        email: data.get("email"),
+        birthdate: data.get("birthdate"),
+        password: data.get("password"),
+      });
+    } else {
+      console.log({
+        logo: data.get("profilePicture"),
+        companyName: data.get("companyName"),
+        email: data.get("email"),
+        cnpj: data.get("cnpj"),
+        password: data.get("password"),
+      });
+    }
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -79,20 +95,25 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+          <ButtonGroup variant="contained" aria-label="Basic button group" sx={{ mb: 3 }}>
+            <Button
+              variant={changeLogin === "Influencer" ? "contained" : "outlined"}
+              onClick={() => setChangeLogin("Influencer")}
+              
+            >
+              Influencer
+            </Button>
+            <Button
+              variant={changeLogin === "Empresa" ? "contained" : "outlined"}
+              onClick={() => setChangeLogin("Empresa")}
+            
+            >
+              Empresa
+            </Button>
+          </ButtonGroup>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <input
                   accept="image/*"
                   style={{ display: "none" }}
@@ -101,62 +122,99 @@ export default function SignUp() {
                   onChange={handlePictureChange}
                 />
                 <label htmlFor="profilePicture">
-                  <Button variant="contained" component="span" fullWidth>
-                    Upload Profile Picture
-                  </Button>
-                </label>
-                {preview && (
                   <Avatar
                     src={preview}
-                    sx={{ width: 100, height: 100, mt: 2, mx: "auto" }}
+                    sx={{ width: 100, height: 100, cursor: 'pointer' }}
                   />
-                )}
+                </label>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="name"
-                  label="Nome"
-                  name="name"
-                  autoComplete="name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField required fullWidth id="cpf" label="CPF" name="cpf" />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="state"
-                  label="Estado"
-                  name="state"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="E-mail"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="birthdate"
-                  label="Data de nascimento"
-                  name="birthdate"
-                  type="date"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
+              {changeLogin === "Influencer" ? (
+                <>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="name"
+                      label="Nome"
+                      name="name"
+                      autoComplete="name"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="cpf"
+                      label="CPF"
+                      name="cpf"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="state"
+                      label="Estado"
+                      name="state"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="email"
+                      label="E-mail"
+                      name="email"
+                      autoComplete="email"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="birthdate"
+                      label="Data de nascimento"
+                      name="birthdate"
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="companyName"
+                      label="Nome da Empresa"
+                      name="companyName"
+                      autoComplete="companyName"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="email"
+                      label="E-mail"
+                      name="email"
+                      autoComplete="email"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="cnpj"
+                      label="CNPJ"
+                      name="cnpj"
+                    />
+                  </Grid>
+                </>
+              )}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -174,23 +232,14 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={()=>{
-                navigate("/registerMarketing")
-              }}
+              color="primary"
             >
               Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link
-                  onClick={() =>
-                    navigate(
-                      `/`
-                    )
-                  }
-                  variant="body2"
-                >
-                  Already have an account? Sign in
+                <Link onClick={() => navigate(`/`)} variant="body2">
+                  Já tem uma conta? Entrar
                 </Link>
               </Grid>
             </Grid>
@@ -198,6 +247,7 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
-    </ThemeProvider>
+   
   );
 }
+
