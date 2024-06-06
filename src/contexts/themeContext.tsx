@@ -1,4 +1,4 @@
-import { createContext, useCallback, useMemo, useState } from "react";
+import { createContext, useCallback, useMemo, useState, useEffect } from "react";
 import { ThemeProvider } from "@emotion/react";
 import { Box } from "@mui/system";
 import { lightTheme, darkTheme } from "../themes/themes";
@@ -6,17 +6,17 @@ import { lightTheme, darkTheme } from "../themes/themes";
 interface ThemeContextData {
   themeName: "light" | "dark";
   toggleTheme: () => void;
-  changeFontSizeByFactor: ()=>void;
-  setThemeName: (str:"string")=>void;
+  changeFontSizeByFactor: (factor: number)=>void;
+  setThemeName: (str:"light" | "dark")=>void;
 }
 
 const ThemeContext = createContext({} as ThemeContextData);
 
 const ThemeContextProvider: React.FC<any> = ({ children }) => {
   const [themeName, setThemeName] = useState<"light" | "dark">("light");
-  
   const [fontSize, setFontSize] = useState(12); //Tamanho padrão do MUI
-  const [oldFontSize, setOldFontSize] = useState(12);
+  const [adaptedTheme, setAdaptedTheme] = useState(lightTheme);
+  const [oldFontSize, setOldFontSize] = useState(fontSize);
 
   const toggleTheme = useCallback(() => {
     setThemeName((oldThemeName) =>
@@ -24,30 +24,34 @@ const ThemeContextProvider: React.FC<any> = ({ children }) => {
     );
   }, []);
 
-  const changeFontSizeByFactor = useCallback((factor: number)=>{
+  const changeFontSizeByFactor =(factor: number)=>{
     setOldFontSize(fontSize);
     setFontSize((prevValue)=>prevValue+factor);
-  });
+  };
   
   const theme = useMemo(() => {
-    const adaptedLightTheme= lightTheme; //ISSO ESTÁ CAUSANDO O BUG DE MUDAR LOCALMENTE A FONTE
-    adaptedLightTheme.typography.fontSize = `${fontSize}rem` ;
+    const newTheme = {...adaptedTheme};
 
-    const typographyTags = ['body1','body2','button','caption','h1','h2','h3','h4',
-    'h5','h6','subtitle1','subtitle2']
+    const typographyTags = ['body1','body2','button','caption','h1','h2','h3','h4','h5','h6','subtitle1','subtitle2']
+    newTheme.typography.fontSize = fontSize;  
 
     typographyTags.map((tag)=> {
-      const oldTagFontSize = adaptedLightTheme.typography[tag].fontSize
-      const number_oldTagFontSize = Number(oldTagFontSize.slice(0, oldTagFontSize.indexOf("rem")))
-      const newFactor = (fontSize/oldFontSize)*number_oldTagFontSize
-      adaptedLightTheme.typography[tag].fontSize = `${newFactor}rem`
-      console.log(adaptedLightTheme.typography[tag].fontSize);
+      const tagFont = String(newTheme.typography[tag].fontSize);
+      const number_tagFont = Number(tagFont.slice(0, tagFont.indexOf("rem")==0?10: tagFont.indexOf("rem")))
+      const factor = (fontSize/oldFontSize) * number_tagFont;
+
+      newTheme.typography[tag].fontSize = factor +"rem";
     });
-    
-    if (themeName === "light") return adaptedLightTheme;
+
+    if (themeName == "light"){
+      return newTheme;
+    } 
+
+    setAdaptedTheme(newTheme);
 
     return darkTheme;
   }, [themeName, fontSize]);
+
 
   const valueProps = {
     themeName: themeName,
