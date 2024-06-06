@@ -1,6 +1,7 @@
 import * as React from "react";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import { ButtonGroup, Button, Container, Box, Drawer, Switch} from "@mui/material";
+import DarkModeSwitch from "./DarkModeSwitch"
 
 export default function AccessibilityDrawer() {
   const [open, setOpen] = React.useState(false);
@@ -12,11 +13,11 @@ export default function AccessibilityDrawer() {
   const DrawerContent = (
     <Container>
       <Box
-        sx={{ height: 150, p: 1 }}
+        sx={{ width: '150px', p: 1 }}
         role="presentation"
         display={"flex"}
         flexDirection={"column"}
-        alignItems={"center"}
+        alignItems={"flex-start"}
         gap={2}
       >
         <Button
@@ -36,15 +37,23 @@ export default function AccessibilityDrawer() {
         >
           X
         </Button>
+        
         <ButtonGroup>
           <Button variant="contained"><strong>-A</strong></Button>
           <Button>+A</Button>
         </ButtonGroup>
-      <Box>
-      <label htmlFor="">
-        <Switch></Switch> Moldura
-      </label>
-      </Box>
+        
+        <Box>
+          <label>
+            <Switch edge="start" /> Moldura
+          </label>
+        </Box>
+
+        <Box>
+          <label>
+            <DarkModeSwitch edge="start" /> Modo
+          </label>
+        </Box>
       </Box>
     </Container>
   );
@@ -72,7 +81,12 @@ export default function AccessibilityDrawer() {
         onClose={() => toggleDrawer(false)}
         hideBackdrop={false}
         variant="temporary"
-        anchor="bottom"
+        anchor="left"
+        onClick={(evt)=>{
+          if(evt.clientX > 180){
+            setOpen(false);
+          }
+        }}
       >
         {DrawerContent}
       </Drawer>
