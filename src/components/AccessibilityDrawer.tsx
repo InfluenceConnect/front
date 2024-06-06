@@ -1,10 +1,15 @@
-import * as React from "react";
+import { useState, useContext } from "react";
+
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import { ButtonGroup, Button, Container, Box, Drawer, Switch} from "@mui/material";
 import DarkModeSwitch from "./DarkModeSwitch"
+import {ThemeContext} from "../contexts/themeContext.tsx"
 
 export default function AccessibilityDrawer() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [fontSize, setFontSize] = useState(1);
+
+  const {changeFontSize, toggleTheme, themeName, setThemeName} = useContext(ThemeContext);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -51,7 +56,14 @@ export default function AccessibilityDrawer() {
 
         <Box>
           <label>
-            <DarkModeSwitch edge="start" /> Modo
+            <DarkModeSwitch
+              edge="start"
+              checked={themeName=="light"?false:true}
+              onClick={()=>
+                  setThemeName((prevValue)=>prevValue=="light"?"dark":"light")
+              }
+            />
+            Modo
           </label>
         </Box>
       </Box>

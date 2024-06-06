@@ -37,8 +37,13 @@ const lightTheme = createTheme({
     dark: {
       main: "#343a40",
       contrastText: "#fff"
-    }
-  }
+    },
+  },
+  typography: {
+    // In Chinese and Japanese the characters are usually larger,
+    // so a smaller fontsize may be appropriate.
+    fontSize: 12,
+  },
 })
 
 const darkTheme = createTheme({
