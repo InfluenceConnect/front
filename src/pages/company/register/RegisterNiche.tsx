@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { useNavigate } from 'react-router-dom';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -21,6 +22,7 @@ interface CheckboxOption {
 }
 
 function RegisterNicheCompany() {
+  const navigate = useNavigate()
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
 
   const checkboxOptions: CheckboxOption[] = [
@@ -82,9 +84,11 @@ function RegisterNicheCompany() {
       </Grid>
 
       <Stack spacing={2} direction="row" justifyContent={'center'} marginTop={5} marginBottom={5}>
-     
-      <Button variant="contained" sx={{width:'100%'}}>Avançar</Button>
-    
+
+      {/* obs: Somente navegando sem passar os dados */}
+
+      <Button variant="contained" sx={{width:'100%'}} onClick={()=> navigate('/registerSocialMedia')}>Avançar</Button>  
+         
     </Stack>
     </Box>
   );

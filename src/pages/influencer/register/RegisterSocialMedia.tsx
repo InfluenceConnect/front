@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Facebook, Instagram, YouTube, Twitter } from '@mui/icons-material';
-import 'bootstrap-icons/font/bootstrap-icons.css'; // Importando os estilos dos ícones Bootstrap
+// import 'bootstrap-icons/font/bootstrap-icons.css'; // Importando os estilos dos ícones Bootstrap
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const lightTheme = createTheme({

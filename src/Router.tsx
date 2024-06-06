@@ -25,15 +25,9 @@ const Router = () => {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/registerNicheCompany"
-            element={<RegisterNicheCompany />}
-          />
-           <Route
-            path="/registerNicheInfluence"
-            element={<RegisterNicheInfluencer />}
-          />
-          <Route path="/registerSocialMedia" element={<RegisterSocialMedia />} />
+          <Route path="/registerNicheCompany"element={<RegisterNicheCompany />}/>
+          <Route path="/registerNicheInfluence"element={<RegisterNicheInfluencer />}/>
+          <Route path="/registerSocialMedia" element={<RegisterSocialMedia/>} />
           <Route path="/registerMarketing" element={<RegisterMarketing />} />
           <Route path="/accountStatus" element={<AccountStatus />} />
           <Route path="*" element={<h1>not found</h1>} />
