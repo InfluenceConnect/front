@@ -9,7 +9,7 @@ export default function AccessibilityDrawer() {
   const [open, setOpen] = useState(false);
   const [fontSize, setFontSize] = useState(1);
 
-  const {changeFontSize, toggleTheme, themeName, setThemeName} = useContext(ThemeContext);
+  const {changeFontSizeByFactor, toggleTheme, themeName, setThemeName} = useContext(ThemeContext);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -44,8 +44,12 @@ export default function AccessibilityDrawer() {
         </Button>
         
         <ButtonGroup>
-          <Button variant="contained"><strong>-A</strong></Button>
-          <Button>+A</Button>
+          <Button variant="contained"
+            onClick={()=>changeFontSizeByFactor(-1)}
+          ><strong>-A</strong></Button>
+          <Button
+            onClick={()=>changeFontSizeByFactor(1)}
+          >+A</Button>
         </ButtonGroup>
         
         <Box>
