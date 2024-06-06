@@ -19,7 +19,7 @@ const Router = () => {
       <AccessibilityBar />
       <Header />
       <AccessibilityDrawer />
-      <Container sx={{minHeight: "69vh"}}>
+      <Container maxWidth = 'xl' sx={{minHeight: "69vh"}}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
