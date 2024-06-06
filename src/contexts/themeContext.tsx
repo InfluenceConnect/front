@@ -14,8 +14,8 @@ const ThemeContext = createContext({} as ThemeContextData);
 
 const ThemeContextProvider: React.FC<any> = ({ children }) => {
   const [themeName, setThemeName] = useState<"light" | "dark">("light");
-  const [fontSize, setFontSize] = useState(12); //Tamanho padrão do MUI
   const [adaptedTheme, setAdaptedTheme] = useState(lightTheme);
+  const [fontSize, setFontSize] = useState(12); //Tamanho padrão do MUI
   const [oldFontSize, setOldFontSize] = useState(fontSize);
 
   const toggleTheme = useCallback(() => {
@@ -38,7 +38,7 @@ const ThemeContextProvider: React.FC<any> = ({ children }) => {
     typographyTags.map((tag)=> {
       const tagFont = String(newTheme.typography[tag].fontSize);
       const number_tagFont = Number(tagFont.slice(0, tagFont.indexOf("rem")==0?10: tagFont.indexOf("rem")))
-      const factor = (fontSize/oldFontSize) * number_tagFont;
+      const factor = number_tagFont + ((fontSize-oldFontSize)/10)
 
       newTheme.typography[tag].fontSize = factor +"rem";
     });
