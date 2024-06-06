@@ -24,9 +24,9 @@ const Router = () => {
       <Container maxWidth = 'xl' sx={{minHeight: "69vh"}}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/registerCompany" element={<Register />} />
           <Route path="/registerNicheCompany"element={<RegisterNicheCompany />}/>
-          <Route path="/registerNicheInfluence"element={<RegisterNicheInfluencer />}/>
+          <Route path="/registerNicheInfluencer"element={<RegisterNicheInfluencer />}/>
           <Route path="/registerSocialMedia" element={<RegisterSocialMedia/>} />
           <Route path="/registerMarketing" element={<RegisterMarketing />} />
           <Route path="/accountStatus" element={<AccountStatus />} />

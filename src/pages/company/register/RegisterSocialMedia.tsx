@@ -9,8 +9,9 @@ import Container from '@mui/material/Container';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Facebook, Instagram, YouTube, Twitter,Language } from '@mui/icons-material';
 // import 'bootstrap-icons/font/bootstrap-icons.css'; // Importando os estilos dos ícones Bootstrap
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { useNavigate } from 'react-router-dom';
+/*
 const lightTheme = createTheme({
   palette: {
     primary: {
@@ -27,8 +28,10 @@ const lightTheme = createTheme({
     }
   }
 });
+*/
 
 export default function RegisterMarketing() {
+  const navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -52,7 +55,6 @@ export default function RegisterMarketing() {
   };
 
   return (
-    <ThemeProvider theme={lightTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -179,12 +181,14 @@ export default function RegisterMarketing() {
               variant="contained"
               color="primary"
               sx={{ mt: 3, mb: 2 }}
+              onClick={()=>{
+                navigate("/registerNicheInfluencer")
+              }}
             >
               Avançar
             </Button>
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
   );
 }
