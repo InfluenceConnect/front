@@ -14,6 +14,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import img from "../../assets/socialmedia-icons.png"
 
 // function Copyright(props: any) {
 //   return (
@@ -45,7 +46,7 @@ export default function SignInSide() {
 
   return (
     // <ThemeProvider theme={defaultTheme}>
-    <Grid container component="main" sx={{ height: "100vh" }}>
+    <Grid container component="main" sx={{ height: "calc(100vh - 65px)" }}>
       <CssBaseline />
       <Grid
         item
@@ -54,7 +55,7 @@ export default function SignInSide() {
         md={7}
         sx={{
           backgroundImage:
-            "url(https://img.freepik.com/premium-vector/social-media-icons-circle-social-media-logos-white-background_678960-5.jpg)",
+            `url(${img})`,
           backgroundRepeat: "no-repeat",
           backgroundColor: (t) =>
             t.palette.mode === "light"
@@ -64,7 +65,7 @@ export default function SignInSide() {
           backgroundPosition: "center",
         }}
       />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square display={'flex'} sx={{alignItems: "center"}}>
         <Box
           sx={{
             my: 8,
@@ -72,6 +73,7 @@ export default function SignInSide() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            gap: "2rem",
           }}
         >
           <ButtonGroup variant="contained" aria-label="Basic button group">
