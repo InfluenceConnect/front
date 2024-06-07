@@ -44,7 +44,7 @@ function HeaderBar() {
               color: "inherit",
             }}
           >
-            Influnece Connect
+            Influence Connect
           </Typography>
 
           {/* Telas grande md=flex  */}

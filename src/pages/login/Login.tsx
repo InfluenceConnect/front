@@ -14,7 +14,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import img from "../../assets/socialmedia-icons.png"
+import img from "../../assets/socialmedia-icons.png";
 
 // function Copyright(props: any) {
 //   return (
@@ -34,7 +34,7 @@ const defaultTheme = createTheme();
 
 export default function SignInSide() {
   const navigate = useNavigate();
-  const [changeLogin, setchangeLogin] = React.useState("Influencer");
+  const [changeLogin, setChangeLogin] = React.useState("Influencer");
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -54,8 +54,7 @@ export default function SignInSide() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage:
-            `url(${img})`,
+          backgroundImage: `url(${img})`,
           backgroundRepeat: "no-repeat",
           backgroundColor: (t) =>
             t.palette.mode === "light"
@@ -65,7 +64,17 @@ export default function SignInSide() {
           backgroundPosition: "center",
         }}
       />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square display={'flex'} sx={{alignItems: "center"}}>
+      <Grid
+        item
+        xs={12}
+        sm={8}
+        md={5}
+        component={Paper}
+        elevation={6}
+        square
+        display={"flex"}
+        sx={{ alignItems: "center" }}
+      >
         <Box
           sx={{
             my: 8,
@@ -79,13 +88,13 @@ export default function SignInSide() {
           <ButtonGroup variant="contained" aria-label="Basic button group">
             <Button
               variant={changeLogin === "Influencer" ? "contained" : "outlined"}
-              onClick={() => setchangeLogin("Influencer")}
+              onClick={() => setChangeLogin("Influencer")}
             >
               Influencer
             </Button>
             <Button
-              variant={changeLogin == "Empresa" ? "contained" : "outlined"}
-              onClick={() => setchangeLogin("Empresa")}
+              variant={changeLogin === "Empresa" ? "contained" : "outlined"}
+              onClick={() => setChangeLogin("Empresa")}
             >
               Empresa
             </Button>
@@ -97,12 +106,7 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5" fontWeight={"bold"}>
             Login {changeLogin}
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -141,13 +145,7 @@ export default function SignInSide() {
               </Grid>
               <Grid item>
                 <Link
-                  onClick={() =>
-                    navigate(
-                      `/register${
-                        changeLogin == "Influencer" ? "Influencer" : "Company"
-                      }`
-                    )
-                  }
+                  onClick={() => navigate('/Register')}
                   variant="body2"
                 >
                   {"Não tem uma conta? Inscreva-se"}
