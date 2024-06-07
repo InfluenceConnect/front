@@ -1,33 +1,23 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
+import { useContext } from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Facebook, Instagram, YouTube, Twitter } from '@mui/icons-material';
-// import 'bootstrap-icons/font/bootstrap-icons.css'; // Importando os estilos dos ícones Bootstrap
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Facebook, Instagram, YouTube, Twitter, AddLink } from '@mui/icons-material';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const lightTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#14C0DE",
-      contrastText: "#fff"
-    },
-    background: {
-      paper: "#fff",
-      default: "#fff"
-    },
-    dark: {
-      main: "#343a40",
-      contrastText: "#fff"
-    }
-  }
-});
+import { ThemeContext } from '../../../contexts/themeContext'; 
+import { lightTheme, darkTheme } from '../../../themes/themes'; 
 
 export default function RegisterSocialMedia() {
+  const { themeName } = useContext(ThemeContext);
+  const currentTheme = themeName === "light" ? lightTheme : darkTheme;
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -42,116 +32,144 @@ export default function RegisterSocialMedia() {
 
   const inputStyle = {
     marginBottom: '1rem',
-    backgroundColor: '#fff', // Fundo branco
+    backgroundColor: currentTheme.palette.background.paper, 
     borderRadius: '4px',
   };
 
   const iconStyle = {
-    color: 'black', // Cor preta para os ícones
+    color: themeName === "light" ? 'black' : 'white',
+    fontSize: '1.5rem', // Ajuste do tamanho do ícone do TikTok para alinhar corretamente
   };
 
   return (
-    <ThemeProvider theme={lightTheme}>
-      <Container component="main" maxWidth="xs">
+    <ThemeProvider theme={currentTheme}>
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
+            marginBottom: 3,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" sx={{ color: themeName === "light" ? 'black' : 'white' }}>
             Vincule suas Redes Sociais:
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="facebook"
-              label="Facebook"
-              name="facebook"
-              autoComplete="facebook"
-              autoFocus
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Facebook style={iconStyle} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={inputStyle}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="instagram"
-              label="Instagram"
-              name="instagram"
-              autoComplete="instagram"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Instagram style={iconStyle} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={inputStyle}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="youtube"
-              label="YouTube"
-              name="youtube"
-              autoComplete="youtube"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <YouTube style={iconStyle} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={inputStyle}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="tiktok"
-              label="TikTok"
-              name="tiktok"
-              autoComplete="tiktok"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <i className="bi bi-tiktok" style={iconStyle}></i> {/* Ícone do Bootstrap Icons */}
-                  </InputAdornment>
-                ),
-              }}
-              sx={inputStyle}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="twitter"
-              label="Twitter"
-              name="twitter"
-              autoComplete="twitter"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Twitter style={iconStyle} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={inputStyle}
-            />
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{
+              mt: 1,
+              p: 2,
+              borderRadius: '8px',
+              backgroundColor: themeName === "light" ? '#fff' : '#424242',
+              boxShadow: 3,
+              width: '100%', 
+            }}
+          >
+            <Box display="flex" alignItems="center" mb={2}>
+              <Facebook style={iconStyle} />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Facebook"
+                name="facebook"
+                fullWidth
+                required
+                multiline
+                maxRows={4}
+                sx={{ ml: 1 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AddLink />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+            <Box display="flex" alignItems="center" mb={2}>
+              <Instagram style={iconStyle} />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Instagram"
+                name="instagram"
+                fullWidth
+                required
+                multiline
+                maxRows={4}
+                sx={{ ml: 1 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AddLink />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+            <Box display="flex" alignItems="center" mb={2}>
+              <YouTube style={iconStyle} />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="YouTube"
+                name="youtube"
+                fullWidth
+                required
+                multiline
+                maxRows={4}
+                sx={{ ml: 1 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AddLink />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+            <Box display="flex" alignItems="center" mb={2}>
+              <i className="bi bi-tiktok" style={iconStyle}></i> {/* Ícone do Bootstrap Icons */}
+              <TextField
+                id="outlined-multiline-flexible"
+                label="TikTok"
+                name="tiktok"
+                fullWidth
+                required
+                multiline
+                maxRows={4}
+                sx={{ ml: 1 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AddLink />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+            <Box display="flex" alignItems="center" mb={2}>
+              <Twitter style={iconStyle} />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Twitter"
+                name="twitter"
+                fullWidth
+                required
+                multiline
+                maxRows={4}
+                sx={{ ml: 1 }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AddLink />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
             <Button
               type="submit"
               fullWidth
