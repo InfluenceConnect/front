@@ -10,31 +10,13 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { Paper } from "@mui/material";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | undefined>(undefined);
   const [changeLogin, setChangeLogin] = useState("Influencer");
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +29,7 @@ export default function SignUp() {
       };
       reader.readAsDataURL(file);
     } else {
-      setPreview(null);
+      setPreview(undefined);
     }
   };
 
@@ -77,20 +59,31 @@ export default function SignUp() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{ p: "2rem 0", /*minHeight: "calc(100vh - 80px)"*/ }}
+    >
       <CssBaseline />
       <Box
+        component={Paper}
+        elevation={0}
+        p={4}
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          height: "100%",
         }}
       >
         <Typography component="h1" variant="h4" fontWeight="bold">
           Influence Connect
         </Typography>
-        <ButtonGroup variant="contained" aria-label="Basic button group" sx={{ mb: 3, mt: 2 }}>
+        <ButtonGroup
+          variant="contained"
+          aria-label="Basic button group"
+          sx={{ mb: 3, mt: 2 }}
+        >
           <Button
             variant={changeLogin === "Influencer" ? "contained" : "outlined"}
             onClick={() => setChangeLogin("Influencer")}
@@ -106,7 +99,11 @@ export default function SignUp() {
         </ButtonGroup>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
               <input
                 accept="image/*"
                 style={{ display: "none" }}
@@ -117,7 +114,7 @@ export default function SignUp() {
               <label htmlFor="profilePicture">
                 <Avatar
                   src={preview}
-                  sx={{ width: 100, height: 100, cursor: 'pointer' }}
+                  sx={{ width: 100, height: 100, cursor: "pointer" }}
                 />
               </label>
             </Grid>
@@ -226,8 +223,9 @@ export default function SignUp() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             color="primary"
+            onClick={()=>navigate(`/registerNiche${changeLogin=="Empresa"?'Company':"Influencer"}`)}
           >
-            Sign Up
+            Registrar
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
@@ -238,7 +236,6 @@ export default function SignUp() {
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 5 }} />
     </Container>
   );
 }

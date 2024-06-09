@@ -55,6 +55,7 @@ const ThemeContextProvider: React.FC<any> = ({ children }) => {
     const typographyTags = ['body1','body2','button','caption','h1','h2','h3','h4','h5','h6','subtitle1','subtitle2']
 
     typographyTags.map((tag)=> {
+      
       const tagFont = String(newTheme.typography[tag].fontSize);
       const number_tagFont = Number(tagFont.slice(0, tagFont.indexOf("rem")==0?10: tagFont.indexOf("rem")))
 

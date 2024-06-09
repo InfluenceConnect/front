@@ -9,7 +9,7 @@ import RegisterSocialMedia from "./pages/influencer/register/RegisterSocialMedia
 import RegisterMarketing from "./pages/company/register/RegisterSocialMedia"
 
 import { Container, CssBaseline } from "@mui/material";
-import Register from "./pages/Register/Register";
+import Register from "./pages/register/Register";
 import RegisterNicheInfluencer from "./pages/influencer/register/RegisterNiche";
 import AccountStatus from './pages/login/AccountStatus';
 
@@ -22,6 +22,7 @@ const Router = () => {
       <Container maxWidth = 'xl' sx={{minHeight: "69vh", paddingLeft: "0", paddingRight: "0"}}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/registerNicheCompany"element={<RegisterNicheCompany />}/>
           <Route path="/registerNicheInfluencer"element={<RegisterNicheInfluencer />}/>
