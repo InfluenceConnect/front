@@ -19,7 +19,7 @@ const Router = () => {
       <CssBaseline /> {/* O CSS RESET DO MUI */}
       <AccessibilityDrawer />
       <Header />
-      <Container maxWidth = 'xl' sx={{minHeight: "69vh"}}>
+      <Container maxWidth = 'xl' sx={{minHeight: "69vh", paddingLeft: "0", paddingRight: "0"}}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
