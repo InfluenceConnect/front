@@ -12,25 +12,8 @@ import Grid from "@mui/material/Grid";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { createTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
-
-// function Copyright(props: any) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
-
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
 
 export default function SignInSide() {
   const navigate = useNavigate();
@@ -46,7 +29,18 @@ export default function SignInSide() {
 
   return (
     // <ThemeProvider theme={defaultTheme}>
-    <Grid container component="main" sx={{ height: "calc(100vh - 65px)" }}>
+    <Grid
+      container
+      component="main"
+      sx={{
+        height: "calc(100vh - 65px)",
+        padding: {
+          sx: "0",
+          sm: "1rem 0",
+          md: "2rem 0",
+        },
+      }}
+    >
       <CssBaseline />
       <Grid
         item
@@ -56,10 +50,6 @@ export default function SignInSide() {
         sx={{
           backgroundImage: `url(${img})`,
           backgroundRepeat: "no-repeat",
-          backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -73,7 +63,9 @@ export default function SignInSide() {
         elevation={6}
         square
         display={"flex"}
-        sx={{ alignItems: "center" }}
+        sx={{
+          alignItems: "center"
+        }}
       >
         <Box
           sx={{
@@ -106,7 +98,12 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5" fontWeight={"bold"}>
             Login {changeLogin}
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -144,19 +141,14 @@ export default function SignInSide() {
                 <Link variant="body2">Esqueceu sua senha?</Link>
               </Grid>
               <Grid item>
-                <Link
-                  onClick={() => navigate('/Register')}
-                  variant="body2"
-                >
+                <Link onClick={() => navigate("/Register")} variant="body2">
                   {"Não tem uma conta? Inscreva-se"}
                 </Link>
               </Grid>
             </Grid>
-            {/* <Copyright sx={{ mt: 5 }} /> */}
           </Box>
         </Box>
       </Grid>
     </Grid>
-    // </ThemeProvider>
   );
 }

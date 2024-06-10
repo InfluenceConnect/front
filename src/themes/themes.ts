@@ -41,13 +41,13 @@ const lightTheme = createTheme({
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
-    primary: {
-      main: "#14C0DE",
-      contrastText: "#fff"
-    },
+    // primary: {
+    //   main: "#14C0DE",
+    //   contrastText: "#fff"
+    // },
     background: {
-      paper: "#424242",
-      default: "#121212"
+      paper: "#343a40",
+      // default: "#121212"
     },
     dark: {
       main: "#343a40",

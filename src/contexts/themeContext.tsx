@@ -1,7 +1,8 @@
-import { createContext, useCallback, useMemo, useState, useEffect } from "react";
+import { createContext, useCallback, useMemo, useState } from "react";
 import { ThemeProvider } from "@emotion/react";
 import { Box } from "@mui/system";
 import { lightTheme, darkTheme } from "../themes/themes";
+import { useMediaQuery } from "@mui/material";
 
 interface ThemeContextData {
   themeName: "light" | "dark";
@@ -11,13 +12,16 @@ interface ThemeContextData {
   setThemeName: (str:"light" | "dark")=>void;
 }
 
+
 const ThemeContext = createContext({} as ThemeContextData);
 
 const ThemeContextProvider: React.FC<any> = ({ children }) => {
-  const [themeName, setThemeName] = useState<"light" | "dark">("light");
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const [themeName, setThemeName] = useState<"light" | "dark">(prefersDarkMode?"dark":"light");
   const [fontSizeFactor,setFontSizeFactor] = useState(0.0);
   const [changedToMemo, setChangedToMemo] = useState(0);
-
+  
   const toggleTheme = useCallback(() => {
     setFontSizeFactor(0);
     setThemeName((oldThemeName) =>
@@ -51,6 +55,7 @@ const ThemeContextProvider: React.FC<any> = ({ children }) => {
     const typographyTags = ['body1','body2','button','caption','h1','h2','h3','h4','h5','h6','subtitle1','subtitle2']
 
     typographyTags.map((tag)=> {
+      
       const tagFont = String(newTheme.typography[tag].fontSize);
       const number_tagFont = Number(tagFont.slice(0, tagFont.indexOf("rem")==0?10: tagFont.indexOf("rem")))
 
