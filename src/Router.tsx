@@ -12,6 +12,7 @@ import { Container, CssBaseline } from "@mui/material";
 import Register from "./pages/register/Register";
 import RegisterNicheInfluencer from "./pages/influencer/register/RegisterNiche";
 import AccountStatus from './pages/login/AccountStatus';
+import NotFound from "./pages/not_found";
 
 const Router = () => {
   return (
@@ -29,7 +30,7 @@ const Router = () => {
           <Route path="/registerSocialMedia" element={<RegisterSocialMedia/>} />
           <Route path="/registerMarketing" element={<RegisterMarketing />} />
           <Route path="/accountStatus" element={<AccountStatus />} />
-          <Route path="*" element={<h1>not found</h1>} />
+          <Route path="*" element={<NotFound/>} />
         </Routes>
       </Container>
       <Footer />
