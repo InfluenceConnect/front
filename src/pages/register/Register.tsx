@@ -43,7 +43,7 @@ const states = [
   "Fora do País"
 ];
 
-const SignUp: React.FC = () => {
+const Register: React.FC = () => {
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -266,4 +266,4 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;
+export default Register;
