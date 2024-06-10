@@ -10,8 +10,11 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 
 function Copyright(props: any) {
   return (
@@ -23,7 +26,7 @@ function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Seu Website
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -31,11 +34,21 @@ function Copyright(props: any) {
   );
 }
 
-export default function SignUp() {
+const states = [
+  "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal",
+  "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul",
+  "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí",
+  "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia",
+  "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins",
+  "Fora do País"
+];
+
+const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [changeLogin, setChangeLogin] = useState("Influencer");
+  const [accountType, setAccountType] = useState<string>("Influencer");
+  const [state, setState] = useState<string>("");
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -55,7 +68,7 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     data.append("profilePicture", profilePicture as Blob);
-    if (changeLogin === "Influencer") {
+    if (accountType === "Influencer") {
       console.log({
         profilePicture: data.get("profilePicture"),
         name: data.get("name"),
@@ -92,14 +105,14 @@ export default function SignUp() {
         </Typography>
         <ButtonGroup variant="contained" aria-label="Basic button group" sx={{ mb: 3, mt: 2 }}>
           <Button
-            variant={changeLogin === "Influencer" ? "contained" : "outlined"}
-            onClick={() => setChangeLogin("Influencer")}
+            variant={accountType === "Influencer" ? "contained" : "outlined"}
+            onClick={() => setAccountType("Influencer")}
           >
             Influencer
           </Button>
           <Button
-            variant={changeLogin === "Empresa" ? "contained" : "outlined"}
-            onClick={() => setChangeLogin("Empresa")}
+            variant={accountType === "Empresa" ? "contained" : "outlined"}
+            onClick={() => setAccountType("Empresa")}
           >
             Empresa
           </Button>
@@ -116,12 +129,12 @@ export default function SignUp() {
               />
               <label htmlFor="profilePicture">
                 <Avatar
-                  src={preview}
+                  src={preview || undefined}
                   sx={{ width: 100, height: 100, cursor: 'pointer' }}
                 />
               </label>
             </Grid>
-            {changeLogin === "Influencer" ? (
+            {accountType === "Influencer" ? (
               <>
                 <Grid item xs={12}>
                   <TextField
@@ -143,13 +156,23 @@ export default function SignUp() {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="state"
-                    label="Estado"
-                    name="state"
-                  />
+                  <FormControl fullWidth required>
+                    <InputLabel id="state-label">Estado</InputLabel>
+                    <Select
+                      labelId="state-label"
+                      id="state"
+                      name="state"
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                      label="Estado"
+                    >
+                      {states.map((state) => (
+                        <MenuItem key={state} value={state}>
+                          {state}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -166,7 +189,7 @@ export default function SignUp() {
                     required
                     fullWidth
                     id="birthdate"
-                    label="Data de nascimento"
+                    label="Data de Nascimento"
                     name="birthdate"
                     type="date"
                     InputLabelProps={{
@@ -227,7 +250,7 @@ export default function SignUp() {
             sx={{ mt: 3, mb: 2 }}
             color="primary"
           >
-            Sign Up
+            Cadastrar
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
@@ -241,4 +264,6 @@ export default function SignUp() {
       <Copyright sx={{ mt: 5 }} />
     </Container>
   );
-}
+};
+
+export default SignUp;
