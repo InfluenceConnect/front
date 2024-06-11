@@ -15,6 +15,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Copyright(props: any) {
   return (
@@ -49,6 +50,7 @@ const Register: React.FC = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [accountType, setAccountType] = useState<string>("Influencer");
   const [state, setState] = useState<string>("");
+  const [loading, setLoading] = React.useState(false);
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -65,6 +67,13 @@ const Register: React.FC = () => {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+     setLoading(true)
+    
+    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
+   setTimeout(() => { 
+   setLoading(false);
+}, 2000);
+
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     data.append("profilePicture", profilePicture as Blob);
@@ -249,7 +258,9 @@ const Register: React.FC = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             color="primary"
+            disabled={loading }
           >
+            {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
             Cadastrar
           </Button>
           <Grid container justifyContent="flex-end">
