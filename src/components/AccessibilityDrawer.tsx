@@ -89,7 +89,7 @@ export default function AccessibilityDrawer() {
   );
 
   return (
-    <div style={{ position: "fixed", top: "40%", left: "1%" }}>
+    <div style={{ position: "fixed", top: "40%", left: "1%", zIndex: "1" }} >
       <Button
         onClick={toggleDrawer(true)}
         variant="contained"

@@ -62,7 +62,12 @@ function RegisterNicheCompany() {
 
   return (
     <Box
-      sx={{ width: "50%", margin: "0 auto", marginTop: 5, textAlign: "center" }}
+      sx={{
+        width: { md: "50%", xs: "80%" },
+        margin: "0 auto",
+        marginTop: 5,
+        textAlign: "center",
+      }}
     >
       <h1> Escolha seus Nichos de Atuação</h1>
       <Grid
@@ -77,7 +82,7 @@ function RegisterNicheCompany() {
               onClick={() => handleChange(option.name)}
               sx={{ width: "100%" }}
             >
-              <Item sx={{ width: "100%" }}>
+              <Item sx={{ width: "100%" }} elevation={3}>
                 <label
                   onClick={(evt) => {
                     evt.preventDefault();
