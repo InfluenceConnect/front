@@ -15,7 +15,7 @@ function Copyright() {
   return (
     <Typography variant="body2" mt={1}>
       {"Copyright © "}
-      <Link href="https://mui.com/">Influnece Connect&nbsp;</Link>
+      <Link tabIndex={0} href="https://mui.com/">Influnece Connect&nbsp;</Link>
       {new Date().getFullYear()}
     </Typography>
   );
@@ -59,7 +59,7 @@ const Footer = () => {
               Links
             </Typography>
             <List sx={{ width: "100%", p: 0 }}>
-              <Link sx={{ textDecoration: "none" }}>
+              <Link tabIndex={0} sx={{ textDecoration: "none" }}>
                 <ListItem
                   disablePadding
                   sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
@@ -67,7 +67,7 @@ const Footer = () => {
                   <ListItemText primary="Sobre" />
                 </ListItem>
               </Link>
-              <Link>
+              <Link tabIndex={0}>
                 <ListItem
                   disablePadding
                   sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
@@ -75,7 +75,7 @@ const Footer = () => {
                   <ListItemText primary="Política de Privacidade"/>
                 </ListItem>
               </Link>
-              <Link>
+              <Link tabIndex={0}>
                 <ListItem
                   disablePadding
                   sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
@@ -98,8 +98,8 @@ const Footer = () => {
             >
               Contatos
             </Typography>
-            <List sx={{ width: "10%", maxWidth: 360, p: 0 }}>
-              <Link sx={{ textDecoration: "none" }}>
+            <List sx={{ maxWidth: 360, p: 0 }}>
+              <Link tabIndex={0} sx={{ textDecoration: "none" }}>
                 <ListItem
                   disablePadding
                   sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
@@ -108,7 +108,7 @@ const Footer = () => {
                   <ListItemText primary="Suporte" />
                 </ListItem>
               </Link>
-              <Link>
+              <Link tabIndex={0}>
                 <ListItem
                   disablePadding
                   sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
@@ -117,7 +117,7 @@ const Footer = () => {
                   <ListItemText primary="Facebook" />
                 </ListItem>
               </Link>
-              <Link>
+              <Link tabIndex={0}>
                 <ListItem
                   disablePadding
                   sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}

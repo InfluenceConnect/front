@@ -37,6 +37,7 @@ function HeaderBar() {
             noWrap
             component="a"
             onClick={()=>navigate("/")}
+            tabIndex={0}
             sx={{
               fontWeight: 500,
               fontFamily: "serif",
