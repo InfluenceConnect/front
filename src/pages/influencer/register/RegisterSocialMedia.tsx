@@ -16,9 +16,11 @@ import {
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function RegisterSocialMedia() {
   const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(false);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -34,6 +36,17 @@ export default function RegisterSocialMedia() {
   const iconStyle = {
     fontSize: "1.5rem", // Ajuste do tamanho do ícone do TikTok para alinhar corretamente
   };
+
+    const handleNext = () => {
+     setLoading(true)
+    
+    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
+    setTimeout(() => { 
+      setLoading(false);
+      navigate("/accountStatus")
+  }, 2000);
+    
+  }
 
   return (
     <Container
@@ -180,8 +193,10 @@ export default function RegisterSocialMedia() {
             variant="contained"
             color="primary"
             sx={{ mt: 3, mb: 2 }}
-            onClick={() => navigate("/accountStatus")}
+            disabled={loading}
+            onClick={handleNext}
           >
+            {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
             Avançar
           </Button>
         </Box>
