@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, forwardRef, ForwardRefRenderFunction } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -15,121 +15,146 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import CircularProgress from '@mui/material/CircularProgress';
+import { IMaskInput } from "react-imask";
+
+interface CopyrightProps {
+  sx?: object;
+}
+
+function Copyright(props: CopyrightProps) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {"Copyright © "}
+      <Link color="inherit" href="https://mui.com/">
+        Seu Website
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
 
 const states = [
-  "Acre",
-  "Alagoas",
-  "Amapá",
-  "Amazonas",
-  "Bahia",
-  "Ceará",
-  "Distrito Federal",
-  "Espírito Santo",
-  "Goiás",
-  "Maranhão",
-  "Mato Grosso",
-  "Mato Grosso do Sul",
-  "Minas Gerais",
-  "Pará",
-  "Paraíba",
-  "Paraná",
-  "Pernambuco",
-  "Piauí",
-  "Rio de Janeiro",
-  "Rio Grande do Norte",
-  "Rio Grande do Sul",
-  "Rondônia",
-  "Roraima",
-  "Santa Catarina",
-  "São Paulo",
-  "Sergipe",
-  "Tocantins",
-  "Fora do País",
+  "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal",
+  "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul",
+  "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí",
+  "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia",
+  "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins",
+  "Fora do País"
 ];
 
+interface TextMaskCustomProps {
+  mask: string;
+  inputRef: (ref: HTMLInputElement | null) => void;
+}
+
+const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomProps> = (props, ref) => {
+  const { mask, inputRef, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask={mask}
+      definitions={{
+        '#': /[0-9]/,
+      }}
+      inputRef={inputRef}
+      onAccept={(value: any) => inputRef(value)}
+    />
+  );
+};
+
 const Register: React.FC = () => {
-  const [loadingImage, setLoadingImage] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
-  const [registerInfo, setRegisterInfo] = useState<any>({
-    profilePicture: undefined,
-    preview: undefined,
-    role: "influencer",
-    geoState: undefined,
-  });
-  
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [accountType, setAccountType] = useState<string>("Influencer");
+  const [state, setState] = useState<string>("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
-    setRegisterInfo({ ...registerInfo, profilePicture: file });
+    setProfilePicture(file);
     if (file) {
-      setLoadingImage(true)
       const reader = new FileReader();
       reader.onloadend = () => {
-        setRegisterInfo({ ...registerInfo, preview: reader.result as string });
+        setPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
     } else {
-      setRegisterInfo({ ...registerInfo, preview: undefined });
+      setPreview(null);
     }
-    
-      setLoadingImage(false);
-      
-  
+  };
+
+  const validateEmail = (email: string) => {
+    const re = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    return re.test(email);
+  };
+
+  const validateCPF = (cpf: string) => {
+    const re = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
+    return re.test(cpf);
+  };
+
+  const validateCNPJ = (cnpj: string) => {
+    const re = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/;
+    return re.test(cnpj);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
- 
-
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    data.append("profilePicture64", registerInfo.preview);
+    data.append("profilePicture", profilePicture as Blob);
 
-    if (registerInfo.role === "influencer") {
-      console.log({
-        profilePicture: data.get("profilePicture64"),
-        name: data.get("name"),
-        cpf: data.get("cpf"),
-        state: data.get("state"),
-        email: data.get("email"),
-        birthdate: data.get("birthdate"),
-        password: data.get("password"),
-      });
-    } 
+    let formErrors: { [key: string]: string } = {};
 
-    else {
-      console.log({
-        logo: data.get("profilePicture"),
-        companyName: data.get("companyName"),
-        email: data.get("email"),
-        cnpj: data.get("cnpj"),
-        password: data.get("password"),
-      });
+    const email = data.get("email") as string;
+    if (!validateEmail(email)) {
+      formErrors.email = "E-mail inválido";
     }
 
-    navigate(`/registerNiche${registerInfo.role}`)
+    if (accountType === "Influencer") {
+      const cpf = data.get("cpf") as string;
+      if (!validateCPF(cpf)) {
+        formErrors.cpf = "CPF inválido";
+      }
+    } else {
+      const cnpj = data.get("cnpj") as string;
+      if (!validateCNPJ(cnpj)) {
+        formErrors.cnpj = "CNPJ inválido";
+      }
+    }
+
+    setErrors(formErrors);
+
+    if (Object.keys(formErrors).length === 0) {
+      if (accountType === "Influencer") {
+        console.log({
+          profilePicture: data.get("profilePicture"),
+          name: data.get("name"),
+          cpf: data.get("cpf"),
+          state: data.get("state"),
+          email: data.get("email"),
+          birthdate: data.get("birthdate"),
+          password: data.get("password"),
+        });
+      } else {
+        console.log({
+          logo: data.get("profilePicture"),
+          companyName: data.get("companyName"),
+          email: data.get("email"),
+          cnpj: data.get("cnpj"),
+          password: data.get("password"),
+        });
+      }
+    }
   };
-  const handleNext = () => {
-     setLoading(true)
-    
-    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
-    setTimeout(() => { 
-      setLoading(false);
-      
-  }, 2000);
-    
-  }
-  
+
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      sx={{ minHeight: "calc(100vh - 65px)", paddingBlock: 5 }}
-    >
+    <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
         sx={{
+          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -138,81 +163,38 @@ const Register: React.FC = () => {
         <Typography component="h1" variant="h4" fontWeight="bold">
           Influence Connect
         </Typography>
-        <ButtonGroup
-          variant="contained"
-          aria-label="Basic button group"
-          sx={{ mb: 3, mt: 2 }}
-        >
+        <ButtonGroup variant="contained" aria-label="Basic button group" sx={{ mb: 3, mt: 2 }}>
           <Button
-            variant={
-              registerInfo.role === "influencer" ? "contained" : "outlined"
-            }
-            onClick={() =>
-              setRegisterInfo({ ...registerInfo, role: "influencer" })
-            }
+            variant={accountType === "Influencer" ? "contained" : "outlined"}
+            onClick={() => setAccountType("Influencer")}
           >
             Influencer
           </Button>
           <Button
-            variant={registerInfo.role === "company" ? "contained" : "outlined"}
-            onClick={() =>
-              setRegisterInfo({ ...registerInfo, role: "company" })
-            }
+            variant={accountType === "Empresa" ? "contained" : "outlined"}
+            onClick={() => setAccountType("Empresa")}
           >
             Empresa
           </Button>
         </ButtonGroup>
-
-        {/* ESSA É A BOX DO FORMULÁRIO */}
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid
-              item
-              xs={12}
-              sx={{ display: "flex", justifyContent: "center" }}
-            >
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
               <input
                 accept="image/*"
                 style={{ display: "none" }}
                 id="profilePicture"
                 type="file"
                 onChange={handlePictureChange}
-                
               />
-              <label  htmlFor="profilePicture"   >
-                
-                  <Avatar
-                  src={registerInfo.preview}
-                  sx={{ width: 100, height: 100, cursor: "pointer" }}
-                  
+              <label htmlFor="profilePicture">
+                <Avatar
+                  src={preview || undefined}
+                  sx={{ width: 100, height: 100, cursor: 'pointer' }}
                 />
-               {loadingImage && (<CircularProgress sx={{ position: 'absolute' }} />)}
               </label>
             </Grid>
-
-            {/* AQUI COMEÇA OS INPUTS CADSATRO */}
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="E-mail"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="Senha"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-              />
-            </Grid>
-            {registerInfo.role === "influencer" ? (
+            {accountType === "Influencer" ? (
               <>
                 <Grid item xs={12}>
                   <TextField
@@ -229,9 +211,14 @@ const Register: React.FC = () => {
                     required
                     fullWidth
                     id="cpf"
-                    label="CPF"
                     name="cpf"
+                    label="CPF"
+                    InputProps={{
+                      inputComponent: TextMaskCustom as any,
+                      inputProps: { mask: "000.000.000-00" },
+                    }}
                   />
+                  {errors.cpf && <Typography color="error">{errors.cpf}</Typography>}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth required>
@@ -240,13 +227,8 @@ const Register: React.FC = () => {
                       labelId="state-label"
                       id="state"
                       name="state"
-                      value={registerInfo.geoState}
-                      onChange={(e) =>
-                        setRegisterInfo({
-                          ...registerInfo,
-                          geoState: e.target.value,
-                        })
-                      }
+                      value={state}
+                      onChange={(e) => setState(e.target.value as string)}
                       label="Estado"
                     >
                       {states.map((state) => (
@@ -257,7 +239,18 @@ const Register: React.FC = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    label="E-mail"
+                    name="email"
+                    autoComplete="email"
+                    error={!!errors.email}
+                    helperText={errors.email}
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     required
@@ -288,13 +281,41 @@ const Register: React.FC = () => {
                   <TextField
                     required
                     fullWidth
-                    id="cnpj"
-                    label="CNPJ"
-                    name="cnpj"
+                    id="email"
+                    label="E-mail"
+                    name="email"
+                    autoComplete="email"
+                    error={!!errors.email}
+                    helperText={errors.email}
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="cnpj"
+                    name="cnpj"
+                    label="CNPJ"
+                    InputProps={{
+                      inputComponent: TextMaskCustom as any,
+                      inputProps: { mask: "00.000.000/0000-00" },
+                    }}
+                  />
+                  {errors.cnpj && <Typography color="error">{errors.cnpj}</Typography>}
                 </Grid>
               </>
             )}
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="Senha"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+              />
+            </Grid>
           </Grid>
           <Button
             type="submit"
@@ -302,21 +323,24 @@ const Register: React.FC = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             color="primary"
-            disabled={loading}
-            onClick={handleNext}
           >
-            {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
             Cadastrar
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link variant="body2">Já tem uma conta? Entrar</Link>
+              <Link onClick={() => navigate(`/`)} variant="body2">
+                Já tem uma conta? Entrar
+              </Link>
             </Grid>
           </Grid>
         </Box>
       </Box>
+      <Copyright sx={{ mt: 5 }} />
     </Container>
   );
 };
 
 export default Register;
+
+
+
