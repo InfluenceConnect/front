@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -7,6 +8,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -22,6 +24,7 @@ interface CheckboxOption {
 }
 
 function RegisterNicheInfluencer() {
+  const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
 
@@ -59,6 +62,17 @@ function RegisterNicheInfluencer() {
       setSelectedCheckboxes([...selectedCheckboxes, checkboxName]);
     }
   };
+
+  const handleNext = () => {
+     setLoading(true)
+    
+    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
+    setTimeout(() => { 
+      setLoading(false);
+      navigate("/registerSocialMedia")
+  }, 2000);
+    
+  }
 
   return (
     <Box
@@ -120,8 +134,9 @@ function RegisterNicheInfluencer() {
         <Button
           variant="contained"
           sx={{ width: "100%" }}
-          onClick={() => navigate("/registerMarketing")}
+          onClick={handleNext}
         >
+          {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
           Avançar
         </Button>
       </Stack>
