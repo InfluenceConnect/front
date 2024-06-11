@@ -50,9 +50,9 @@ const ThemeContextProvider: React.FC<any> = ({ children }) => {
     });
   }, [outlineIsActive]);
 
-  const toggleOutline = useCallback(() => {
-    setOutlineIsActive(!outlineIsActive);
-  }, []);
+  const toggleOutline = (() => {
+    setOutlineIsActive((prevValue)=> !prevValue);
+  });
 
   const toggleTheme = useCallback(() => {
     setFontSizeFactor(0);
