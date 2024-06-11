@@ -79,6 +79,8 @@ function RegisterNicheCompany() {
         {checkboxOptions.map((option) => (
           <Grid item xs={12} sm={6} md={6} key={option.name}>
             <Button
+              tabIndex={0}
+              aria-label={`botão nicho ${option.name}`}
               onClick={() => handleChange(option.name)}
               sx={{ width: "100%" }}
             >
@@ -90,6 +92,7 @@ function RegisterNicheCompany() {
                   }}
                 >
                   <Checkbox
+                    tabIndex={-1} //Remove o tab index pois já existe no button pai
                     name={option.name}
                     checked={selectedCheckboxes.includes(option.name)}
                   />

@@ -89,23 +89,24 @@ export default function AccessibilityDrawer() {
   );
 
   return (
-    <div style={{ position: "fixed", top: "40%", left: "1%", zIndex: "1" }} >
+    <div style={{ position: "fixed", top: "50%", transform: "translateY(-50%)", left: "1%", zIndex: "1" }} >
       <Button
         onClick={toggleDrawer(true)}
         variant="contained"
+        disableElevation
         sx={{
-          border: "0.15rem solid #343a40",
-          borderRadius: "100%",
+          bgcolor: "#2c7ce7",
+          borderRadius: "8px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: "2rem",
-          height: "2rem",
+          width: "40px",
+          height: "40px",
           minWidth: "0px",
           p: 0,
         }}
       >
-        <AccessibilityIcon />
+        <AccessibilityIcon sx={{fontSize: "28px"}} />
       </Button>
       <Drawer
         open={open}

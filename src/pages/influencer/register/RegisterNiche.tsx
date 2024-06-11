@@ -79,6 +79,8 @@ function RegisterNicheInfluencer() {
         {checkboxOptions.map((option) => (
           <Grid item xs={12} sm={6} md={6} key={option.name}>
             <Button
+              tabIndex={0}
+              aria-label={`botão nicho ${option.name}`}
               onClick={() => handleChange(option.name)}
               sx={{ width: "100%" }}
             >
@@ -91,6 +93,7 @@ function RegisterNicheInfluencer() {
                 >
                   <Checkbox
                     name={option.name}
+                    tabIndex={-1} //Remove o tab index pois já existe no button pai
                     checked={selectedCheckboxes.includes(option.name)}
                   />
                   {selectedCheckboxes.includes(option.name) ? (
