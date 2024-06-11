@@ -48,7 +48,7 @@ export default function SignInSide() {
       container
       component="main"
       sx={{
-        height: "calc(100vh - 65px)",
+        minHeight: "calc(100vh - 65px)",
         padding: {
           sx: "0",
           sm: "1rem 0",
