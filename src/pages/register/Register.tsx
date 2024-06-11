@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, forwardRef, ForwardRefRenderFunction } from "react";
+import { useState, ForwardRefRenderFunction } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -48,7 +48,7 @@ interface TextMaskCustomProps {
   inputRef: (ref: HTMLInputElement | null) => void;
 }
 
-const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomProps> = (props, ref) => {
+const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomProps> = (props) => {
   const { mask, inputRef, ...other } = props;
   return (
     <IMaskInput
@@ -100,6 +100,11 @@ const Register: React.FC = () => {
     return re.test(cnpj);
   };
 
+  const validatePassword = (password: string) => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return re.test(password);
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -108,8 +113,14 @@ const Register: React.FC = () => {
     let formErrors: { [key: string]: string } = {};
 
     const email = data.get("email") as string;
+    const password = data.get("password") as string;
+
     if (!validateEmail(email)) {
       formErrors.email = "E-mail inválido";
+    }
+
+    if (!validatePassword(password)) {
+      formErrors.password = "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     }
 
     if (accountType === "Influencer") {
@@ -248,7 +259,7 @@ const Register: React.FC = () => {
                     name="email"
                     autoComplete="email"
                     error={!!errors.email}
-                    helperText={errors.email}
+                                       helperText={errors.email}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -314,6 +325,8 @@ const Register: React.FC = () => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                error={!!errors.password}
+                helperText={errors.password}
               />
             </Grid>
           </Grid>
