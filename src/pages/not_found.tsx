@@ -9,7 +9,7 @@ const NotFound: React.FC = () => {
   return (
     <Grid container direction="column" alignItems="center" justifyContent="center" style={{ height: '100vh' }}>
       <IconButton aria-label="Error" size="large" color="error"> 
-        <ErrorIcon />
+        <ErrorIcon style={{ width: 50, height:50 }} />
       </IconButton>
       <Typography variant="h1" style={{ color: theme.palette.primary.main }}>
        Algo deu errado! 
