@@ -33,12 +33,6 @@ export default function RegisterMarketing() {
     });
   };
 
-  const inputStyle = {
-    marginBottom: '1rem',
-    backgroundColor: currentTheme.palette.background.paper, 
-    borderRadius: '4px',
-  };
-
   const iconStyle = {
     color: themeName === "light" ? 'black' : 'white', 
     fontSize: '1.5rem', // Ajuste do tamanho do ícone do TikTok para alinhar corretamente
