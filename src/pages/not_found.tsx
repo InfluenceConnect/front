@@ -11,10 +11,10 @@ const NotFound: React.FC = () => {
       <IconButton aria-label="Error" size="large" color="error"> 
         <ErrorIcon style={{ width: 50, height:50 }} />
       </IconButton>
-      <Typography variant="h1" style={{ color: theme.palette.primary.main }}>
+      <Typography textAlign={'center'} variant="h1" style={{ color: theme.palette.primary.main }}>
        Algo deu errado! 
-      </Typography>
-          <Typography variant="h6" style={{ color: theme.palette.error.main }}>
+      </Typography >
+          <Typography textAlign={'center'} variant="h6"  style={{ color: theme.palette.error.main }}>
         A página solicitada não pôde ser encontrada.(err.404)
       </Typography>
     </Grid>

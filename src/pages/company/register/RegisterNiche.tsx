@@ -69,7 +69,7 @@ function RegisterNicheCompany() {
     //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
     setTimeout(() => { 
       setLoading(false);
-      navigate("/registerSocialMedia")
+      navigate("/registerMarketing")
   }, 2000);
     
   }

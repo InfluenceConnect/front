@@ -14,8 +14,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../../../contexts/themeContext'; 
 import { lightTheme, darkTheme } from '../../../themes/themes'; 
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function RegisterMarketing() {
+   const [loading, setLoading] = React.useState(false);
   const { themeName } = useContext(ThemeContext);
   const currentTheme = themeName === "light" ? lightTheme : darkTheme;
   const navigate = useNavigate();
@@ -37,6 +39,16 @@ export default function RegisterMarketing() {
     color: themeName === "light" ? 'black' : 'white', 
     fontSize: '1.5rem', // Ajuste do tamanho do ícone do TikTok para alinhar corretamente
   };
+  const handleNext = () => {
+     setLoading(true)
+    
+    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
+    setTimeout(() => { 
+      setLoading(false);
+      navigate("/accountStatus")
+  }, 2000);
+    
+  }
 
   return (
     <ThemeProvider theme={currentTheme}>
@@ -193,10 +205,10 @@ export default function RegisterMarketing() {
               variant="contained"
               color="primary"
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => {
-                navigate("/registerNicheInfluencer");
-              }}
-            >
+              disabled={loading}
+              onClick={handleNext}
+            > 
+               {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
               Avançar
             </Button>
           </Box>
