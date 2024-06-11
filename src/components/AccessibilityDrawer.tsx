@@ -20,6 +20,8 @@ export default function AccessibilityDrawer() {
     descreaseFontSizeFactor,
     toggleTheme,
     themeName,
+    outlineIsActive,
+    toggleOutline,
   } = useContext(ThemeContext);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -63,7 +65,12 @@ export default function AccessibilityDrawer() {
 
         <Box>
           <label>
-            <Switch edge="start" /> Moldura
+            <Switch
+              edge="start"
+              checked={outlineIsActive}
+              onClick={() => toggleOutline()}
+            />{" "}
+            Moldura
           </label>
         </Box>
 
