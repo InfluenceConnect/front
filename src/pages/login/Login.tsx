@@ -14,21 +14,36 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
+import CircularProgress from '@mui/material/CircularProgress';
+
+
 
 export default function SignInSide() {
   const navigate = useNavigate();
+
   const [changeLogin, setChangeLogin] = React.useState("Influencer");
+  const [loading, setLoading] = React.useState(false);
+
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true)
+    
+    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
+   setTimeout(() => { 
+   setLoading(false);
+}, 2000);
+
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+
+    console.log({email: data.get("email"), password: data.get("password"),
     });
+
   };
 
+  
   return (
-    // <ThemeProvider theme={defaultTheme}>
+
     <Grid
       container
       component="main"
@@ -95,9 +110,11 @@ export default function SignInSide() {
           <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
+
           <Typography component="h1" variant="h5" fontWeight={"bold"}>
             Login {changeLogin}
           </Typography>
+
           <Box
             component="form"
             noValidate
@@ -133,9 +150,12 @@ export default function SignInSide() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
             >
-              Login
+              {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
+             Login
             </Button>
+
             <Grid container>
               <Grid item xs>
                 <Link variant="body2">Esqueceu sua senha?</Link>
