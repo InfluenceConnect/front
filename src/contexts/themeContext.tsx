@@ -16,7 +16,7 @@ interface ThemeContextData {
   increaseFontSizeFactor: () => void;
   descreaseFontSizeFactor: () => void;
   setThemeName: (str: "light" | "dark") => void;
-  outlineIsActive: true | false
+  outlineIsActive: true | false;
   toggleOutline: () => void;
 }
 
@@ -99,19 +99,23 @@ const ThemeContextProvider: React.FC<any> = ({ children }) => {
       "subtitle2",
     ];
 
-    typographyTags.map((tag) => {
-      const tagFont = String(newTheme.typography[tag].fontSize);
+    const wantedTags = Object.entries(newTheme.typography)
+      .filter((arrObj) => {
+        if (typographyTags.includes(arrObj[0])) return true;
+      })
+      .map((e) => e[1]);
+
+    wantedTags.map((obj) => {
+      const tagFont = String(obj.fontSize);
       const number_tagFont = Number(
         tagFont.slice(
           0,
           tagFont.indexOf("rem") == 0 ? 10 : tagFont.indexOf("rem")
         )
       );
-
       console.log(number_tagFont, fontSizeFactor);
       const factor = number_tagFont + fontSizeFactor;
-
-      newTheme.typography[tag].fontSize = factor + "rem";
+      obj.fontSize = factor + "rem";
     });
 
     return newTheme;
@@ -124,7 +128,7 @@ const ThemeContextProvider: React.FC<any> = ({ children }) => {
     descreaseFontSizeFactor: descreaseFontSizeFactor,
     setThemeName: setThemeName,
     toggleOutline: toggleOutline,
-    outlineIsActive: outlineIsActive
+    outlineIsActive: outlineIsActive,
   };
 
   return (
