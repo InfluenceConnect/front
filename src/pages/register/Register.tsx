@@ -49,6 +49,8 @@ const states = [
 ];
 
 const Register: React.FC = () => {
+  const [loadingImage, setLoadingImage] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const [registerInfo, setRegisterInfo] = useState<any>({
     profilePicture: undefined,
@@ -56,12 +58,13 @@ const Register: React.FC = () => {
     role: "influencer",
     geoState: undefined,
   });
-  const [loading, setLoading] = React.useState(false);
+  
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setRegisterInfo({ ...registerInfo, profilePicture: file });
     if (file) {
+      setLoadingImage(true)
       const reader = new FileReader();
       reader.onloadend = () => {
         setRegisterInfo({ ...registerInfo, preview: reader.result as string });
@@ -70,15 +73,14 @@ const Register: React.FC = () => {
     } else {
       setRegisterInfo({ ...registerInfo, preview: undefined });
     }
+    
+      setLoadingImage(false);
+      
+  
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-     setLoading(true)
-    
-    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
-   setTimeout(() => { 
-   setLoading(false);
-}, 2000);
+ 
 
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -108,7 +110,17 @@ const Register: React.FC = () => {
 
     navigate(`/registerNiche${registerInfo.role}`)
   };
-
+  const handleNext = () => {
+     setLoading(true)
+    
+    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
+    setTimeout(() => { 
+      setLoading(false);
+      
+  }, 2000);
+    
+  }
+  
   return (
     <Container
       component="main"
@@ -165,12 +177,16 @@ const Register: React.FC = () => {
                 id="profilePicture"
                 type="file"
                 onChange={handlePictureChange}
+                
               />
-              <label htmlFor="profilePicture">
-                <Avatar
+              <label  htmlFor="profilePicture"   >
+                
+                  <Avatar
                   src={registerInfo.preview}
                   sx={{ width: 100, height: 100, cursor: "pointer" }}
+                  
                 />
+               {loadingImage && (<CircularProgress sx={{ position: 'absolute' }} />)}
               </label>
             </Grid>
 
@@ -286,7 +302,8 @@ const Register: React.FC = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             color="primary"
-            disabled={loading }
+            disabled={loading}
+            onClick={handleNext}
           >
             {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
             Cadastrar
