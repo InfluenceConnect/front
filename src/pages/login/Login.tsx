@@ -15,10 +15,13 @@ import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
 import CircularProgress from '@mui/material/CircularProgress';
+import { useContext } from "react";
+import { RegisterContext } from "../../contexts/registerContext";
 
 
 
 export default function SignInSide() {
+  const { typeUser, setTypeUser } = useContext(RegisterContext);
   const navigate = useNavigate();
 
   const [changeLogin, setChangeLogin] = React.useState("Influencer");
@@ -26,20 +29,31 @@ export default function SignInSide() {
 
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+     
     setLoading(true)
+   
     
     //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
-   setTimeout(() => { 
-   setLoading(false);
-}, 2000);
+    setTimeout(() => { 
+    setLoading(false);
+    }, 2000);
 
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
-    console.log({email: data.get("email"), password: data.get("password"),
+  
+    console.log({
+      email: data.get("email"), password: data.get("password"),
+      
     });
 
   };
+
+   const handleRegister = () => {
+    // Atualiza a string no contexto
+     setTypeUser(changeLogin);
+     navigate("/Register")
+  };
+
 
   
   return (
@@ -161,7 +175,7 @@ export default function SignInSide() {
                 <Link variant="body2">Esqueceu sua senha?</Link>
               </Grid>
               <Grid item>
-                <Link onClick={() => navigate("/Register")} variant="body2">
+                <Link onClick={handleRegister} variant="body2">
                   {"Não tem uma conta? Inscreva-se"}
                 </Link>
               </Grid>

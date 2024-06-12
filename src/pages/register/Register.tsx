@@ -1,4 +1,5 @@
 import * as React from "react";
+import  { useContext } from "react";
 import { useState, ForwardRefRenderFunction } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -16,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { IMaskInput } from "react-imask";
+import { RegisterContext } from "../../contexts/registerContext";
 
 interface CopyrightProps {
   sx?: object;
@@ -64,13 +66,14 @@ const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomPro
 };
 
 const Register: React.FC = () => {
+    const { typeUser} = useContext(RegisterContext);
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [accountType, setAccountType] = useState<string>("Influencer");
   const [state, setState] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+   
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setProfilePicture(file);
@@ -123,7 +126,7 @@ const Register: React.FC = () => {
       formErrors.password = "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     }
 
-    if (accountType === "Influencer") {
+    if ( typeUser=== "Influencer") {
       const cpf = data.get("cpf") as string;
       if (!validateCPF(cpf)) {
         formErrors.cpf = "CPF inválido";
@@ -138,7 +141,7 @@ const Register: React.FC = () => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      if (accountType === "Influencer") {
+      if (typeUser=== "Influencer") {
         console.log({
           profilePicture: data.get("profilePicture"),
           name: data.get("name"),
@@ -174,20 +177,7 @@ const Register: React.FC = () => {
         <Typography component="h1" variant="h4" fontWeight="bold">
           Influence Connect
         </Typography>
-        <ButtonGroup variant="contained" aria-label="Basic button group" sx={{ mb: 3, mt: 2 }}>
-          <Button
-            variant={accountType === "Influencer" ? "contained" : "outlined"}
-            onClick={() => setAccountType("Influencer")}
-          >
-            Influencer
-          </Button>
-          <Button
-            variant={accountType === "Empresa" ? "contained" : "outlined"}
-            onClick={() => setAccountType("Empresa")}
-          >
-            Empresa
-          </Button>
-        </ButtonGroup>
+       
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -205,7 +195,7 @@ const Register: React.FC = () => {
                 />
               </label>
             </Grid>
-            {accountType === "Influencer" ? (
+            {typeUser === "Influencer" ? (
               <>
                 <Grid item xs={12}>
                   <TextField
