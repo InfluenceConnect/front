@@ -3,7 +3,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useState,
+  useState, ReactNode
 } from "react";
 import { ThemeProvider } from "@emotion/react";
 import { Box } from "@mui/system";
@@ -22,7 +22,9 @@ interface ThemeContextData {
 
 const ThemeContext = createContext({} as ThemeContextData);
 
-const ThemeContextProvider: React.FC<any> = ({ children }) => {
+const ThemeContextProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const [themeName, setThemeName] = useState<"light" | "dark">(
