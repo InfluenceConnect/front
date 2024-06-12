@@ -10,45 +10,82 @@ import { ThemeProvider } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Facebook, Instagram, YouTube, Twitter, Language, AddLink } from '@mui/icons-material';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../../../contexts/themeContext'; 
 import { lightTheme, darkTheme } from '../../../themes/themes'; 
 import CircularProgress from '@mui/material/CircularProgress';
 
+type MarketingLinks = {
+  facebook: string;
+  instagram: string;
+  youtube: string;
+  tiktok: string;
+  twitter: string;
+  website: string;
+};
+
+type Errors = {
+  [key: string]: string;
+};
+
 export default function RegisterMarketing() {
-   const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const { themeName } = useContext(ThemeContext);
   const currentTheme = themeName === "light" ? lightTheme : darkTheme;
   const navigate = useNavigate();
+  const [errors, setErrors] = React.useState<Errors>({});
+  const [marketing, setMarketing] = React.useState<MarketingLinks>({
+    facebook: "",
+    instagram: "",
+    youtube: "",
+    tiktok: "",
+    twitter: "",
+    website: ""
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setMarketing((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      facebook: data.get('facebook'),
-      instagram: data.get('instagram'),
-      youtube: data.get('youtube'),
-      tiktok: data.get('tiktok'),
-      twitter: data.get('twitter'),
-      website: data.get('website'),
-    });
+    const newMarketing: MarketingLinks = {
+      facebook: data.get("facebook") as string,
+      instagram: data.get("instagram") as string,
+      youtube: data.get("youtube") as string,
+      tiktok: data.get("tiktok") as string,
+      twitter: data.get("twitter") as string,
+      website: data.get("website") as string
+    };
+    setMarketing(newMarketing);
+
+    const formErrors: Errors = {};
+    const isValid = Object.values(newMarketing).some((value) => value !== "");
+
+    if (!isValid) {
+      formErrors.general = "Preencha pelo menos 1 dos campos para prosseguir.";
+    }
+
+    if (Object.keys(formErrors).length === 0) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        navigate("/accountStatus");
+      }, 2000);
+    } else {
+      setErrors(formErrors);
+    }
   };
 
   const iconStyle = {
     color: themeName === "light" ? 'black' : 'white', 
-    fontSize: '1.5rem', // Ajuste do tamanho do ícone do TikTok para alinhar corretamente
+    fontSize: '1.5rem', 
   };
-  const handleNext = () => {
-     setLoading(true)
-    
-    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
-    setTimeout(() => { 
-      setLoading(false);
-      navigate("/accountStatus")
-  }, 2000);
-    
-  }
 
   return (
     <ThemeProvider theme={currentTheme}>
@@ -79,17 +116,25 @@ export default function RegisterMarketing() {
               width: '100%', 
             }}
           >
+            {errors.general && (
+              <Typography color="error" sx={{ mb: 2, textAlign: "center" }}>
+                {errors.general}
+              </Typography>
+            )}
             <Box display="flex" alignItems="center" mb={2}>
               <Facebook style={iconStyle} />
               <TextField
-                id="outlined-multiline-flexible"
+                id="facebook"
                 label="Facebook"
                 name="facebook"
                 fullWidth
-                required
                 multiline
                 maxRows={4}
                 sx={{ ml: 1 }}
+                value={marketing.facebook}
+                onChange={handleChange}
+                error={!!errors.facebook}
+                helperText={errors.facebook}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -102,14 +147,17 @@ export default function RegisterMarketing() {
             <Box display="flex" alignItems="center" mb={2}>
               <Instagram style={iconStyle} />
               <TextField
-                id="outlined-multiline-flexible"
+                id="instagram"
                 label="Instagram"
                 name="instagram"
                 fullWidth
-                required
                 multiline
                 maxRows={4}
                 sx={{ ml: 1 }}
+                value={marketing.instagram}
+                onChange={handleChange}
+                error={!!errors.instagram}
+                helperText={errors.instagram}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -122,14 +170,17 @@ export default function RegisterMarketing() {
             <Box display="flex" alignItems="center" mb={2}>
               <YouTube style={iconStyle} />
               <TextField
-                id="outlined-multiline-flexible"
+                id="youtube"
                 label="YouTube"
                 name="youtube"
                 fullWidth
-                required
                 multiline
                 maxRows={4}
                 sx={{ ml: 1 }}
+                value={marketing.youtube}
+                onChange={handleChange}
+                error={!!errors.youtube}
+                helperText={errors.youtube}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -142,14 +193,17 @@ export default function RegisterMarketing() {
             <Box display="flex" alignItems="center" mb={2}>
               <i className="bi bi-tiktok" style={iconStyle}></i> {/* Ícone do Bootstrap Icons */}
               <TextField
-                id="outlined-multiline-flexible"
+                id="tiktok"
                 label="TikTok"
                 name="tiktok"
                 fullWidth
-                required
                 multiline
                 maxRows={4}
                 sx={{ ml: 1 }}
+                value={marketing.tiktok}
+                onChange={handleChange}
+                error={!!errors.tiktok}
+                helperText={errors.tiktok}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -162,14 +216,17 @@ export default function RegisterMarketing() {
             <Box display="flex" alignItems="center" mb={2}>
               <Twitter style={iconStyle} />
               <TextField
-                id="outlined-multiline-flexible"
+                id="twitter"
                 label="Twitter"
                 name="twitter"
                 fullWidth
-                required
                 multiline
                 maxRows={4}
                 sx={{ ml: 1 }}
+                value={marketing.twitter}
+                onChange={handleChange}
+                error={!!errors.twitter}
+                helperText={errors.twitter}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -182,14 +239,17 @@ export default function RegisterMarketing() {
             <Box display="flex" alignItems="center" mb={2}>
               <Language style={iconStyle} />
               <TextField
-                id="outlined-multiline-flexible"
+                id="website"
                 label="Website"
                 name="website"
                 fullWidth
-                required
                 multiline
                 maxRows={4}
                 sx={{ ml: 1 }}
+                value={marketing.website}
+                onChange={handleChange}
+                error={!!errors.website}
+                helperText={errors.website}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -206,9 +266,8 @@ export default function RegisterMarketing() {
               color="primary"
               sx={{ mt: 3, mb: 2 }}
               disabled={loading}
-              onClick={handleNext}
-            > 
-               {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
+            >
+              {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
               Avançar
             </Button>
           </Box>

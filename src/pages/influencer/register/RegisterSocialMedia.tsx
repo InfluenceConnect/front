@@ -18,35 +18,72 @@ import { Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 
+// Definição dos tipos para o estado e os erros
+type SocialMediaLinks = {
+  facebook: string;
+  instagram: string;
+  youtube: string;
+  tiktok: string;
+  twitter: string;
+};
+
+type Errors = {
+  [key: string]: string;
+};
+
 export default function RegisterSocialMedia() {
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
+  const [errors, setErrors] = React.useState<Errors>({});
+  const [socialMedia, setSocialMedia] = React.useState<SocialMediaLinks>({
+    facebook: "",
+    instagram: "",
+    youtube: "",
+    tiktok: "",
+    twitter: ""
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setSocialMedia((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      facebook: data.get("facebook"),
-      instagram: data.get("instagram"),
-      youtube: data.get("youtube"),
-      tiktok: data.get("tiktok"),
-      twitter: data.get("twitter"),
-    });
+    const newSocialMedia: SocialMediaLinks = {
+      facebook: data.get("facebook") as string,
+      instagram: data.get("instagram") as string,
+      youtube: data.get("youtube") as string,
+      tiktok: data.get("tiktok") as string,
+      twitter: data.get("twitter") as string
+    };
+    setSocialMedia(newSocialMedia);
+
+    const formErrors: Errors = {};
+    const isValid = Object.values(newSocialMedia).some((value) => value !== "");
+
+    if (!isValid) {
+      formErrors.general = "Preencha pelo menos 1 dos campos para prosseguir.";
+    }
+
+    if (Object.keys(formErrors).length === 0) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        navigate("/accountStatus");
+      }, 2000);
+    } else {
+      setErrors(formErrors);
+    }
   };
 
   const iconStyle = {
-    fontSize: "1.5rem", // Ajuste do tamanho do ícone do TikTok para alinhar corretamente
+    fontSize: "1.5rem",
   };
-
-    const handleNext = () => {
-     setLoading(true)
-    
-    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
-    setTimeout(() => { 
-      setLoading(false);
-      navigate("/accountStatus")
-  }, 2000);
-    
-  }
 
   return (
     <Container
@@ -86,17 +123,25 @@ export default function RegisterSocialMedia() {
             width: "100%",
           }}
         >
+          {errors.general && (
+            <Typography color="error" sx={{ mb: 2, textAlign: "center" }}>
+              {errors.general}
+            </Typography>
+          )}
           <Box display="flex" alignItems="center" mb={2}>
             <Facebook style={iconStyle} />
             <TextField
-              id="outlined-multiline-flexible"
+              id="facebook"
               label="Facebook"
               name="facebook"
               fullWidth
-              required
               multiline
               maxRows={4}
               sx={{ ml: 1 }}
+              value={socialMedia.facebook}
+              onChange={handleChange}
+              error={!!errors.facebook}
+              helperText={errors.facebook}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -109,14 +154,17 @@ export default function RegisterSocialMedia() {
           <Box display="flex" alignItems="center" mb={2}>
             <Instagram style={iconStyle} />
             <TextField
-              id="outlined-multiline-flexible"
+              id="instagram"
               label="Instagram"
               name="instagram"
               fullWidth
-              required
               multiline
               maxRows={4}
               sx={{ ml: 1 }}
+              value={socialMedia.instagram}
+              onChange={handleChange}
+              error={!!errors.instagram}
+              helperText={errors.instagram}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -129,14 +177,17 @@ export default function RegisterSocialMedia() {
           <Box display="flex" alignItems="center" mb={2}>
             <YouTube style={iconStyle} />
             <TextField
-              id="outlined-multiline-flexible"
+              id="youtube"
               label="YouTube"
               name="youtube"
               fullWidth
-              required
               multiline
               maxRows={4}
               sx={{ ml: 1 }}
+              value={socialMedia.youtube}
+              onChange={handleChange}
+              error={!!errors.youtube}
+              helperText={errors.youtube}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -147,17 +198,19 @@ export default function RegisterSocialMedia() {
             />
           </Box>
           <Box display="flex" alignItems="center" mb={2}>
-            <i className="bi bi-tiktok" style={iconStyle}></i>{" "}
-            {/* Ícone do Bootstrap Icons */}
+            <i className="bi bi-tiktok" style={iconStyle}></i>
             <TextField
-              id="outlined-multiline-flexible"
+              id="tiktok"
               label="TikTok"
               name="tiktok"
               fullWidth
-              required
               multiline
               maxRows={4}
               sx={{ ml: 1 }}
+              value={socialMedia.tiktok}
+              onChange={handleChange}
+              error={!!errors.tiktok}
+              helperText={errors.tiktok}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -170,14 +223,17 @@ export default function RegisterSocialMedia() {
           <Box display="flex" alignItems="center" mb={2}>
             <Twitter style={iconStyle} />
             <TextField
-              id="outlined-multiline-flexible"
+              id="twitter"
               label="Twitter"
               name="twitter"
               fullWidth
-              required
               multiline
               maxRows={4}
               sx={{ ml: 1 }}
+              value={socialMedia.twitter}
+              onChange={handleChange}
+              error={!!errors.twitter}
+              helperText={errors.twitter}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -194,7 +250,6 @@ export default function RegisterSocialMedia() {
             color="primary"
             sx={{ mt: 3, mb: 2 }}
             disabled={loading}
-            onClick={handleNext}
           >
             {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
             Avançar
