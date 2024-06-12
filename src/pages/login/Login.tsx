@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -21,6 +22,7 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { RegisterContext } from "../../contexts/registerContext";
 
 export default function SignInSide() {
   const navigate = useNavigate();
@@ -31,6 +33,7 @@ export default function SignInSide() {
   const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success"); // Tipando corretamente
   const [alertMessage, setAlertMessage] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
+    const { setTypeUser } = useContext(RegisterContext);
 
   const handleCloseSnackbar = (
     event?: React.SyntheticEvent | Event,
@@ -84,7 +87,10 @@ export default function SignInSide() {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
+  const handleTypeUser = () => {
+    setTypeUser(changeLogin)
+    navigate('/Register')
+  }
   return (
     <Grid
       container
@@ -212,7 +218,7 @@ export default function SignInSide() {
                 <Link variant="body2">Esqueceu sua senha?</Link>
               </Grid>
               <Grid item>
-                <Link onClick={() => navigate("/Register")} variant="body2">
+                <Link onClick={handleTypeUser} variant="body2">
                   {"Não tem uma conta? Inscreva-se"}
                 </Link>
               </Grid>

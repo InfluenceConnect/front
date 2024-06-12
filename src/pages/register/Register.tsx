@@ -97,7 +97,8 @@ const Register: React.FC = () => {
     return re.test(password);
   };
 
-  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    
     setLoading(true);
     setTimeout(() => {  // somente para nao entrar em loop retir apos implementar API
       setLoading(false);
@@ -165,6 +166,7 @@ const Register: React.FC = () => {
 
 
   };
+ 
 
   return (
     <Container component="main" maxWidth="xs">
