@@ -18,23 +18,7 @@ import InputLabel from "@mui/material/InputLabel";
 import { IMaskInput } from "react-imask";
 import { RegisterContext } from "../../contexts/registerContext";
 import CircularProgress from '@mui/material/CircularProgress';
-
-interface CopyrightProps {
-  sx?: object;
-}
-
-function Copyright(props: CopyrightProps) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Seu Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import verifyEmailIsAvailable from "../../services/register";
 
 const states = [
   "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal",
@@ -113,7 +97,7 @@ const Register: React.FC = () => {
     return re.test(password);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     setTimeout(() => {  // somente para nao entrar em loop retir apos implementar API
       setLoading(false);
@@ -127,9 +111,14 @@ const Register: React.FC = () => {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
+    const isAvailableEmailAtAPI = await verifyEmailIsAvailable(email)
+    console.log(isAvailableEmailAtAPI)
+
+    
     if (!validateEmail(email)) {
       formErrors.email = "E-mail inválido";
-    }
+    } 
+    else if(!isAvailableEmailAtAPI) formErrors.email= "E-mail já está cadastrado."
 
     if (!validatePassword(password)) {
       formErrors.password = "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
@@ -148,6 +137,8 @@ const Register: React.FC = () => {
     }
 
     setErrors(formErrors);
+
+    
 
     if (Object.keys(formErrors).length === 0) {
       if (typeUser === "Influencer") {
@@ -170,6 +161,9 @@ const Register: React.FC = () => {
         });
       }
     }
+
+
+
   };
 
   return (
@@ -352,7 +346,6 @@ const Register: React.FC = () => {
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 5 }} />
     </Container>
   );
 };
