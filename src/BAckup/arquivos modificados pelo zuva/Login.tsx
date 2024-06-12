@@ -14,78 +14,50 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
-import CircularProgress from "@mui/material/CircularProgress";
-import Snackbar from "@mui/material/Snackbar";
-import Alert, { AlertColor } from "@mui/material/Alert"; // Importando AlertColor
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import CircularProgress from '@mui/material/CircularProgress';
+import { useContext } from "react";
+import { RegisterContext } from "../../contexts/registerContext";
+
+
 
 export default function SignInSide() {
+  const { typeUser, setTypeUser } = useContext(RegisterContext);
   const navigate = useNavigate();
 
   const [changeLogin, setChangeLogin] = React.useState("Influencer");
   const [loading, setLoading] = React.useState(false);
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success"); // Tipando corretamente
-  const [alertMessage, setAlertMessage] = React.useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleCloseSnackbar = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnackbar(false);
-  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-
-    const data = new FormData(event.currentTarget);
-    const email = data.get("email") as string;
-    const password = data.get("password") as string;
-
-    // Simulando o carregamento para evitar loading infinito
-    setTimeout(() => {
-      setLoading(false);
-
-      // Validação do email e senha
-      if (!email.includes("@")) {
-        setAlertSeverity("error");
-        setAlertMessage("O email deve conter o caractere '@'.");
-        setOpenSnackbar(true);
-        return;
-      }
-
-      if (password.length < 8) {
-        setAlertSeverity("error");
-        setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
-        setOpenSnackbar(true);
-        return;
-      }
-
-      // Sucesso
-      setAlertSeverity("success");
-      setAlertMessage("Login feito com sucesso!");
-      setOpenSnackbar(true);
-
-      console.log({
-        email: email,
-        password: password,
-      });
+     
+    setLoading(true)
+   
+    
+    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
+    setTimeout(() => { 
+    setLoading(false);
     }, 2000);
+
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+  
+    console.log({
+      email: data.get("email"), password: data.get("password"),
+      
+    });
+
   };
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
+   const handleRegister = () => {
+    // Atualiza a string no contexto
+     setTypeUser(changeLogin);
+     navigate("/Register")
   };
 
+
+  
   return (
+
     <Grid
       container
       component="main"
@@ -121,7 +93,7 @@ export default function SignInSide() {
         square
         display={"flex"}
         sx={{
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         <Box
@@ -157,7 +129,12 @@ export default function SignInSide() {
             Login {changeLogin}
           </Typography>
 
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -174,23 +151,9 @@ export default function SignInSide() {
               fullWidth
               name="password"
               label="Digite sua senha"
-              type={showPassword ? "text" : "password"}
+              type="password"
               id="password"
               autoComplete="current-password"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                      sx={{ color: "primary.main" }} // Definindo a cor do ícone
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -203,8 +166,8 @@ export default function SignInSide() {
               sx={{ mt: 3, mb: 2 }}
               disabled={loading}
             >
-              {loading && <CircularProgress size={24} sx={{ position: 'absolute' }} />}
-              Login
+              {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
+             Login
             </Button>
 
             <Grid container>
@@ -212,7 +175,7 @@ export default function SignInSide() {
                 <Link variant="body2">Esqueceu sua senha?</Link>
               </Grid>
               <Grid item>
-                <Link onClick={() => navigate("/Register")} variant="body2">
+                <Link onClick={handleRegister} variant="body2">
                   {"Não tem uma conta? Inscreva-se"}
                 </Link>
               </Grid>
@@ -220,16 +183,6 @@ export default function SignInSide() {
           </Box>
         </Box>
       </Grid>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert onClose={handleCloseSnackbar} severity={alertSeverity} sx={{ width: '100%' }}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
     </Grid>
   );
 }
