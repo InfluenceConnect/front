@@ -1,9 +1,8 @@
 import * as React from "react";
-import  { useContext } from "react";
+import { useContext } from "react";
 import { useState, ForwardRefRenderFunction } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
@@ -19,7 +18,6 @@ import InputLabel from "@mui/material/InputLabel";
 import { IMaskInput } from "react-imask";
 import { RegisterContext } from "../../contexts/registerContext";
 import CircularProgress from '@mui/material/CircularProgress';
-import { FormatAlignJustify } from "@mui/icons-material";
 
 interface CopyrightProps {
   sx?: object;
@@ -68,24 +66,23 @@ const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomPro
 };
 
 const Register: React.FC = () => {
-  const { typeUser} = useContext(RegisterContext);
+  const { typeUser } = useContext(RegisterContext);
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
- 
   const [state, setState] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = React.useState(false);
-   const [loadingImage, setLoadingImage] = React.useState(false);
-   
+  const [loadingImage, setLoadingImage] = React.useState(false);
+  
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setProfilePicture(file);
     if (file) {
-      setLoadingImage(true)
-      setTimeout(() => {  // somente para nao entrar em loop retir apos implementar API
-    setLoadingImage(false);
-    }, 2000);
+      setLoadingImage(true);
+      setTimeout(() => {  // somente para nao entrar em loop retirar apos implementar API
+        setLoadingImage(false);
+      }, 2000);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
@@ -94,7 +91,6 @@ const Register: React.FC = () => {
     } else {
       setPreview(null);
     }
-    
   };
 
   const validateEmail = (email: string) => {
@@ -118,10 +114,9 @@ const Register: React.FC = () => {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true)
-    
+    setLoading(true);
     setTimeout(() => {  // somente para nao entrar em loop retir apos implementar API
-    setLoading(false);
+      setLoading(false);
     }, 500);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -133,16 +128,14 @@ const Register: React.FC = () => {
     const password = data.get("password") as string;
 
     if (!validateEmail(email)) {
-     
       formErrors.email = "E-mail inválido";
-
     }
 
     if (!validatePassword(password)) {
       formErrors.password = "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     }
 
-    if ( typeUser=== "Influencer") {
+    if (typeUser === "Influencer") {
       const cpf = data.get("cpf") as string;
       if (!validateCPF(cpf)) {
         formErrors.cpf = "CPF inválido";
@@ -157,7 +150,7 @@ const Register: React.FC = () => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      if (typeUser=== "Influencer") {
+      if (typeUser === "Influencer") {
         console.log({
           profilePicture: data.get("profilePicture"),
           name: data.get("name"),
@@ -196,26 +189,22 @@ const Register: React.FC = () => {
        
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', textAlign:"center"}}>
               <input
                 accept="image/*"
                 style={{ display: "none" }}
                 id="profilePicture"
                 type="file"
                 onChange={handlePictureChange}
-                
-               
+                disabled={loadingImage}
               />
-              <label htmlFor="profilePicture" style={{textAlign:'center'}}>
-                 
-                <Avatar
+              <label aria-disabled={ loadingImage} htmlFor="profilePicture" style={{textAlign:'center'}}>
+                {loadingImage? ( <div style={{ width: 100, height: 100 ,textAlign:'center' }}>
+                 {loadingImage && (<CircularProgress style={{justifyContent:'center'}}/>)}
+                </div>):(<Avatar 
                   src={preview || undefined}
-                  sx={{ width: 100, height: 100, cursor: 'pointer'}}
-                />
-                 {loadingImage && (<CircularProgress style={{justifyContent:'center', alignItems:'center'}}
-          
-         />)}
-              
+                  sx={{ width: 100, height: 100, cursor: 'pointer' }}
+                />)}
               </label>
             </Grid>
             {typeUser === "Influencer" ? (
@@ -272,7 +261,7 @@ const Register: React.FC = () => {
                     name="email"
                     autoComplete="email"
                     error={!!errors.email}
-                                       helperText={errors.email}
+                    helperText={errors.email}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -369,6 +358,3 @@ const Register: React.FC = () => {
 };
 
 export default Register;
-
-
-
