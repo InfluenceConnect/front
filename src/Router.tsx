@@ -6,17 +6,13 @@ import Footer from "./components/Footer";
 import AccessibilityBar from "./components/AccessibilityBar";
 import RegisterNicheCompany from "./pages/company/register/RegisterNiche";
 import AccessibilityDrawer from "./components/AccessibilityDrawer";
-import RegisterSocialMedia from "./pages/influencer/register/RegisterSocialMedia";
-import RegisterMarketing from "./pages/company/register/RegisterSocialMedia";
+import RegisterSocialMedia from "./pages/influencer/register/RegisterSocialMedia"
+import RegisterMarketing from "./pages/company/register/RegisterSocialMedia"
 
 import { Container, CssBaseline } from "@mui/material";
 import Register from "./pages/Register/Register";
 import RegisterNicheInfluencer from "./pages/influencer/register/RegisterNiche";
 import AccountStatus from './pages/login/AccountStatus';
-
-
-import HomePageInfluencer from './pages/influencer/HomePageInfluencer';
-import HomePageCompany from './pages/company/HomePageCompany';
 
 const Router = () => {
   return (
@@ -25,18 +21,15 @@ const Router = () => {
       <AccessibilityBar />
       <Header />
       <AccessibilityDrawer />
-      <Container maxWidth='xl' sx={{ minHeight: "69vh" }}>
+      <Container maxWidth = 'xl' sx={{minHeight: "69vh"}}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/registerNicheCompany" element={<RegisterNicheCompany />} />
-          <Route path="/registerNicheInfluencer" element={<RegisterNicheInfluencer />} />
-          <Route path="/registerSocialMedia" element={<RegisterSocialMedia />} />
+          <Route path="/registerNicheCompany"element={<RegisterNicheCompany />}/>
+          <Route path="/registerNicheInfluencer"element={<RegisterNicheInfluencer />}/>
+          <Route path="/registerSocialMedia" element={<RegisterSocialMedia/>} />
           <Route path="/registerMarketing" element={<RegisterMarketing />} />
           <Route path="/accountStatus" element={<AccountStatus />} />
-          {/* Novas rotas */}
-          <Route path="/influencer/home" element={<HomePageInfluencer />} />
-          <Route path="/company/home" element={<HomePageCompany />} />
           <Route path="*" element={<h1>not found</h1>} />
         </Routes>
       </Container>
