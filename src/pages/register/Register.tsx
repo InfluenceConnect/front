@@ -16,6 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { IMaskInput } from "react-imask";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import { RegisterContext } from "../../contexts/registerContext";
 import CircularProgress from '@mui/material/CircularProgress';
 import verifyEmailIsAvailable from "../../services/register";
@@ -50,7 +51,7 @@ const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomPro
 };
 
 const Register: React.FC = () => {
-  const { typeUser } = useContext(RegisterContext);
+  const { typeUser,setTypeUser } = useContext(RegisterContext);
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -58,6 +59,7 @@ const Register: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = React.useState(false);
   const [loadingImage, setLoadingImage] = React.useState(false);
+  const [changeLogin, setChangeLogin] = React.useState("Influencer");
   
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -179,9 +181,25 @@ const Register: React.FC = () => {
           alignItems: "center",
         }}
       >
+
+       
         <Typography component="h1" variant="h4" fontWeight="bold">
           Influence Connect
         </Typography>
+         <ButtonGroup variant="contained" aria-label="Basic button group">
+            <Button
+              variant={typeUser === "Influencer" ? "contained" : "outlined"}
+              onClick={() => setTypeUser("Influencer")}
+            >
+              Influencer
+            </Button>
+            <Button
+              variant={typeUser === "Empresa" ? "contained" : "outlined"}
+              onClick={() => setTypeUser("Empresa")}
+            >
+              Empresa
+            </Button>
+          </ButtonGroup>
        
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
