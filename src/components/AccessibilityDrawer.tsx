@@ -52,15 +52,25 @@ export default function AccessibilityDrawer() {
             fontWeight: "bold",
             alignSelf: "flex-end",
           }}
+          aria-label="Fechar drawer de acessibilidade"
         >
           X
         </Button>
 
         <ButtonGroup>
-          <Button variant="contained" onClick={() => descreaseFontSizeFactor()}>
+          <Button
+            variant="contained"
+            onClick={() => descreaseFontSizeFactor()}
+            aria-label="Diminuir tamanho da fonte"
+          >
             <strong>-A</strong>
           </Button>
-          <Button onClick={() => increaseFontSizeFactor()}>+A</Button>
+          <Button
+            onClick={() => increaseFontSizeFactor()}
+            aria-label="Aumentar tamanho da fonte"
+          >
+            +A
+          </Button>
         </ButtonGroup>
 
         <Box>
@@ -69,6 +79,7 @@ export default function AccessibilityDrawer() {
               edge="start"
               checked={outlineIsActive}
               onClick={() => toggleOutline()}
+              aria-label="Ativar ou desativar "
             />{" "}
             Moldura
           </label>
@@ -78,10 +89,11 @@ export default function AccessibilityDrawer() {
           <label>
             <DarkModeSwitch
               edge="start"
-              checked={themeName == "light" ? false : true}
+              checked={themeName === "light" ? false : true}
               onClick={() => toggleTheme()}
+              aria-label=" Ativar ou desativar "
             />
-            Modo
+            Tema escuro
           </label>
         </Box>
       </Box>
@@ -89,7 +101,15 @@ export default function AccessibilityDrawer() {
   );
 
   return (
-    <div style={{ position: "fixed", top: "50%", transform: "translateY(-50%)", left: "1%", zIndex: "1" }} >
+    <div
+      style={{
+        position: "fixed",
+        top: "50%",
+        transform: "translateY(-50%)",
+        left: "1%",
+        zIndex: "1",
+      }}
+    >
       <Button
         onClick={toggleDrawer(true)}
         variant="contained"
@@ -105,8 +125,9 @@ export default function AccessibilityDrawer() {
           minWidth: "0px",
           p: 0,
         }}
+        aria-label="Abrir drawer de acessibilidade"
       >
-        <AccessibilityIcon sx={{fontSize: "28px"}} />
+        <AccessibilityIcon sx={{ fontSize: "28px" }} />
       </Button>
       <Drawer
         open={open}
@@ -119,6 +140,7 @@ export default function AccessibilityDrawer() {
             setOpen(false);
           }
         }}
+        aria-label="Drawer de acessibilidade"
       >
         {DrawerContent}
       </Drawer>

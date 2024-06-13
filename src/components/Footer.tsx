@@ -3,9 +3,6 @@ import {
   Link,
   Container,
   Box,
-  List,
-  ListItem,
-  ListItemText,
 } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -15,7 +12,7 @@ function Copyright() {
   return (
     <Typography variant="body2" mt={1}>
       {"Copyright © "}
-      <Link tabIndex={0} href="https://mui.com/">Influnece Connect&nbsp;</Link>
+      <Link tabIndex={-1} href="https://mui.com/">Influence Connect&nbsp;</Link>
       {new Date().getFullYear()}
     </Typography>
   );
@@ -40,14 +37,13 @@ const Footer = () => {
             >
               Influence Connect
             </Typography>
-            <Typography variant="body2" textAlign={"justify"}>
+            <Typography variant="body2" textAlign={"justify"} >
               Conecta empresas e influenciadores, otimiza campanhas em mídias
               sociais, oferece eficiência e controle total.
             </Typography>
           </Box>
 
-          <Box display={"flex"} flexDirection={"column"}
-          sx={{ minWidth: "12rem"}}>
+          <Box display={"flex"} flexDirection={"column"} sx={{ minWidth: "12rem" }}>
             <Typography
               sx={{
                 fontSize: "1.1rem",
@@ -58,33 +54,15 @@ const Footer = () => {
             >
               Links
             </Typography>
-            <List sx={{ width: "100%", p: 0 }}>
-              <Link tabIndex={0} sx={{ textDecoration: "none" }}>
-                <ListItem
-                  disablePadding
-                  sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-                >
-                  <ListItemText primary="Sobre" />
-                </ListItem>
-              </Link>
-              <Link tabIndex={0}>
-                <ListItem
-                  disablePadding
-                  sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-                >
-                  <ListItemText primary="Política de Privacidade"/>
-                </ListItem>
-              </Link>
-              <Link tabIndex={0}>
-                <ListItem
-                  disablePadding
-                  sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-                >
-
-                  <ListItemText primary="Whatsapp" />
-                </ListItem>
-              </Link>
-            </List>
+            <Link tabIndex={0} sx={{ textDecoration: "none", display: "block", marginBottom: "0.5rem" }}>
+              Sobre
+            </Link>
+            <Link tabIndex={0} sx={{ textDecoration: "none", display: "block", marginBottom: "0.5rem" }}>
+              Política de Privacidade
+            </Link>
+            <Link tabIndex={0} sx={{ textDecoration: "none", display: "block" }}>
+              Whatsapp
+            </Link>
           </Box>
 
           <Box display={"flex"} flexDirection={"column"}>
@@ -98,40 +76,22 @@ const Footer = () => {
             >
               Contatos
             </Typography>
-            <List sx={{ maxWidth: 360, p: 0 }}>
-              <Link tabIndex={0} sx={{ textDecoration: "none" }}>
-                <ListItem
-                  disablePadding
-                  sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-                >
-                  <HelpIcon />
-                  <ListItemText primary="Suporte" />
-                </ListItem>
-              </Link>
-              <Link tabIndex={0}>
-                <ListItem
-                  disablePadding
-                  sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-                >
-                  <FacebookIcon />
-                  <ListItemText primary="Facebook" />
-                </ListItem>
-              </Link>
-              <Link tabIndex={0}>
-                <ListItem
-                  disablePadding
-                  sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-                >
-                  <WhatsAppIcon />
-
-                  <ListItemText primary="Whatsapp" />
-                </ListItem>
-              </Link>
-            </List>
+            <Link tabIndex={0} sx={{ textDecoration: "none", display: "flex", alignItems: "center", marginBottom: "0.5rem", gap: "0.5rem" }}>
+              <HelpIcon />
+              Suporte
+            </Link>
+            <Link tabIndex={0} sx={{ textDecoration: "none", display: "flex", alignItems: "center", marginBottom: "0.5rem", gap: "0.5rem" }}>
+              <FacebookIcon />
+              Facebook
+            </Link>
+            <Link tabIndex={0} sx={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <WhatsAppIcon />
+              Whatsapp
+            </Link>
           </Box>
         </Box>
 
-        <Box display={"flex"} alignItems={"center"} justifyContent={"center"} marginTop={"2rem"}>
+        <Box  display={"flex"} alignItems={"center"} justifyContent={"center"} marginTop={"2rem"} >
           <Copyright />
         </Box>
       </Container>

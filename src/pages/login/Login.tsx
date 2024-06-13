@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
-import Alert, { AlertColor } from "@mui/material/Alert"; // Importando AlertColor
+import Alert, { AlertColor } from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
@@ -30,10 +30,10 @@ export default function SignInSide() {
   const [changeLogin, setChangeLogin] = React.useState("Influencer");
   const [loading, setLoading] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success"); // Tipando corretamente
+  const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success");
   const [alertMessage, setAlertMessage] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
-    const { setTypeUser } = useContext(RegisterContext);
+  const { setTypeUser } = useContext(RegisterContext);
 
   const handleCloseSnackbar = (
     event?: React.SyntheticEvent | Event,
@@ -53,11 +53,9 @@ export default function SignInSide() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    // Simulando o carregamento para evitar loading infinito
     setTimeout(() => {
       setLoading(false);
 
-      // Validação do email e senha
       if (!email.includes("@")) {
         setAlertSeverity("error");
         setAlertMessage("O email deve conter o caractere '@'.");
@@ -72,7 +70,6 @@ export default function SignInSide() {
         return;
       }
 
-      // Sucesso
       setAlertSeverity("success");
       setAlertMessage("Login feito com sucesso!");
       setOpenSnackbar(true);
@@ -87,10 +84,12 @@ export default function SignInSide() {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
   const handleTypeUser = () => {
-    setTypeUser(changeLogin)
-    navigate('/Register')
-  }
+    setTypeUser(changeLogin);
+    navigate('/Register');
+  };
+
   return (
     <Grid
       container
@@ -140,16 +139,18 @@ export default function SignInSide() {
             gap: "2rem",
           }}
         >
-          <ButtonGroup variant="contained" aria-label="Basic button group">
+          <ButtonGroup variant="contained">
             <Button
               variant={changeLogin === "Influencer" ? "contained" : "outlined"}
               onClick={() => setChangeLogin("Influencer")}
+              aria-label="selecionar influenciador"
             >
               Influencer
             </Button>
             <Button
               variant={changeLogin === "Empresa" ? "contained" : "outlined"}
               onClick={() => setChangeLogin("Empresa")}
+              aria-label="selecionar empresa"
             >
               Empresa
             </Button>
@@ -187,10 +188,11 @@ export default function SignInSide() {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label="toggle password visibility"
+                      aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                      aria-pressed={showPassword ? "true" : "false"}
                       onClick={handleClickShowPassword}
                       edge="end"
-                      sx={{ color: "primary.main" }} // Definindo a cor do ícone
+                      sx={{ color: "primary.main" }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -199,7 +201,15 @@ export default function SignInSide() {
               }}
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox
+                  value="remember"
+                  color="primary"
+                  inputProps={{
+                    "aria-label": "Lembrar-me",
+                  }}
+                />
+              }
               label="Lembrar me"
             />
             <Button
@@ -208,6 +218,7 @@ export default function SignInSide() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               disabled={loading}
+              aria-label="Fazer login"
             >
               {loading && <CircularProgress size={24} sx={{ position: 'absolute' }} />}
               Login
@@ -215,10 +226,12 @@ export default function SignInSide() {
 
             <Grid container>
               <Grid item xs>
-                <Link variant="body2">Esqueceu sua senha?</Link>
+                <Link variant="body2" aria-label="Esqueceu sua senha?" tabIndex={0}>
+                  Esqueceu sua senha?
+                </Link>
               </Grid>
               <Grid item>
-                <Link onClick={handleTypeUser} variant="body2">
+                <Link onClick={handleTypeUser} variant="body2" aria-label="Criar uma nova conta" tabIndex={0}>
                   {"Não tem uma conta? Inscreva-se"}
                 </Link>
               </Grid>
