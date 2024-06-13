@@ -13,6 +13,8 @@ import Register from "./pages/register/Register";
 import RegisterNicheInfluencer from "./pages/influencer/register/RegisterNiche";
 import AccountStatus from './pages/login/AccountStatus';
 import NotFound from "./pages/not_found";
+import HomePageInfluencer from "./pages/influencer/HomePageInfluencer"; 
+import HomePageCompany from "./pages/company/HomePageCompany"; 
 
 const Router = () => {
   return (
@@ -20,7 +22,7 @@ const Router = () => {
       <CssBaseline /> {/* O CSS RESET DO MUI */}
       <AccessibilityDrawer />
       <Header />
-      <Container maxWidth = 'xl' sx={{minHeight: "69vh", paddingLeft: "0", paddingRight: "0"}}>
+      <Container maxWidth='xl' sx={{minHeight: "69vh", paddingLeft: "0", paddingRight: "0"}}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -30,6 +32,8 @@ const Router = () => {
           <Route path="/registerSocialMedia" element={<RegisterSocialMedia/>} />
           <Route path="/registerMarketing" element={<RegisterMarketing />} />
           <Route path="/accountStatus" element={<AccountStatus />} />
+          <Route path="/homeInfluencer" element={<HomePageInfluencer />} /> 
+          <Route path="/homeCompany" element={<HomePageCompany />} /> 
           <Route path="*" element={<NotFound/>} />
         </Routes>
       </Container>
