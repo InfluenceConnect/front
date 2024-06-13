@@ -16,9 +16,8 @@ import {
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
-// Definição dos tipos para o estado e os erros
 type SocialMediaLinks = {
   facebook: string;
   instagram: string;
@@ -40,15 +39,36 @@ export default function RegisterSocialMedia() {
     instagram: "",
     youtube: "",
     tiktok: "",
-    twitter: ""
+    twitter: "",
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setSocialMedia((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
+  };
+
+  const isValidURL = (url: string): boolean => {
+    const pattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,}([/?].*)?$/;
+    return pattern.test(url);
+  };
+
+  const validateSocialMediaLinks = (links: SocialMediaLinks): Errors => {
+    let formErrors: Errors = {};
+
+    Object.entries(links).forEach(([key, value]) => {
+      if (value && !isValidURL(value)) {
+        formErrors[key] = `Informe um ${key} válido.`;
+      }
+    });
+
+    if (Object.values(links).every((value) => value === "")) {
+      formErrors.general = "Preencha pelo menos um dos campos para prosseguir.";
+    }
+
+    return formErrors;
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -59,16 +79,11 @@ export default function RegisterSocialMedia() {
       instagram: data.get("instagram") as string,
       youtube: data.get("youtube") as string,
       tiktok: data.get("tiktok") as string,
-      twitter: data.get("twitter") as string
+      twitter: data.get("twitter") as string,
     };
     setSocialMedia(newSocialMedia);
 
-    const formErrors: Errors = {};
-    const isValid = Object.values(newSocialMedia).some((value) => value !== "");
-
-    if (!isValid) {
-      formErrors.general = "Preencha pelo menos 1 dos campos para prosseguir.";
-    }
+    const formErrors = validateSocialMediaLinks(newSocialMedia);
 
     if (Object.keys(formErrors).length === 0) {
       setLoading(true);
@@ -81,168 +96,65 @@ export default function RegisterSocialMedia() {
     }
   };
 
-  const iconStyle = {
-    fontSize: "1.5rem",
-  };
-
   return (
-    <Container
-      component="main"
-      maxWidth="sm"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "70vh",
-        p: { xs: 0 },
-      }}
-    >
+    <Container component="main" maxWidth="md">
       <CssBaseline />
-      <Box
-        component={Paper}
-        elevation={0}
+      <Paper
+        elevation={3}
         sx={{
+          p: 2,
+          mt: 5,
+          mb: 5,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          width: { xs: "100vw" },
-          p: { xs: 2, sm: 4 },
         }}
       >
         <Typography component="h1" variant="h5">
-          Vincule suas Redes Sociais:
+          Cadastrar Redes Sociais
         </Typography>
         <Box
           component="form"
           onSubmit={handleSubmit}
           noValidate
-          sx={{
-            mt: 1,
-            p: 2,
-            borderRadius: "8px",
-            width: "100%",
-          }}
+          sx={{ mt: 1, width: "100%" }}
         >
           {errors.general && (
             <Typography color="error" sx={{ mb: 2, textAlign: "center" }}>
               {errors.general}
             </Typography>
           )}
-          <Box display="flex" alignItems="center" mb={2}>
-            <Facebook style={iconStyle} />
-            <TextField
-              id="facebook"
-              label="Facebook"
-              name="facebook"
-              fullWidth
-              multiline
-              maxRows={4}
-              sx={{ ml: 1 }}
-              value={socialMedia.facebook}
-              onChange={handleChange}
-              error={!!errors.facebook}
-              helperText={errors.facebook}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AddLink />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-          <Box display="flex" alignItems="center" mb={2}>
-            <Instagram style={iconStyle} />
-            <TextField
-              id="instagram"
-              label="Instagram"
-              name="instagram"
-              fullWidth
-              multiline
-              maxRows={4}
-              sx={{ ml: 1 }}
-              value={socialMedia.instagram}
-              onChange={handleChange}
-              error={!!errors.instagram}
-              helperText={errors.instagram}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AddLink />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-          <Box display="flex" alignItems="center" mb={2}>
-            <YouTube style={iconStyle} />
-            <TextField
-              id="youtube"
-              label="YouTube"
-              name="youtube"
-              fullWidth
-              multiline
-              maxRows={4}
-              sx={{ ml: 1 }}
-              value={socialMedia.youtube}
-              onChange={handleChange}
-              error={!!errors.youtube}
-              helperText={errors.youtube}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AddLink />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-          <Box display="flex" alignItems="center" mb={2}>
-            <i className="bi bi-tiktok" style={iconStyle}></i>
-            <TextField
-              id="tiktok"
-              label="TikTok"
-              name="tiktok"
-              fullWidth
-              multiline
-              maxRows={4}
-              sx={{ ml: 1 }}
-              value={socialMedia.tiktok}
-              onChange={handleChange}
-              error={!!errors.tiktok}
-              helperText={errors.tiktok}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AddLink />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-          <Box display="flex" alignItems="center" mb={2}>
-            <Twitter style={iconStyle} />
-            <TextField
-              id="twitter"
-              label="Twitter"
-              name="twitter"
-              fullWidth
-              multiline
-              maxRows={4}
-              sx={{ ml: 1 }}
-              value={socialMedia.twitter}
-              onChange={handleChange}
-              error={!!errors.twitter}
-              helperText={errors.twitter}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <AddLink />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
+          {Object.keys(socialMedia).map((key) => (
+            <Box display="flex" alignItems="center" mb={2} key={key}>
+              {key === "facebook" && <Facebook sx={{ fontSize: 30 }} />}
+              {key === "instagram" && <Instagram sx={{ fontSize: 30 }} />}
+              {key === "youtube" && <YouTube sx={{ fontSize: 30 }} />}
+              {key === "tiktok" && (
+                <i className="bi bi-tiktok" style={{ fontSize: 30 }}></i>
+              )}
+              {key === "twitter" && <Twitter sx={{ fontSize: 30 }} />}
+              <TextField
+                id={key}
+                label={key.charAt(0).toUpperCase() + key.slice(1)}
+                name={key}
+                fullWidth
+                multiline
+                maxRows={4}
+                sx={{ ml: 1 }}
+                value={socialMedia[key as keyof SocialMediaLinks]}
+                onChange={handleChange}
+                error={!!errors[key]}
+                helperText={errors[key]}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AddLink />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Box>
+          ))}
           <Button
             type="submit"
             fullWidth
@@ -251,11 +163,11 @@ export default function RegisterSocialMedia() {
             sx={{ mt: 3, mb: 2 }}
             disabled={loading}
           >
-            {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
+            {loading && <CircularProgress sx={{ position: "absolute" }} />}
             Avançar
           </Button>
         </Box>
-      </Box>
+      </Paper>
     </Container>
   );
 }

@@ -51,6 +51,27 @@ export default function RegisterMarketing() {
     }));
   };
 
+  const isValidURL = (url: string): boolean => {
+    const pattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,}([/?].*)?$/;
+    return pattern.test(url);
+  };
+
+  const validateMarketingLinks = (links: MarketingLinks): Errors => {
+    let formErrors: Errors = {};
+
+    Object.entries(links).forEach(([key, value]) => {
+      if (value && !isValidURL(value)) {
+        formErrors[key] = `Informe um ${key} válido.`;
+      }
+    });
+
+    if (Object.values(links).every((value) => value === "")) {
+      formErrors.general = "Preencha pelo menos um dos campos para prosseguir.";
+    }
+
+    return formErrors;
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -64,12 +85,7 @@ export default function RegisterMarketing() {
     };
     setMarketing(newMarketing);
 
-    const formErrors: Errors = {};
-    const isValid = Object.values(newMarketing).some((value) => value !== "");
-
-    if (!isValid) {
-      formErrors.general = "Preencha pelo menos 1 dos campos para prosseguir.";
-    }
+    const formErrors = validateMarketingLinks(newMarketing);
 
     if (Object.keys(formErrors).length === 0) {
       setLoading(true);
@@ -83,18 +99,18 @@ export default function RegisterMarketing() {
   };
 
   const iconStyle = {
-    color: themeName === "light" ? 'black' : 'white', 
-    fontSize: '1.5rem', 
+    color: themeName === "light" ? 'black' : 'white',
+    fontSize: '1.5rem',
   };
 
   return (
     <ThemeProvider theme={currentTheme}>
-      <Container component="main" maxWidth="sm">
+      <Container component="main" maxWidth="md">
         <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
-            marginBottom: 3, 
+            marginBottom: 5,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -113,7 +129,7 @@ export default function RegisterMarketing() {
               borderRadius: '8px',
               backgroundColor: themeName === "light" ? '#fff' : '#424242',
               boxShadow: 3,
-              width: '100%', 
+              width: '100%',
             }}
           >
             {errors.general && (
@@ -121,144 +137,36 @@ export default function RegisterMarketing() {
                 {errors.general}
               </Typography>
             )}
-            <Box display="flex" alignItems="center" mb={2}>
-              <Facebook style={iconStyle} />
-              <TextField
-                id="facebook"
-                label="Facebook"
-                name="facebook"
-                fullWidth
-                multiline
-                maxRows={4}
-                sx={{ ml: 1 }}
-                value={marketing.facebook}
-                onChange={handleChange}
-                error={!!errors.facebook}
-                helperText={errors.facebook}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AddLink />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center" mb={2}>
-              <Instagram style={iconStyle} />
-              <TextField
-                id="instagram"
-                label="Instagram"
-                name="instagram"
-                fullWidth
-                multiline
-                maxRows={4}
-                sx={{ ml: 1 }}
-                value={marketing.instagram}
-                onChange={handleChange}
-                error={!!errors.instagram}
-                helperText={errors.instagram}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AddLink />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center" mb={2}>
-              <YouTube style={iconStyle} />
-              <TextField
-                id="youtube"
-                label="YouTube"
-                name="youtube"
-                fullWidth
-                multiline
-                maxRows={4}
-                sx={{ ml: 1 }}
-                value={marketing.youtube}
-                onChange={handleChange}
-                error={!!errors.youtube}
-                helperText={errors.youtube}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AddLink />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center" mb={2}>
-              <i className="bi bi-tiktok" style={iconStyle}></i> {/* Ícone do Bootstrap Icons */}
-              <TextField
-                id="tiktok"
-                label="TikTok"
-                name="tiktok"
-                fullWidth
-                multiline
-                maxRows={4}
-                sx={{ ml: 1 }}
-                value={marketing.tiktok}
-                onChange={handleChange}
-                error={!!errors.tiktok}
-                helperText={errors.tiktok}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AddLink />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center" mb={2}>
-              <Twitter style={iconStyle} />
-              <TextField
-                id="twitter"
-                label="Twitter"
-                name="twitter"
-                fullWidth
-                multiline
-                maxRows={4}
-                sx={{ ml: 1 }}
-                value={marketing.twitter}
-                onChange={handleChange}
-                error={!!errors.twitter}
-                helperText={errors.twitter}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AddLink />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center" mb={2}>
-              <Language style={iconStyle} />
-              <TextField
-                id="website"
-                label="Website"
-                name="website"
-                fullWidth
-                multiline
-                maxRows={4}
-                sx={{ ml: 1 }}
-                value={marketing.website}
-                onChange={handleChange}
-                error={!!errors.website}
-                helperText={errors.website}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AddLink />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
+            {Object.keys(marketing).map((key) => (
+              <Box display="flex" alignItems="center" mb={2} key={key}>
+                {key === "facebook" && <Facebook style={iconStyle} />}
+                {key === "instagram" && <Instagram style={iconStyle} />}
+                {key === "youtube" && <YouTube style={iconStyle} />}
+                {key === "tiktok" && <i className="bi bi-tiktok" style={iconStyle}></i>}
+                {key === "twitter" && <Twitter style={iconStyle} />}
+                {key === "website" && <Language style={iconStyle} />}
+                <TextField
+                  id={key}
+                  label={key.charAt(0).toUpperCase() + key.slice(1)}
+                  name={key}
+                  fullWidth
+                  multiline
+                  maxRows={4}
+                  sx={{ ml: 1 }}
+                  value={marketing[key as keyof MarketingLinks]}
+                  onChange={handleChange}
+                  error={!!errors[key]}
+                  helperText={errors[key]}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AddLink />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Box>
+            ))}
             <Button
               type="submit"
               fullWidth
