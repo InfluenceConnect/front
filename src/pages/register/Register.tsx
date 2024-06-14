@@ -114,14 +114,14 @@ const Register: React.FC = () => {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    const isAvailableEmailAtAPI = await verifyEmailIsAvailable(email)
-    console.log(isAvailableEmailAtAPI)
+    //const isAvailableEmailAtAPI = await verifyEmailIsAvailable(email)
+    //console.log(isAvailableEmailAtAPI)
 
     
     if (!validateEmail(email)) {
       formErrors.email = "E-mail inválido";
     } 
-    else if(!isAvailableEmailAtAPI) formErrors.email= "E-mail já está cadastrado."
+    //else if(!isAvailableEmailAtAPI) formErrors.email= "E-mail já está cadastrado."
 
     if (!validatePassword(password)) {
       formErrors.password = "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
