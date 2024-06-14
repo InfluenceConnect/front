@@ -8,7 +8,8 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
+import { RegisterContext } from "../../../contexts/registerContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -23,31 +24,33 @@ interface CheckboxOption {
   label: string;
 }
 
+const checkboxOptions: CheckboxOption[] = [
+  { name: "esporte", label: "Esportes" },
+  { name: "musica", label: "Música" },
+  { name: "moda", label: "Moda" },
+  { name: "saude-bem-estar", label: "Saúde e bem estar" },
+  { name: "negocios", label: "Negócios" },
+  { name: "design-interior", label: "Design de interiores" },
+  { name: "tecnologia", label: "Técnologia" },
+  { name: "fotografia", label: "Fotografia" },
+  { name: "culinaria", label: "Culinária" },
+  { name: "educacao", label: "Educação" },
+  { name: "games", label: "Games" },
+  { name: "sustentabilidade", label: "Sustentabilidade" },
+  { name: "automoveis", label: "Automóveis" },
+  { name: "viagens", label: "Viagens" },
+  { name: "pets", label: "Pets" },
+  { name: "vida", label: "Vida" },
+  { name: "politica-ativismo", label: "Política e Ativismo" },
+  { name: "outros", label: "Outros" },
+];
+
 function RegisterNicheInfluencer() {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
 
-  const checkboxOptions: CheckboxOption[] = [
-    { name: "esporte", label: "Esportes" },
-    { name: "musica", label: "Música" },
-    { name: "moda", label: "Moda" },
-    { name: "saude-bem-estar", label: "Saúde e bem estar" },
-    { name: "negocios", label: "Negócios" },
-    { name: "design-interior", label: "Design de interiores" },
-    { name: "tecnologia", label: "Técnologia" },
-    { name: "fotografia", label: "Fotografia" },
-    { name: "culinaria", label: "Culinária" },
-    { name: "educacao", label: "Educação" },
-    { name: "games", label: "Games" },
-    { name: "sustentabilidade", label: "Sustentabilidade" },
-    { name: "automoveis", label: "Automóveis" },
-    { name: "viagens", label: "Viagens" },
-    { name: "pets", label: "Pets" },
-    { name: "vida", label: "Vida" },
-    { name: "politica-ativismo", label: "Política e Ativismo" },
-    { name: "outros", label: "Outros" },
-  ];
+  const registerInfCtx = React.useContext(RegisterContext);
 
   const handleChange = (checkboxName: string) => {
     let selected: boolean = selectedCheckboxes.indexOf(checkboxName) != -1;
@@ -64,15 +67,22 @@ function RegisterNicheInfluencer() {
   };
 
   const handleNext = () => {
-     setLoading(true)
-    
-    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
-    setTimeout(() => { 
-      setLoading(false);
-      navigate("/registerSocialMedia")
-  }, 2000);
-    
-  }
+    setLoading(true);
+
+    const arrNicheIds = [];
+    for(let index in checkboxOptions){
+      if (selectedCheckboxes.includes(checkboxOptions[index].name))
+        arrNicheIds.push(Number(index) + 1);
+    }
+
+    registerInfCtx.setInfluencerData({
+      ...registerInfCtx.influencerData,
+      nicheIds: arrNicheIds,
+    });
+
+    setLoading(false);
+    navigate("/registerSocialMedia")
+  };
 
   return (
     <Box
@@ -131,12 +141,8 @@ function RegisterNicheInfluencer() {
       >
         {/* obs: Somente navegando sem passar os dados */}
 
-        <Button
-          variant="contained"
-          sx={{ width: "100%" }}
-          onClick={handleNext}
-        >
-          {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
+        <Button variant="contained" sx={{ width: "100%" }} onClick={handleNext}>
+          {loading && <CircularProgress sx={{ position: "absolute" }} />}
           Avançar
         </Button>
       </Stack>

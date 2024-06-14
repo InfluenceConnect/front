@@ -17,6 +17,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import { RegisterContext } from "../../../contexts/registerContext";
 
 type SocialMediaLinks = {
   facebook: string;
@@ -32,6 +33,7 @@ type Errors = {
 
 export default function RegisterSocialMedia() {
   const navigate = useNavigate();
+  const registerInfCtx = React.useContext(RegisterContext);
   const [loading, setLoading] = React.useState(false);
   const [errors, setErrors] = React.useState<Errors>({});
   const [socialMedia, setSocialMedia] = React.useState<SocialMediaLinks>({
@@ -51,7 +53,8 @@ export default function RegisterSocialMedia() {
   };
 
   const isValidURL = (url: string): boolean => {
-    const pattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,}([/?].*)?$/;
+    const pattern =
+      /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,}([/?].*)?$/;
     return pattern.test(url);
   };
 
@@ -87,10 +90,30 @@ export default function RegisterSocialMedia() {
 
     if (Object.keys(formErrors).length === 0) {
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/accountStatus");
-      }, 2000);
+
+      const socialMediaInfluencer = Object.entries(newSocialMedia)
+        .map((sm, index) => {
+          if (sm[1] != "" && sm[1] != null && sm[1] != undefined)
+            return { socialMediaId: index + 1, link: sm[1] };
+          else return undefined;
+        })
+        .filter((e) => e !== undefined) as InfluencerSocialMedia[];
+
+      registerInfCtx.setInfluencerData(() => {
+        const obj = {
+          ...registerInfCtx.influencerData,
+          influencerSocialMedia: socialMediaInfluencer,
+        };
+
+        console.log(obj);
+        return {
+          ...registerInfCtx.influencerData,
+          influencerSocialMedia: socialMediaInfluencer,
+        };
+      });
+
+      setLoading(false);
+      //navigate("/accountStatus");
     } else {
       setErrors(formErrors);
     }
