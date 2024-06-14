@@ -18,16 +18,38 @@ import InputLabel from "@mui/material/InputLabel";
 import { IMaskInput } from "react-imask";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { RegisterContext } from "../../contexts/registerContext";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import verifyEmailIsAvailable from "../../services/register";
 
 const states = [
-  "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal",
-  "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul",
-  "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí",
-  "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia",
-  "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins",
-  "Fora do País"
+  "Acre",
+  "Alagoas",
+  "Amapá",
+  "Amazonas",
+  "Bahia",
+  "Ceará",
+  "Distrito Federal",
+  "Espírito Santo",
+  "Goiás",
+  "Maranhão",
+  "Mato Grosso",
+  "Mato Grosso do Sul",
+  "Minas Gerais",
+  "Pará",
+  "Paraíba",
+  "Paraná",
+  "Pernambuco",
+  "Piauí",
+  "Rio de Janeiro",
+  "Rio Grande do Norte",
+  "Rio Grande do Sul",
+  "Rondônia",
+  "Roraima",
+  "Santa Catarina",
+  "São Paulo",
+  "Sergipe",
+  "Tocantins",
+  "Fora do País",
 ];
 
 interface TextMaskCustomProps {
@@ -35,23 +57,24 @@ interface TextMaskCustomProps {
   inputRef: (ref: HTMLInputElement | null) => void;
 }
 
-const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomProps> = (props) => {
-  const { mask, inputRef, ...other } = props;
+const TextMaskCustom: ForwardRefRenderFunction<
+  HTMLDivElement,
+  TextMaskCustomProps
+> = (props) => {
+  const { mask, ...other } = props;
   return (
     <IMaskInput
       {...other}
       mask={mask}
       definitions={{
-        '#': /[0-9]/,
+        "#": /[0-9]/,
       }}
-      inputRef={inputRef}
-      onAccept={(value: any) => inputRef(value)}
     />
   );
 };
 
 const Register: React.FC = () => {
-  const { typeUser,setTypeUser } = useContext(RegisterContext);
+  const { typeUser, setTypeUser } = useContext(RegisterContext);
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -59,21 +82,20 @@ const Register: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = React.useState(false);
   const [loadingImage, setLoadingImage] = React.useState(false);
-  const [changeLogin, setChangeLogin] = React.useState("Influencer");
-  
+
+  const registerInfCtx = useContext(RegisterContext);
+
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setProfilePicture(file);
     if (file) {
       setLoadingImage(true);
-      setTimeout(() => {  // somente para nao entrar em loop retirar apos implementar API
-        setLoadingImage(false);
-      }, 2000);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+      setLoadingImage(false);
     } else {
       setPreview(null);
     }
@@ -95,14 +117,15 @@ const Register: React.FC = () => {
   };
 
   const validatePassword = (password: string) => {
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const re =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return re.test(password);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    
     setLoading(true);
-    setTimeout(() => {  // somente para nao entrar em loop retir apos implementar API
+    setTimeout(() => {
+      // somente para nao entrar em loop retir apos implementar API
       setLoading(false);
     }, 500);
     event.preventDefault();
@@ -117,17 +140,17 @@ const Register: React.FC = () => {
     //const isAvailableEmailAtAPI = await verifyEmailIsAvailable(email)
     //console.log(isAvailableEmailAtAPI)
 
-    
     if (!validateEmail(email)) {
       formErrors.email = "E-mail inválido";
-    } 
+    }
     //else if(!isAvailableEmailAtAPI) formErrors.email= "E-mail já está cadastrado."
 
     if (!validatePassword(password)) {
-      formErrors.password = "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
+      formErrors.password =
+        "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     }
 
-    if (typeUser === "Influencer") {
+    if (typeUser === "influencer") {
       const cpf = data.get("cpf") as string;
       if (!validateCPF(cpf)) {
         formErrors.cpf = "CPF inválido";
@@ -141,10 +164,8 @@ const Register: React.FC = () => {
 
     setErrors(formErrors);
 
-    
-
     if (Object.keys(formErrors).length === 0) {
-      if (typeUser === "Influencer") {
+      if (typeUser === "influencer") {
         console.log({
           profilePicture: data.get("profilePicture"),
           name: data.get("name"),
@@ -153,6 +174,21 @@ const Register: React.FC = () => {
           email: data.get("email"),
           birthdate: data.get("birthdate"),
           password: data.get("password"),
+        });
+
+        registerInfCtx.setInfluencerData(() => {
+          const newInfluencerData = {
+            ...registerInfCtx.influencerData,
+            email: email,
+            password: password,
+            cpf: data.get("cpf") as string,
+            profilePhoto: preview ?? "",
+            stateId: states.indexOf(state) + 1, //+1 porque os id's no banco começam de 0
+            birthdate: data.get("birthdate")?.toString() ?? "",
+          };
+
+          console.log(newInfluencerData);
+          return newInfluencerData;
         });
       } else {
         console.log({
@@ -163,12 +199,11 @@ const Register: React.FC = () => {
           password: data.get("password"),
         });
       }
+
+      console.log(registerInfCtx.typeUser)
+      navigate("/registerNicheInfluencer");
     }
-
-
-
   };
- 
 
   return (
     <Container component="main" maxWidth="xs">
@@ -181,29 +216,35 @@ const Register: React.FC = () => {
           alignItems: "center",
         }}
       >
-
-       
         <Typography component="h1" variant="h4" fontWeight="bold">
           Influence Connect
         </Typography>
-         <ButtonGroup variant="contained" aria-label="Basic button group">
-            <Button
-              variant={typeUser === "Influencer" ? "contained" : "outlined"}
-              onClick={() => setTypeUser("Influencer")}
-            >
-              Influencer
-            </Button>
-            <Button
-              variant={typeUser === "Empresa" ? "contained" : "outlined"}
-              onClick={() => setTypeUser("Empresa")}
-            >
-              Empresa
-            </Button>
-          </ButtonGroup>
-       
+        <ButtonGroup variant="contained" aria-label="Basic button group">
+          <Button
+            variant={typeUser === "influencer" ? "contained" : "outlined"}
+            onClick={() => setTypeUser("influencer")}
+          >
+            Influencer
+          </Button>
+          <Button
+            variant={typeUser === "company" ? "contained" : "outlined"}
+            onClick={() => setTypeUser("company")}
+          >
+            Empresa
+          </Button>
+        </ButtonGroup>
+
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', textAlign:"center"}}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                textAlign: "center",
+              }}
+            >
               <input
                 accept="image/*"
                 style={{ display: "none" }}
@@ -212,16 +253,26 @@ const Register: React.FC = () => {
                 onChange={handlePictureChange}
                 disabled={loadingImage}
               />
-              <label aria-disabled={ loadingImage} htmlFor="profilePicture" style={{textAlign:'center'}}>
-                {loadingImage? ( <div style={{ width: 100, height: 100 ,textAlign:'center' }}>
-                 {loadingImage && (<CircularProgress style={{justifyContent:'center'}}/>)}
-                </div>):(<Avatar 
-                  src={preview || undefined}
-                  sx={{ width: 100, height: 100, cursor: 'pointer' }}
-                />)}
+              <label
+                aria-disabled={loadingImage}
+                htmlFor="profilePicture"
+                style={{ textAlign: "center" }}
+              >
+                {loadingImage ? (
+                  <div style={{ width: 100, height: 100, textAlign: "center" }}>
+                    {loadingImage && (
+                      <CircularProgress style={{ justifyContent: "center" }} />
+                    )}
+                  </div>
+                ) : (
+                  <Avatar
+                    src={preview || undefined}
+                    sx={{ width: 100, height: 100, cursor: "pointer" }}
+                  />
+                )}
               </label>
             </Grid>
-            {typeUser === "Influencer" ? (
+            {typeUser === "influencer" ? (
               <>
                 <Grid item xs={12}>
                   <TextField
@@ -245,7 +296,9 @@ const Register: React.FC = () => {
                       inputProps: { mask: "000.000.000-00" },
                     }}
                   />
-                  {errors.cpf && <Typography color="error">{errors.cpf}</Typography>}
+                  {errors.cpf && (
+                    <Typography color="error">{errors.cpf}</Typography>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth required>
@@ -328,7 +381,9 @@ const Register: React.FC = () => {
                       inputProps: { mask: "00.000.000/0000-00" },
                     }}
                   />
-                  {errors.cnpj && <Typography color="error">{errors.cnpj}</Typography>}
+                  {errors.cnpj && (
+                    <Typography color="error">{errors.cnpj}</Typography>
+                  )}
                 </Grid>
               </>
             )}
@@ -353,8 +408,8 @@ const Register: React.FC = () => {
             sx={{ mt: 3, mb: 2 }}
             color="primary"
             disabled={loading}
-          >  
-            {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
+          >
+            {loading && <CircularProgress sx={{ position: "absolute" }} />}
             Cadastrar
           </Button>
           <Grid container justifyContent="flex-end">

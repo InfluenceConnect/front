@@ -15,10 +15,12 @@ import AccountStatus from "./pages/login/AccountStatus";
 import NotFound from "./pages/not_found";
 import HomePageInfluencer from "./pages/influencer/HomePageInfluencer";
 import HomePageCompany from "./pages/company/HomePageCompany";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { RegisterContext } from "./contexts/registerContext";
 
 const Router = () => {
-  const [mode, setMode] = useState("company");
+
+  const {typeUser} = useContext(RegisterContext);
 
   return (
     <BrowserRouter>
@@ -34,7 +36,7 @@ const Router = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
 
-          {mode == "influencer" ? (
+          {typeUser == "influencer" ? (
             <>
               <Route
                 path="/registerNicheInfluencer"
@@ -51,7 +53,7 @@ const Router = () => {
             <></>
           )}
 
-          {mode == "company" ? (
+          {typeUser == "company" ? (
             <>
               <Route
                 path="/registerNicheCompany"

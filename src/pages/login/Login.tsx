@@ -27,7 +27,7 @@ import { RegisterContext } from "../../contexts/registerContext";
 export default function SignInSide() {
   const navigate = useNavigate();
 
-  const [changeLogin, setChangeLogin] = React.useState("Influencer");
+  const [changeLogin, setChangeLogin] = React.useState("influencer");
   const [loading, setLoading] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success");
@@ -141,15 +141,15 @@ export default function SignInSide() {
         >
           <ButtonGroup variant="contained">
             <Button
-              variant={changeLogin === "Influencer" ? "contained" : "outlined"}
-              onClick={() => setChangeLogin("Influencer")}
+              variant={changeLogin === "influencer" ? "contained" : "outlined"}
+              onClick={() => setChangeLogin("influencer")}
               aria-label="selecionar influenciador"
             >
               Influencer
             </Button>
             <Button
-              variant={changeLogin === "Empresa" ? "contained" : "outlined"}
-              onClick={() => setChangeLogin("Empresa")}
+              variant={changeLogin === "company" ? "contained" : "outlined"}
+              onClick={() => setChangeLogin("company")}
               aria-label="selecionar empresa"
             >
               Empresa
