@@ -18,6 +18,7 @@ import { Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { RegisterContext } from "../../../contexts/registerContext";
+import { registerInfluencer } from "../../../services/register";
 
 type SocialMediaLinks = {
   facebook: string;
@@ -74,7 +75,7 @@ export default function RegisterSocialMedia() {
     return formErrors;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const newSocialMedia: SocialMediaLinks = {
@@ -113,7 +114,13 @@ export default function RegisterSocialMedia() {
       });
 
       setLoading(false);
-      //navigate("/accountStatus");
+
+      try {
+        await registerInfluencer(registerInfCtx.influencerData);
+        navigate("/accountStatus");
+      } catch (error) {
+        console.log("Error)");
+      }
     } else {
       setErrors(formErrors);
     }

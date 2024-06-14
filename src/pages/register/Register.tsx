@@ -19,7 +19,7 @@ import { IMaskInput } from "react-imask";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { RegisterContext } from "../../contexts/registerContext";
 import CircularProgress from "@mui/material/CircularProgress";
-import verifyEmailIsAvailable from "../../services/register";
+import {verifyEmailIsAvailable }from "../../services/register";
 
 const states = [
   "Acre",
