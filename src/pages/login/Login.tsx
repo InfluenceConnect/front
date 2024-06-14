@@ -23,6 +23,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { RegisterContext } from "../../contexts/registerContext";
+import { login } from "../../services/login";
 
 export default function SignInSide() {
   const navigate = useNavigate();
@@ -30,7 +31,8 @@ export default function SignInSide() {
   const [changeLogin, setChangeLogin] = React.useState("influencer");
   const [loading, setLoading] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success");
+  const [alertSeverity, setAlertSeverity] =
+    React.useState<AlertColor>("success");
   const [alertMessage, setAlertMessage] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const { setTypeUser } = useContext(RegisterContext);
@@ -45,7 +47,7 @@ export default function SignInSide() {
     setOpenSnackbar(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
 
@@ -53,32 +55,32 @@ export default function SignInSide() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    setTimeout(() => {
-      setLoading(false);
-
-      if (!email.includes("@")) {
-        setAlertSeverity("error");
-        setAlertMessage("O email deve conter o caractere '@'.");
-        setOpenSnackbar(true);
-        return;
-      }
-
-      if (password.length < 8) {
-        setAlertSeverity("error");
-        setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
-        setOpenSnackbar(true);
-        return;
-      }
-
-      setAlertSeverity("success");
-      setAlertMessage("Login feito com sucesso!");
+    if (!email.includes("@")) {
+      setAlertSeverity("error");
+      setAlertMessage("O email deve conter o caractere '@'.");
       setOpenSnackbar(true);
+      return;
+    }
 
-      console.log({
-        email: email,
-        password: password,
-      });
-    }, 2000);
+    if (password.length < 8) {
+      setAlertSeverity("error");
+      setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    const resLogin = await login(email, password);
+    console.log(resLogin);
+
+    setAlertSeverity(resLogin.sucess == "true" ? "success" : "error");
+    setAlertMessage(resLogin.message);
+    setOpenSnackbar(true);
+
+    setLoading(false);
+    
+    if(resLogin.sucess=="true"){
+      navigate("/accountStatus")
+    }
   };
 
   const handleClickShowPassword = () => {
@@ -87,7 +89,7 @@ export default function SignInSide() {
 
   const handleTypeUser = () => {
     setTypeUser(changeLogin);
-    navigate('/Register');
+    navigate("/Register");
   };
 
   return (
@@ -164,7 +166,12 @@ export default function SignInSide() {
             Login {changeLogin}
           </Typography>
 
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -188,7 +195,9 @@ export default function SignInSide() {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                      aria-label={
+                        showPassword ? "Esconder senha" : "Mostrar senha"
+                      }
                       aria-pressed={showPassword ? "true" : "false"}
                       onClick={handleClickShowPassword}
                       edge="end"
@@ -220,18 +229,29 @@ export default function SignInSide() {
               disabled={loading}
               aria-label="Fazer login"
             >
-              {loading && <CircularProgress size={24} sx={{ position: 'absolute' }} />}
+              {loading && (
+                <CircularProgress size={24} sx={{ position: "absolute" }} />
+              )}
               Login
             </Button>
 
             <Grid container>
               <Grid item xs>
-                <Link variant="body2" aria-label="Esqueceu sua senha?" tabIndex={0}>
+                <Link
+                  variant="body2"
+                  aria-label="Esqueceu sua senha?"
+                  tabIndex={0}
+                >
                   Esqueceu sua senha?
                 </Link>
               </Grid>
               <Grid item>
-                <Link onClick={handleTypeUser} variant="body2" aria-label="Criar uma nova conta" tabIndex={0}>
+                <Link
+                  onClick={handleTypeUser}
+                  variant="body2"
+                  aria-label="Criar uma nova conta"
+                  tabIndex={0}
+                >
                   {"Não tem uma conta? Inscreva-se"}
                 </Link>
               </Grid>
@@ -245,7 +265,11 @@ export default function SignInSide() {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={alertSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={alertSeverity}
+          sx={{ width: "100%" }}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>
