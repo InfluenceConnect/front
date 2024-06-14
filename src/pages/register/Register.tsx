@@ -1,56 +1,28 @@
 import * as React from "react";
-import { useContext } from "react";
-import { useState, ForwardRefRenderFunction } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import { useContext, useState, ForwardRefRenderFunction } from "react";
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  ButtonGroup,
+  CircularProgress,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import { IMaskInput } from "react-imask";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import { RegisterContext } from "../../contexts/registerContext";
-import CircularProgress from "@mui/material/CircularProgress";
-import {verifyEmailIsAvailable }from "../../services/register";
+import { verifyEmailIsAvailable } from "../../services/register";
+import { states } from "../../data/states";
 
-const states = [
-  "Acre",
-  "Alagoas",
-  "Amapá",
-  "Amazonas",
-  "Bahia",
-  "Ceará",
-  "Distrito Federal",
-  "Espírito Santo",
-  "Goiás",
-  "Maranhão",
-  "Mato Grosso",
-  "Mato Grosso do Sul",
-  "Minas Gerais",
-  "Pará",
-  "Paraíba",
-  "Paraná",
-  "Pernambuco",
-  "Piauí",
-  "Rio de Janeiro",
-  "Rio Grande do Norte",
-  "Rio Grande do Sul",
-  "Rondônia",
-  "Roraima",
-  "Santa Catarina",
-  "São Paulo",
-  "Sergipe",
-  "Tocantins",
-  "Fora do País",
-];
 
 interface TextMaskCustomProps {
   mask: string;
@@ -124,10 +96,6 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
-    setTimeout(() => {
-      // somente para nao entrar em loop retir apos implementar API
-      setLoading(false);
-    }, 500);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     data.append("profilePicture", profilePicture as Blob);
@@ -137,13 +105,12 @@ const Register: React.FC = () => {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    //const isAvailableEmailAtAPI = await verifyEmailIsAvailable(email)
-    //console.log(isAvailableEmailAtAPI)
+    const isAvailableEmailAtAPI = await verifyEmailIsAvailable(email);
 
     if (!validateEmail(email)) {
       formErrors.email = "E-mail inválido";
-    }
-    //else if(!isAvailableEmailAtAPI) formErrors.email= "E-mail já está cadastrado."
+    } else if (!isAvailableEmailAtAPI)
+      formErrors.email = "E-mail já está cadastrado.";
 
     if (!validatePassword(password)) {
       formErrors.password =
@@ -162,6 +129,7 @@ const Register: React.FC = () => {
       }
     }
 
+    setLoading(false);
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
@@ -200,7 +168,7 @@ const Register: React.FC = () => {
         });
       }
 
-      console.log(registerInfCtx.typeUser)
+      console.log(registerInfCtx.typeUser);
       navigate("/registerNicheInfluencer");
     }
   };

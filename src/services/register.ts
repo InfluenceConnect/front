@@ -1,12 +1,9 @@
-import axios from "axios";
+import api from "./api";
 
 const verifyEmailIsAvailable = async (email: string) => {
   try {
     const req = { email: email };
-    let { data } = await axios.post(
-      "http://localhost:8001/users/is-email-available",
-      req
-    );
+    let { data } = await api.post("/users/is-email-available", req);
 
     console.log(data.isAvailable);
     return data.isAvailable;
@@ -18,14 +15,11 @@ const verifyEmailIsAvailable = async (email: string) => {
 
 const registerInfluencer = async (infData: RequestSaveInfluencer) => {
   try {
-    let res = await axios.post(
-      "http://localhost:8001/influenceconnect/influencers/register",
-      infData
-    );
+    let res = await api.post("/influencers/register", infData);
     console.log(res);
   } catch (error) {
     console.log(error);
   }
 };
 
-export {verifyEmailIsAvailable, registerInfluencer};
+export { verifyEmailIsAvailable, registerInfluencer };
