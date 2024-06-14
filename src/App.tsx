@@ -1,10 +1,13 @@
 import Router from "./Router";
+import { RegisterContextProvider } from "./contexts/registerContext";
 import { ThemeContextProvider } from "./contexts/themeContext";
 
 function App() {
   return (
     <ThemeContextProvider>
-      <Router />
+      <RegisterContextProvider>
+        <Router />
+      </RegisterContextProvider>
     </ThemeContextProvider>
   );
 }

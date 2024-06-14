@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,41 +13,96 @@ import Grid from "@mui/material/Grid";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { createTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
-
-// function Copyright(props: any) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
-
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
+import Alert, { AlertColor } from "@mui/material/Alert";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { RegisterContext } from "../../contexts/registerContext";
 
 export default function SignInSide() {
   const navigate = useNavigate();
-  const [changeLogin, setChangeLogin] = React.useState("Influencer");
+
+  const [changeLogin, setChangeLogin] = React.useState("influencer");
+  const [loading, setLoading] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success");
+  const [alertMessage, setAlertMessage] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const { setTypeUser } = useContext(RegisterContext);
+
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const email = data.get("email") as string;
+    const password = data.get("password") as string;
+
+    setTimeout(() => {
+      setLoading(false);
+
+      if (!email.includes("@")) {
+        setAlertSeverity("error");
+        setAlertMessage("O email deve conter o caractere '@'.");
+        setOpenSnackbar(true);
+        return;
+      }
+
+      if (password.length < 8) {
+        setAlertSeverity("error");
+        setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
+        setOpenSnackbar(true);
+        return;
+      }
+
+      setAlertSeverity("success");
+      setAlertMessage("Login feito com sucesso!");
+      setOpenSnackbar(true);
+
+      console.log({
+        email: email,
+        password: password,
+      });
+    }, 2000);
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleTypeUser = () => {
+    setTypeUser(changeLogin);
+    navigate('/Register');
   };
 
   return (
-    // <ThemeProvider theme={defaultTheme}>
-    <Grid container component="main" sx={{ height: "calc(100vh - 65px)" }}>
+    <Grid
+      container
+      component="main"
+      sx={{
+        minHeight: "calc(100vh - 65px)",
+        padding: {
+          sx: "0",
+          sm: "1rem 0",
+          md: "2rem 0",
+        },
+      }}
+    >
       <CssBaseline />
       <Grid
         item
@@ -56,10 +112,6 @@ export default function SignInSide() {
         sx={{
           backgroundImage: `url(${img})`,
           backgroundRepeat: "no-repeat",
-          backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -73,7 +125,9 @@ export default function SignInSide() {
         elevation={6}
         square
         display={"flex"}
-        sx={{ alignItems: "center" }}
+        sx={{
+          alignItems: "center",
+        }}
       >
         <Box
           sx={{
@@ -85,16 +139,18 @@ export default function SignInSide() {
             gap: "2rem",
           }}
         >
-          <ButtonGroup variant="contained" aria-label="Basic button group">
+          <ButtonGroup variant="contained">
             <Button
-              variant={changeLogin === "Influencer" ? "contained" : "outlined"}
-              onClick={() => setChangeLogin("Influencer")}
+              variant={changeLogin === "influencer" ? "contained" : "outlined"}
+              onClick={() => setChangeLogin("influencer")}
+              aria-label="selecionar influenciador"
             >
               Influencer
             </Button>
             <Button
-              variant={changeLogin === "Empresa" ? "contained" : "outlined"}
-              onClick={() => setChangeLogin("Empresa")}
+              variant={changeLogin === "company" ? "contained" : "outlined"}
+              onClick={() => setChangeLogin("company")}
+              aria-label="selecionar empresa"
             >
               Empresa
             </Button>
@@ -103,9 +159,11 @@ export default function SignInSide() {
           <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
+
           <Typography component="h1" variant="h5" fontWeight={"bold"}>
             Login {changeLogin}
           </Typography>
+
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
@@ -123,12 +181,35 @@ export default function SignInSide() {
               fullWidth
               name="password"
               label="Digite sua senha"
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               autoComplete="current-password"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                      aria-pressed={showPassword ? "true" : "false"}
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                      sx={{ color: "primary.main" }}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox
+                  value="remember"
+                  color="primary"
+                  inputProps={{
+                    "aria-label": "Lembrar-me",
+                  }}
+                />
+              }
               label="Lembrar me"
             />
             <Button
@@ -136,27 +217,38 @@ export default function SignInSide() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
+              aria-label="Fazer login"
             >
+              {loading && <CircularProgress size={24} sx={{ position: 'absolute' }} />}
               Login
             </Button>
+
             <Grid container>
               <Grid item xs>
-                <Link variant="body2">Esqueceu sua senha?</Link>
+                <Link variant="body2" aria-label="Esqueceu sua senha?" tabIndex={0}>
+                  Esqueceu sua senha?
+                </Link>
               </Grid>
               <Grid item>
-                <Link
-                  onClick={() => navigate('/Register')}
-                  variant="body2"
-                >
+                <Link onClick={handleTypeUser} variant="body2" aria-label="Criar uma nova conta" tabIndex={0}>
                   {"Não tem uma conta? Inscreva-se"}
                 </Link>
               </Grid>
             </Grid>
-            {/* <Copyright sx={{ mt: 5 }} /> */}
           </Box>
         </Box>
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={alertSeverity} sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Grid>
-    // </ThemeProvider>
   );
 }
