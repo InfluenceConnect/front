@@ -16,13 +16,16 @@ import {
   InputLabel,
   ButtonGroup,
   CircularProgress,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { IMaskInput } from "react-imask";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { RegisterContext } from "../../contexts/registerContext";
 import { verifyEmailIsAvailable } from "../../services/register";
 import { states } from "../../data/states";
-
 
 interface TextMaskCustomProps {
   mask: string;
@@ -52,8 +55,9 @@ const Register: React.FC = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [state, setState] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = React.useState(false);
-  const [loadingImage, setLoadingImage] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const registerInfCtx = useContext(RegisterContext);
 
@@ -71,6 +75,10 @@ const Register: React.FC = () => {
     } else {
       setPreview(null);
     }
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const validateEmail = (email: string) => {
@@ -361,11 +369,31 @@ const Register: React.FC = () => {
                 fullWidth
                 name="password"
                 label="Senha"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="new-password"
                 error={!!errors.password}
                 helperText={errors.password}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={
+                          showPassword ? "Esconder senha" : "Mostrar senha"
+                        }
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                        sx={{ color: "primary.main" }}
+                      >
+                        {showPassword ? (
+                          <VisibilityOff sx={{ color: "primary.main" }} />
+                        ) : (
+                          <Visibility sx={{ color: "primary.main" }} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
           </Grid>
