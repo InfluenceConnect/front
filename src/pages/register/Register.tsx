@@ -146,6 +146,7 @@ const Register: React.FC = () => {
           const newInfluencerData = {
             ...registerInfCtx.influencerData,
             email: email,
+            name: data.get("name") as string,
             password: password,
             cpf: data.get("cpf") as string,
             profilePhoto: preview ?? "",
