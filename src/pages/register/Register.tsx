@@ -26,16 +26,16 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useRegisterContext } from "../../contexts/registerContext";
 import { verifyEmailIsAvailable } from "../../services/register";
 import { states } from "../../data/states";
+import { useSessionContext } from "../../contexts/SessionContext";
 
 interface TextMaskCustomProps {
   mask: string;
   inputRef: (ref: HTMLInputElement | null) => void;
 }
 
-const TextMaskCustom: ForwardRefRenderFunction<
-  HTMLDivElement,
-  TextMaskCustomProps
-> = (props) => {
+const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomProps> = (
+  props
+) => {
   const { mask, ...other } = props;
   return (
     <IMaskInput
@@ -49,7 +49,6 @@ const TextMaskCustom: ForwardRefRenderFunction<
 };
 
 const Register: React.FC = () => {
-  const { typeUser, setTypeUser } = useRegisterContext();
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -59,6 +58,8 @@ const Register: React.FC = () => {
   const [loadingImage, setLoadingImage] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const sessionCtx = useSessionContext();
+  const { userType, setUserType } = sessionCtx;
   const registerInfCtx = useRegisterContext();
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,8 +98,7 @@ const Register: React.FC = () => {
   };
 
   const validatePassword = (password: string) => {
-    const re =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return re.test(password);
   };
 
@@ -117,15 +117,14 @@ const Register: React.FC = () => {
 
     if (!validateEmail(email)) {
       formErrors.email = "E-mail inválido";
-    } else if (!isAvailableEmailAtAPI)
-      formErrors.email = "E-mail já está cadastrado.";
+    } else if (!isAvailableEmailAtAPI) formErrors.email = "E-mail já está cadastrado.";
 
     if (!validatePassword(password)) {
       formErrors.password =
         "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     }
 
-    if (typeUser === "influencer") {
+    if (userType === "creatingInfluencer") {
       const cpf = data.get("cpf") as string;
       if (!validateCPF(cpf)) {
         formErrors.cpf = "CPF inválido";
@@ -141,7 +140,7 @@ const Register: React.FC = () => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      if (typeUser === "influencer") {
+      if (userType === "creatingInfluencer") {
         registerInfCtx.setInfluencerData(() => {
           const newInfluencerData = {
             ...registerInfCtx.influencerData,
@@ -173,10 +172,10 @@ const Register: React.FC = () => {
 
       console.log(registerInfCtx.typeUser);
 
-      if(typeUser == "influencer")
-        navigate("/registerNicheInfluencer");
-      if(typeUser == "company")
-        navigate("/registerNicheCompany")
+      if (userType == "creatingInfluencer") setUserType("creatingInfluencer");
+      navigate("/registerNicheInfluencer");
+      if (userType == "creatingCompany") setUserType("creatingCompany");
+      navigate("/registerNicheCompany");
     }
   };
 
@@ -196,14 +195,14 @@ const Register: React.FC = () => {
         </Typography>
         <ButtonGroup variant="contained" aria-label="Basic button group">
           <Button
-            variant={typeUser === "influencer" ? "contained" : "outlined"}
-            onClick={() => setTypeUser("influencer")}
+            variant={userType === "creatingInfluencer" ? "contained" : "outlined"}
+            onClick={() => setUserType("creatingInfluencer")}
           >
             Influencer
           </Button>
           <Button
-            variant={typeUser === "company" ? "contained" : "outlined"}
-            onClick={() => setTypeUser("company")}
+            variant={userType === "creatingCompany" ? "contained" : "outlined"}
+            onClick={() => setUserType("creatingCompany")}
           >
             Empresa
           </Button>
@@ -247,7 +246,7 @@ const Register: React.FC = () => {
                 )}
               </label>
             </Grid>
-            {typeUser === "influencer" ? (
+            {userType === "creatingInfluencer" ? (
               <>
                 <Grid item xs={12}>
                   <TextField
@@ -271,9 +270,7 @@ const Register: React.FC = () => {
                       inputProps: { mask: "000.000.000-00" },
                     }}
                   />
-                  {errors.cpf && (
-                    <Typography color="error">{errors.cpf}</Typography>
-                  )}
+                  {errors.cpf && <Typography color="error">{errors.cpf}</Typography>}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth required>
@@ -356,9 +353,7 @@ const Register: React.FC = () => {
                       inputProps: { mask: "00.000.000/0000-00" },
                     }}
                   />
-                  {errors.cnpj && (
-                    <Typography color="error">{errors.cnpj}</Typography>
-                  )}
+                  {errors.cnpj && <Typography color="error">{errors.cnpj}</Typography>}
                 </Grid>
               </>
             )}
@@ -377,9 +372,7 @@ const Register: React.FC = () => {
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
-                        aria-label={
-                          showPassword ? "Esconder senha" : "Mostrar senha"
-                        }
+                        aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
                         onClick={handleClickShowPassword}
                         edge="end"
                         sx={{ color: "primary.main" }}

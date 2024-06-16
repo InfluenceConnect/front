@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -22,20 +21,20 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { RegisterContext } from "../../contexts/registerContext";
 import { login } from "../../services/login";
+import { useSessionContext } from "../../contexts/SessionContext";
+
 
 export default function SignInSide() {
   const navigate = useNavigate();
+  const sessionCtx = useSessionContext();
+  const {userType, setUserType} = sessionCtx;
 
-  const [changeLogin, setChangeLogin] = React.useState("influencer");
   const [loading, setLoading] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const [alertSeverity, setAlertSeverity] =
-    React.useState<AlertColor>("success");
+  const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success");
   const [alertMessage, setAlertMessage] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
-  const { setTypeUser } = useContext(RegisterContext);
 
   const { mode } = useParams();
 
@@ -50,14 +49,11 @@ export default function SignInSide() {
     }
   }, []);
 
-  const handleCloseSnackbar = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
+  const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
-    console.log(event)
+    console.log(event);
     setOpenSnackbar(false);
   };
 
@@ -73,6 +69,7 @@ export default function SignInSide() {
       setAlertSeverity("error");
       setAlertMessage("O email deve conter o caractere '@'.");
       setOpenSnackbar(true);
+      setLoading(false)
       return;
     }
 
@@ -80,21 +77,28 @@ export default function SignInSide() {
       setAlertSeverity("error");
       setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
       setOpenSnackbar(true);
+      setLoading(false)
       return;
     }
 
     const resLogin = await login(email, password);
-    console.log(resLogin);
+    const userLoginType = resLogin.user.role.type.toLowerCase() as
+      | "influencer"
+      | "company"
+      | "adm";
+
+    sessionCtx.handleChangeUserType(userLoginType, resLogin.user.influencer?.status?? "");
 
     setAlertSeverity(resLogin.sucess == "true" ? "success" : "error");
     setAlertMessage(resLogin.message);
     setOpenSnackbar(true);
 
-    setLoading(false);
-
     if (resLogin.sucess == "true") {
-      navigate("/accountStatus");
+      const where = userLoginType == "influencer" ? "/accountStatus" : "/homeCompany";
+      navigate(where);
     }
+
+    setLoading(false);
   };
 
   const handleClickShowPassword = () => {
@@ -102,7 +106,6 @@ export default function SignInSide() {
   };
 
   const handleTypeUser = () => {
-    setTypeUser(changeLogin);
     navigate("/Register");
   };
 
@@ -157,15 +160,15 @@ export default function SignInSide() {
         >
           <ButtonGroup variant="contained">
             <Button
-              variant={changeLogin === "influencer" ? "contained" : "outlined"}
-              onClick={() => setChangeLogin("influencer")}
+              variant={userType === "creatingInfluencer" ? "contained" : "outlined"}
+              onClick={() => setUserType("creatingInfluencer")}
               aria-label="selecionar influenciador"
             >
               Influencer
             </Button>
             <Button
-              variant={changeLogin === "company" ? "contained" : "outlined"}
-              onClick={() => setChangeLogin("company")}
+              variant={userType === "creatingCompany" ? "contained" : "outlined"}
+              onClick={() => setUserType("creatingCompany")}
               aria-label="selecionar empresa"
             >
               Empresa
@@ -177,15 +180,10 @@ export default function SignInSide() {
           </Avatar>
 
           <Typography component="h1" variant="h5" fontWeight={"bold"}>
-            Login {changeLogin}
+            Faça o Login 
           </Typography>
 
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -209,9 +207,7 @@ export default function SignInSide() {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label={
-                        showPassword ? "Esconder senha" : "Mostrar senha"
-                      }
+                      aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
                       aria-pressed={showPassword ? "true" : "false"}
                       onClick={handleClickShowPassword}
                       edge="end"
@@ -243,19 +239,13 @@ export default function SignInSide() {
               disabled={loading}
               aria-label="Fazer login"
             >
-              {loading && (
-                <CircularProgress size={24} sx={{ position: "absolute" }} />
-              )}
+              {loading && <CircularProgress size={24} sx={{ position: "absolute" }} />}
               Login
             </Button>
 
             <Grid container>
               <Grid item xs>
-                <Link
-                  variant="body2"
-                  aria-label="Esqueceu sua senha?"
-                  tabIndex={0}
-                >
+                <Link variant="body2" aria-label="Esqueceu sua senha?" tabIndex={0}>
                   Esqueceu sua senha?
                 </Link>
               </Grid>
