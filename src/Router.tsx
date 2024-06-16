@@ -11,9 +11,10 @@ import CreatingCompanyRoutes from "./routes/CreatingCompanyRoutes";
 import CreatingInfluencerRoutes from "./routes/CreatingInfluencerRoutes";
 import InfluencerRoutes from "./routes/InfluencerRoutes";
 import InactiveInfluencerRoutes from "./routes/InactiveInfluencer";
+import AdmRoutes from "./routes/AdmRoutes";
 
 const Router = () => {
-  const {userType} = useSessionContext();
+  const { userType } = useSessionContext();
 
   return (
     <BrowserRouter>
@@ -24,13 +25,14 @@ const Router = () => {
         maxWidth="xl"
         sx={{ minHeight: "69vh", paddingLeft: "0", paddingRight: "0" }}
       >
-        {userType == "influencer"? <InfluencerRoutes />:<></> }
+        {userType == "adm" ? <AdmRoutes /> : <></>}
+        {userType == "influencer" ? <InfluencerRoutes /> : <></>}
         {userType == "company" ? <CompanyRoutes /> : <></>}
-        {userType == "inactiveInfluencer" ? <InactiveInfluencerRoutes />: <></>}
+        {userType == "inactiveInfluencer" ? <InactiveInfluencerRoutes /> : <></>}
 
         <RegisterContextProvider>
-          {userType == "creatingInfluencer"? <CreatingInfluencerRoutes /> :<></> }
-          {userType == "creatingCompany"? <CreatingCompanyRoutes />: <></>}
+          {userType == "creatingInfluencer" ? <CreatingInfluencerRoutes /> : <></>}
+          {userType == "creatingCompany" ? <CreatingCompanyRoutes /> : <></>}
         </RegisterContextProvider>
       </Container>
       <Footer />
