@@ -1,4 +1,6 @@
 import React, { createContext, useState, ReactNode } from "react";
+import RequestSaveCompany from "../types/RequestSaveCompany";
+import RequestSaveInfluencer from "../types/requestSaveInfluencer";
 
 interface RegisterContextData {
   typeUser: string;

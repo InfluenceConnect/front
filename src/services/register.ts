@@ -1,4 +1,6 @@
+import RequestSaveCompany from "../types/RequestSaveCompany";
 import api from "./api";
+import RequestSaveInfluencer from "../types/requestSaveInfluencer";
 
 const verifyEmailIsAvailable = async (email: string) => {
   try {
@@ -21,5 +23,12 @@ const registerInfluencer = async (infData: RequestSaveInfluencer) => {
     console.log(error);
   }
 };
-
-export { verifyEmailIsAvailable, registerInfluencer };
+const registerCompany = async (compData: RequestSaveCompany) => {
+  try {
+    let res = await api.post("/company", compData);
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export { verifyEmailIsAvailable, registerInfluencer, registerCompany };

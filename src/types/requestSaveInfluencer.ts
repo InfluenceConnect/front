@@ -15,3 +15,5 @@ interface RequestSaveInfluencer {
   nicheIds: number[];
   influencerSocialMedia: InfluencerSocialMedia[];
 }
+
+export default RequestSaveInfluencer;
