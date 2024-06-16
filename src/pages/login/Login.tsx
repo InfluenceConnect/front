@@ -57,6 +57,7 @@ export default function SignInSide() {
     if (reason === "clickaway") {
       return;
     }
+    console.log(event)
     setOpenSnackbar(false);
   };
 
