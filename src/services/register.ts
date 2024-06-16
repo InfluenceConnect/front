@@ -18,7 +18,7 @@ const verifyEmailIsAvailable = async (email: string) => {
 const registerInfluencer = async (infData: RequestSaveInfluencer) => {
   try {
     let res = await api.post("/influencers/register", infData);
-    console.log(res);
+    return res;
   } catch (error) {
     console.log(error);
   }
@@ -27,7 +27,7 @@ const registerInfluencer = async (infData: RequestSaveInfluencer) => {
 const registerCompany = async (compData: RequestSaveCompany) => {
   try {
     let res = await api.post("/companys", compData);
-    console.log(res);
+    return res;
   } catch (error) {
     console.log(error);
   }

@@ -118,7 +118,14 @@ export default function RegisterMarketing() {
       registerCtx.setCompanyData(newCompanyData);
 
       console.log(newCompanyData);
-      await registerCompany(newCompanyData);
+      
+      const res = await registerCompany(newCompanyData);
+
+      if(!!res){
+        navigate("/login/registered")
+      }else{
+        navigate("/login/registerError")
+      }
       
       setLoading(false);
     } else {

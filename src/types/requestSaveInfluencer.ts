@@ -1,4 +1,4 @@
-interface InfluencerSocialMedia {
+export interface InfluencerSocialMedia {
   socialMediaId: number;
   link: string;
 }

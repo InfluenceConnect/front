@@ -13,7 +13,7 @@ import Grid from "@mui/material/Grid";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
@@ -36,6 +36,19 @@ export default function SignInSide() {
   const [alertMessage, setAlertMessage] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const { setTypeUser } = useContext(RegisterContext);
+
+  const { mode } = useParams();
+
+  React.useEffect(() => {
+    if (mode == "registered") {
+      setAlertMessage("😎 Cadastrado com sucesso");
+      setOpenSnackbar(true);
+    } else if (mode == "registerError") {
+      setAlertMessage("☹️ Erro ao cadastrar, tente mais tarde!");
+      setAlertSeverity("error");
+      setOpenSnackbar(true);
+    }
+  }, []);
 
   const handleCloseSnackbar = (
     event?: React.SyntheticEvent | Event,
@@ -77,9 +90,9 @@ export default function SignInSide() {
     setOpenSnackbar(true);
 
     setLoading(false);
-    
-    if(resLogin.sucess=="true"){
-      navigate("/accountStatus")
+
+    if (resLogin.sucess == "true") {
+      navigate("/accountStatus");
     }
   };
 
