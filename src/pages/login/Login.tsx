@@ -25,7 +25,7 @@ import { login } from "../../services/login";
 import { useSessionContext } from "../../contexts/SessionContext";
 
 
-export default function SignInSide() {
+export default function LoginPage() {
   const navigate = useNavigate();
   const sessionCtx = useSessionContext();
   const {userType, setUserType} = sessionCtx;
