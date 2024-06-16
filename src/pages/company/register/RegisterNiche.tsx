@@ -8,7 +8,8 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
+import { useRegisterContext } from "../../../contexts/registerContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -27,6 +28,7 @@ function RegisterNicheCompany() {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+  const registerCtx = useRegisterContext();
 
   const checkboxOptions: CheckboxOption[] = [
     { name: "esporte", label: "Esportes" },
@@ -64,15 +66,21 @@ function RegisterNicheCompany() {
   };
 
   const handleNext = () => {
-     setLoading(true)
-    
-    //COLOQUEI SOMENTE PRA NÃO FICAR E LOADING INFINITO !!!!!!
-    setTimeout(() => { 
-      setLoading(false);
-      navigate("/registerMarketing")
-  }, 2000);
-    
-  }
+    setLoading(true);
+
+    //SALVANDO INFORMAÇÕES NO CONTEXTO
+    const nicheIds: number[] = [];
+    for (let index in checkboxOptions) {
+      if (selectedCheckboxes.includes(checkboxOptions[index].name))
+        nicheIds.push(Number(index) + 1); //+1 porque o nicho começa de 1 no banco de dados
+    }
+    registerCtx.setCompanyData(() => {
+      return { ...registerCtx.companyData, nicheIds: nicheIds };
+    });
+
+    setLoading(false);
+    navigate("/registerMarketing")
+  };
 
   return (
     <Box
@@ -137,7 +145,7 @@ function RegisterNicheCompany() {
           disabled={loading}
           onClick={handleNext}
         >
-            {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
+          {loading && <CircularProgress sx={{ position: "absolute" }} />}
           Avançar
         </Button>
       </Stack>

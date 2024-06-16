@@ -1,19 +1,29 @@
-import * as React from 'react';
-import { useContext } from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
-import InputAdornment from '@mui/material/InputAdornment';
-import { Facebook, Instagram, YouTube, Twitter, Language, AddLink } from '@mui/icons-material';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { useNavigate } from 'react-router-dom';
-import { ThemeContext } from '../../../contexts/themeContext'; 
-import { lightTheme, darkTheme } from '../../../themes/themes'; 
-import CircularProgress from '@mui/material/CircularProgress';
+import * as React from "react";
+import { useContext } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import InputAdornment from "@mui/material/InputAdornment";
+import {
+  Facebook,
+  Instagram,
+  YouTube,
+  Twitter,
+  Language,
+  AddLink,
+} from "@mui/icons-material";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { useNavigate } from "react-router-dom";
+import { ThemeContext } from "../../../contexts/themeContext";
+import { lightTheme, darkTheme } from "../../../themes/themes";
+import CircularProgress from "@mui/material/CircularProgress";
+import { companyMarketingChannels } from "../../../types/requestSaveCompany";
+import { useRegisterContext } from "../../../contexts/registerContext";
+import { registerCompany } from "../../../services/register";
 
 type MarketingLinks = {
   facebook: string;
@@ -33,6 +43,7 @@ export default function RegisterMarketing() {
   const { themeName } = useContext(ThemeContext);
   const currentTheme = themeName === "light" ? lightTheme : darkTheme;
   const navigate = useNavigate();
+  const registerCtx = useRegisterContext();
   const [errors, setErrors] = React.useState<Errors>({});
   const [marketing, setMarketing] = React.useState<MarketingLinks>({
     facebook: "",
@@ -40,19 +51,20 @@ export default function RegisterMarketing() {
     youtube: "",
     tiktok: "",
     twitter: "",
-    website: ""
+    website: "",
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setMarketing((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const isValidURL = (url: string): boolean => {
-    const pattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,}([/?].*)?$/;
+    const pattern =
+      /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,}([/?].*)?$/;
     return pattern.test(url);
   };
 
@@ -72,7 +84,7 @@ export default function RegisterMarketing() {
     return formErrors;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const newMarketing: MarketingLinks = {
@@ -81,7 +93,7 @@ export default function RegisterMarketing() {
       youtube: data.get("youtube") as string,
       tiktok: data.get("tiktok") as string,
       twitter: data.get("twitter") as string,
-      website: data.get("website") as string
+      website: data.get("website") as string,
     };
     setMarketing(newMarketing);
 
@@ -89,18 +101,34 @@ export default function RegisterMarketing() {
 
     if (Object.keys(formErrors).length === 0) {
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        navigate("/accountStatus");
-      }, 2000);
+
+      const marketingChannelsIds: companyMarketingChannels[] = [];
+      Object.entries(newMarketing).map((e, index) => {
+        if (e[1] != "")
+          marketingChannelsIds.push({
+            marketingChannelId: Number(index) + 1,
+            link: e[1],
+          });
+      });
+
+      const newCompanyData = {
+        ...registerCtx.companyData,
+        companyMarketingChannels: marketingChannelsIds,
+      };
+      registerCtx.setCompanyData(newCompanyData);
+
+      console.log(newCompanyData);
+      await registerCompany(newCompanyData);
+      
+      setLoading(false);
     } else {
       setErrors(formErrors);
     }
   };
 
   const iconStyle = {
-    color: themeName === "light" ? 'black' : 'white',
-    fontSize: '1.5rem',
+    color: themeName === "light" ? "black" : "white",
+    fontSize: "1.5rem",
   };
 
   return (
@@ -111,12 +139,16 @@ export default function RegisterMarketing() {
           sx={{
             marginTop: 8,
             marginBottom: 5,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ color: themeName === "light" ? 'black' : 'white' }}>
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{ color: themeName === "light" ? "black" : "white" }}
+          >
             Cadastre seus Canais de Marketing:
           </Typography>
           <Box
@@ -126,10 +158,10 @@ export default function RegisterMarketing() {
             sx={{
               mt: 1,
               p: 2,
-              borderRadius: '8px',
-              backgroundColor: themeName === "light" ? '#fff' : '#424242',
+              borderRadius: "8px",
+              backgroundColor: themeName === "light" ? "#fff" : "#424242",
               boxShadow: 3,
-              width: '100%',
+              width: "100%",
             }}
           >
             {errors.general && (
@@ -142,7 +174,9 @@ export default function RegisterMarketing() {
                 {key === "facebook" && <Facebook style={iconStyle} />}
                 {key === "instagram" && <Instagram style={iconStyle} />}
                 {key === "youtube" && <YouTube style={iconStyle} />}
-                {key === "tiktok" && <i className="bi bi-tiktok" style={iconStyle}></i>}
+                {key === "tiktok" && (
+                  <i className="bi bi-tiktok" style={iconStyle}></i>
+                )}
                 {key === "twitter" && <Twitter style={iconStyle} />}
                 {key === "website" && <Language style={iconStyle} />}
                 <TextField
@@ -175,7 +209,7 @@ export default function RegisterMarketing() {
               sx={{ mt: 3, mb: 2 }}
               disabled={loading}
             >
-              {loading && (<CircularProgress sx={{ position: 'absolute' }} />)}
+              {loading && <CircularProgress sx={{ position: "absolute" }} />}
               Avançar
             </Button>
           </Box>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useState, ForwardRefRenderFunction } from "react";
+import { useState, ForwardRefRenderFunction } from "react";
 import {
   Avatar,
   Button,
@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { IMaskInput } from "react-imask";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { RegisterContext } from "../../contexts/registerContext";
+import { useRegisterContext } from "../../contexts/registerContext";
 import { verifyEmailIsAvailable } from "../../services/register";
 import { states } from "../../data/states";
 
@@ -49,7 +49,7 @@ const TextMaskCustom: ForwardRefRenderFunction<
 };
 
 const Register: React.FC = () => {
-  const { typeUser, setTypeUser } = useContext(RegisterContext);
+  const { typeUser, setTypeUser } = useRegisterContext();
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -59,7 +59,7 @@ const Register: React.FC = () => {
   const [loadingImage, setLoadingImage] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const registerInfCtx = useContext(RegisterContext);
+  const registerInfCtx = useRegisterContext();
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -142,16 +142,6 @@ const Register: React.FC = () => {
 
     if (Object.keys(formErrors).length === 0) {
       if (typeUser === "influencer") {
-        console.log({
-          profilePicture: data.get("profilePicture"),
-          name: data.get("name"),
-          cpf: data.get("cpf"),
-          state: data.get("state"),
-          email: data.get("email"),
-          birthdate: data.get("birthdate"),
-          password: data.get("password"),
-        });
-
         registerInfCtx.setInfluencerData(() => {
           const newInfluencerData = {
             ...registerInfCtx.influencerData,
@@ -162,22 +152,30 @@ const Register: React.FC = () => {
             stateId: states.indexOf(state) + 1, //+1 porque os id's no banco começam de 0
             birthdate: data.get("birthdate")?.toString() ?? "",
           };
-
-          console.log(newInfluencerData);
           return newInfluencerData;
         });
       } else {
-        console.log({
-          logo: data.get("profilePicture"),
-          companyName: data.get("companyName"),
-          email: data.get("email"),
-          cnpj: data.get("cnpj"),
-          password: data.get("password"),
+        registerInfCtx.setCompanyData(() => {
+          const newCompanyData = {
+            ...registerInfCtx.companyData,
+            email: email,
+            password: password,
+            cnpj: data.get("cnpj") as string,
+            name: data.get("companyName") as string,
+            profileLogo: preview ?? "",
+          };
+
+          console.log(newCompanyData);
+          return newCompanyData;
         });
       }
 
       console.log(registerInfCtx.typeUser);
-      navigate("/registerNicheInfluencer");
+
+      if(typeUser == "influencer")
+        navigate("/registerNicheInfluencer");
+      if(typeUser == "company")
+        navigate("/registerNicheCompany")
     }
   };
 

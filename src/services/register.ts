@@ -1,4 +1,4 @@
-import RequestSaveCompany from "../types/RequestSaveCompany";
+import RequestSaveCompany from "../types/requestSaveCompany";
 import api from "./api";
 import RequestSaveInfluencer from "../types/requestSaveInfluencer";
 
@@ -23,6 +23,7 @@ const registerInfluencer = async (infData: RequestSaveInfluencer) => {
     console.log(error);
   }
 };
+
 const registerCompany = async (compData: RequestSaveCompany) => {
   try {
     let res = await api.post("/company", compData);
