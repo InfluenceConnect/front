@@ -7,6 +7,7 @@ import LoginPage from "../pages/login/Login"
 import Register from "../pages/register/Register";
 import RegisterNicheCompany from "../pages/company/register/RegisterNiche";
 import RegisterMarketing from "../pages/company/register/RegisterMarketing";
+import UpdateInfluencer from "../pages/influencer/UpdateInfluencer";
 
 const AdmRoutes = () => {
   return (
@@ -21,6 +22,7 @@ const AdmRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/registerNicheCompany" element={<RegisterNicheCompany />} />
       <Route path="/registerMarketing" element={<RegisterMarketing />} />
+      <Route path="/updateInfluencer" element={<UpdateInfluencer />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

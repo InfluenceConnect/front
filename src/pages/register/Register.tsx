@@ -54,10 +54,13 @@ const Register: React.FC = () => {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [state, setState] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
   const [loadingImage, setLoadingImage] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Novo estado para a senha de confirmação
 
   const sessionCtx = useSessionContext();
   const { userType, setUserType } = sessionCtx;
@@ -79,8 +82,12 @@ const Register: React.FC = () => {
     }
   };
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
+  const handleClickShowPassword = (field: string) => () => {
+    if (field === "password") {
+      setShowPassword((prev) => !prev);
+    } else if (field === "confirmPassword") {
+      setShowConfirmPassword((prev) => !prev);
+    }
   };
 
   const validateEmail = (email: string) => {
@@ -113,6 +120,7 @@ const Register: React.FC = () => {
 
     const email = data.get("email") as string;
     const password = data.get("password") as string;
+    const confirmPassword = data.get("confirmPassword") as string;
 
     const isAvailableEmailAtAPI = await verifyEmailIsAvailable(email);
 
@@ -123,6 +131,10 @@ const Register: React.FC = () => {
     if (!validatePassword(password)) {
       formErrors.password =
         "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
+    }
+
+    if (password !== confirmPassword) {
+      formErrors.confirmPassword = "As senhas não coincidem";
     }
 
     if (userType === "creatingInfluencer") {
@@ -165,19 +177,15 @@ const Register: React.FC = () => {
             name: data.get("companyName") as string,
             profileLogo: preview ?? "",
           };
-
-          console.log(newCompanyData);
           return newCompanyData;
         });
       }
 
-      console.log(registerInfCtx.typeUser);
-
-      if (userType == "creatingInfluencer") {
+      if (userType === "creatingInfluencer") {
         setUserType("creatingInfluencer");
         navigate("/registerNicheInfluencer");
       }
-      if (userType == "creatingCompany") {
+      if (userType === "creatingCompany") {
         setUserType("creatingCompany");
         navigate("/registerNicheCompany");
       }
@@ -242,7 +250,7 @@ const Register: React.FC = () => {
                     {loadingImage && (
                       <CircularProgress style={{ justifyContent: "center" }} />
                     )}
-                  </div>
+                  </div                  >
                 ) : (
                   <Avatar
                     src={preview || undefined}
@@ -378,11 +386,42 @@ const Register: React.FC = () => {
                     <InputAdornment position="end">
                       <IconButton
                         aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
-                        onClick={handleClickShowPassword}
+                        onClick={handleClickShowPassword("password")}
                         edge="end"
                         sx={{ color: "primary.main" }}
                       >
                         {showPassword ? (
+                          <VisibilityOff sx={{ color: "primary.main" }} />
+                        ) : (
+                          <Visibility sx={{ color: "primary.main" }} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirmar Senha"
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                autoComplete="new-password"
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={showConfirmPassword ? "Esconder senha" : "Mostrar senha"}
+                        onClick={handleClickShowPassword("confirmPassword")}
+                        edge="end"
+                        sx={{ color: "primary.main" }}
+                      >
+                        {showConfirmPassword ? (
                           <VisibilityOff sx={{ color: "primary.main" }} />
                         ) : (
                           <Visibility sx={{ color: "primary.main" }} />
@@ -419,3 +458,5 @@ const Register: React.FC = () => {
 };
 
 export default Register;
+
+
