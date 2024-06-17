@@ -7,7 +7,7 @@ import {
   TextField,
   Link,
   Grid,
-  Box, 
+  Box,
   Typography,
   Container,
   Select,
@@ -173,10 +173,14 @@ const Register: React.FC = () => {
 
       console.log(registerInfCtx.typeUser);
 
-      if (userType == "creatingInfluencer") setUserType("creatingInfluencer");
-      navigate("/registerNicheInfluencer");
-      if (userType == "creatingCompany") setUserType("creatingCompany");
-      navigate("/registerNicheCompany");
+      if (userType == "creatingInfluencer") {
+        setUserType("creatingInfluencer");
+        navigate("/registerNicheInfluencer");
+      }
+      if (userType == "creatingCompany") {
+        setUserType("creatingCompany");
+        navigate("/registerNicheCompany");
+      }
     }
   };
 

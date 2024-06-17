@@ -15,11 +15,7 @@ import {
   NativeSelect,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  getAllCompanies,
-  getAllCompaniesPageable,
-  getNumbersOfCompanies,
-} from "../../services/company";
+import { getAllCompaniesPageable, getNumbersOfCompanies } from "../../services/company";
 import numberOfPages from "../../utils/numbersOfPages";
 
 interface Company {
