@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import { Box, Container, Typography, Grid, Card, CardActions, CardContent, CardMedia, Button, TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
+import { getAllInfluencers } from '../../services/influence';
 interface Influencer {
   name: string;
   description: string;
@@ -9,7 +9,7 @@ interface Influencer {
   image: string; // Adicionando campo de imagem
 }
 
-const mockInfluencers: Influencer[] = [
+const mockDefaultInfluencers: Influencer[] = [
   { id: 1, name: 'Influenciador 1', description: 'Descrição do Influenciador 1', image: '/static/images/cards/image1.jpg' },
   { id: 2, name: 'Influenciador 2', description: 'Descrição do Influenciador 2', image: '/static/images/cards/image2.jpg' },
   { id: 3, name: 'Influenciador 3', description: 'Descrição do Influenciador 3', image: '/static/images/cards/image3.jpg' },
@@ -34,7 +34,7 @@ const InfluencerCard: React.FC<Influencer> = ({ name, description, image }) => (
         {name}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {description}
+        {description} 
       </Typography>
     </CardContent>
     <CardActions>
@@ -46,10 +46,23 @@ const InfluencerCard: React.FC<Influencer> = ({ name, description, image }) => (
 
 const HomePageCompany: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [mockInfluencers, setMockInfluencers] = useState(mockDefaultInfluencers);
+
+   useEffect(()=>{
+    async function setInfluencersFromDB(){
+      const companies = await getAllInfluencers();
+
+      if(companies)
+        setMockInfluencers(companies);
+         
+    }
+
+    setInfluencersFromDB();
+  },[])
 
   const filteredInfluencers = mockInfluencers.filter(influencer =>
     influencer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    influencer.description.toLowerCase().includes(searchTerm.toLowerCase())
+    influencer.description.toLowerCase().includes(searchTerm.toLowerCase()) // SE ATENTAR AOS PARAMETROS DE PESQUISA !!!
   );
 
   return (
