@@ -26,6 +26,7 @@ interface Influencer {
   description: string;
   id: number;
   image: string; // Adicionando campo de imagem
+  profilePhoto?: string;
 }
 
 const mockDefaultInfluencers: Influencer[] = [
@@ -85,9 +86,9 @@ const mockDefaultInfluencers: Influencer[] = [
   },
 ];
 
-const InfluencerCard: React.FC<Influencer> = ({ name, description, image }) => (
+const InfluencerCard: React.FC<Influencer> = ({ name, description, profilePhoto }) => (
   <Card sx={{ maxWidth: 345 }}>
-    <CardMedia component="img" alt={name} height="140" image={image} />
+    <CardMedia component="img" alt={name} height="140" image={profilePhoto} />
     <CardContent>
       <Typography gutterBottom variant="h5" component="div">
         {name}
