@@ -12,11 +12,13 @@ import {
   TextField,
   InputAdornment,
   NativeSelect,
-  Slider,
   Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { getAllInfluencers, getAllInfluencersPageable, getNumbersOfInfluencers } from "../../services/influence";
+import {
+  getAllInfluencersPageable,
+  getNumbersOfInfluencers,
+} from "../../services/influence";
 import numberOfPages from "../../utils/numbersOfPages";
 
 interface Influencer {
@@ -111,10 +113,10 @@ const HomePageCompany: React.FC = () => {
   useEffect(() => {
     async function setInfluencersFromDB() {
       const influencers = await getAllInfluencersPageable(page, pageSize);
-      const count =  await getNumbersOfInfluencers();
+      const count = await getNumbersOfInfluencers();
       if (influencers) {
         setMockInfluencers(influencers);
-        
+
         setCountOfPages(numberOfPages(count, pageSize));
       }
     }
@@ -166,7 +168,11 @@ const HomePageCompany: React.FC = () => {
             <option value={50}>50</option>
             <option value={100}>100</option>
           </NativeSelect>
-          <Pagination count={countOfPages} color="primary" onChange={(_, i) => setPage(i - 1)} />
+          <Pagination
+            count={countOfPages}
+            color="primary"
+            onChange={(_, i) => setPage(i - 1)}
+          />
         </Box>
         <Grid container spacing={2}>
           {filteredInfluencers.map((item) => (
