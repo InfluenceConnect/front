@@ -24,11 +24,10 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login } from "../../services/login";
 import { useSessionContext } from "../../contexts/SessionContext";
 
-
 export default function LoginPage() {
   const navigate = useNavigate();
   const sessionCtx = useSessionContext();
-  const {userType, setUserType} = sessionCtx;
+  const { userType, setUserType } = sessionCtx;
 
   const [loading, setLoading] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -69,7 +68,7 @@ export default function LoginPage() {
       setAlertSeverity("error");
       setAlertMessage("O email deve conter o caractere '@'.");
       setOpenSnackbar(true);
-      setLoading(false)
+      setLoading(false);
       return;
     }
 
@@ -77,23 +76,25 @@ export default function LoginPage() {
       setAlertSeverity("error");
       setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
       setOpenSnackbar(true);
-      setLoading(false)
+      setLoading(false);
       return;
     }
 
     const resLogin = await login(email, password);
-    const userLoginType = resLogin.user.role.type.toLowerCase() as
-      | "influencer"
-      | "company"
-      | "adm";
-
-    sessionCtx.handleChangeUserType(userLoginType, resLogin.user.influencer?.status?? "");
 
     setAlertSeverity(resLogin.sucess == "true" ? "success" : "error");
     setAlertMessage(resLogin.message);
     setOpenSnackbar(true);
 
     if (resLogin.sucess == "true") {
+      const userLoginType = resLogin.user.role.type.toLowerCase() as
+        | "influencer"
+        | "company"
+        | "adm";
+      sessionCtx.handleChangeUserType(
+        userLoginType,
+        resLogin.user.influencer?.status ?? ""
+      );
       const where = userLoginType == "influencer" ? "/accountStatus" : "/homeCompany";
       navigate(where);
     }
@@ -180,7 +181,7 @@ export default function LoginPage() {
           </Avatar>
 
           <Typography component="h1" variant="h5" fontWeight={"bold"}>
-            Faça o Login 
+            Faça o Login
           </Typography>
 
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
