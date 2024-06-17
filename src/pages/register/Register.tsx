@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, ForwardRefRenderFunction } from "react";
+import { useState, forwardRef } from "react";
 import {
   Avatar,
   Button,
@@ -7,7 +7,7 @@ import {
   TextField,
   Link,
   Grid,
-  Box,
+  Box, 
   Typography,
   Container,
   Select,
@@ -30,23 +30,24 @@ import { useSessionContext } from "../../contexts/SessionContext";
 
 interface TextMaskCustomProps {
   mask: string;
-  inputRef: (ref: HTMLInputElement | null) => void;
+  inputRef: React.Ref<HTMLInputElement>;
 }
 
-const TextMaskCustom: ForwardRefRenderFunction<HTMLDivElement, TextMaskCustomProps> = (
-  props
-) => {
-  const { mask, ...other } = props;
-  return (
-    <IMaskInput
-      {...other}
-      mask={mask}
-      definitions={{
-        "#": /[0-9]/,
-      }}
-    />
-  );
-};
+const TextMaskCustom = forwardRef<HTMLInputElement, TextMaskCustomProps>(
+  function TextMaskCustom(props, ref) {
+    const { mask, ...other } = props;
+    return (
+      <IMaskInput
+        {...other}
+        mask={mask}
+        definitions={{
+          "#": /[0-9]/,
+        }}
+        inputRef={ref}
+      />
+    );
+  }
+);
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
