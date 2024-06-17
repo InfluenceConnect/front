@@ -17,7 +17,7 @@ const verifyEmailIsAvailable = async (email: string) => {
 
 const registerInfluencer = async (infData: RequestSaveInfluencer) => {
   try {
-    let res = await api.post("/influencers/register", infData);
+    let res = await api.post("/influencers", infData);
     return res;
   } catch (error) {
     console.log(error);
