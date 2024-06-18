@@ -10,6 +10,7 @@ import RegisterMarketing from "../pages/company/register/RegisterMarketing";
 import UpdateInfluencer from "../pages/influencer/UpdateInfluencer";
 import AdminPage from "../pages/adm/AdminPage";
 import UserDetail from "../pages/adm/UserDetails";
+import RegisterCampaign from "../pages/company/register/RegisterCampaign";
 
 const AdmRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const AdmRoutes = () => {
       <Route path="/registerNicheCompany" element={<RegisterNicheCompany />} />
       <Route path="/registerMarketing" element={<RegisterMarketing />} />
       <Route path="/updateInfluencer" element={<UpdateInfluencer />} />
+      <Route path="/registerCampaign" element={<RegisterCampaign />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
