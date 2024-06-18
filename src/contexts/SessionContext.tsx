@@ -12,8 +12,8 @@ const SessionContext = createContext({} as SessionContextData);
 const useSessionContext = () => useContext(SessionContext);
 
 const SessionContextProvider = ({ children }: { children: ReactNode }) => {
-  const [userType, setUserType] = useState<usersType>("creatingInfluencer");
-  //const [userType, setUserType] = useState<usersType>("adm");
+  // const [userType, setUserType] = useState<usersType>("creatingInfluencer");
+  const [userType, setUserType] = useState<usersType>("adm");
 
   const handleChangeUserType = (userRole: string, status: string) => {
     const userRole_LC = userRole.toLowerCase();

@@ -21,14 +21,8 @@ import {
 } from "../../services/influence";
 import numberOfPages from "../../utils/numbersOfPages";
 import InfluencerDetailModal from "./InfluencerDetailModal"; 
+import Influencer from "../../types/influencer";
 
-interface Influencer {
-  name: string;
-  description: string;
-  id: number;
-  image: string;
-  profilePhoto?: string;
-}
 
 const mockDefaultInfluencers: Influencer[] = [
   {
@@ -36,54 +30,63 @@ const mockDefaultInfluencers: Influencer[] = [
     name: "Influenciador 1",
     description: "Descrição do Influenciador 1",
     image: "/static/images/cards/image1.jpg",
+    status: "",
   },
   {
     id: 2,
     name: "Influenciador 2",
     description: "Descrição do Influenciador 2",
     image: "/static/images/cards/image2.jpg",
+    status: "",
   },
   {
     id: 3,
     name: "Influenciador 3",
     description: "Descrição do Influenciador 3",
     image: "/static/images/cards/image3.jpg",
+    status: "",
   },
   {
     id: 4,
     name: "Influenciador 4",
     description: "Descrição do Influenciador 4",
     image: "/static/images/cards/image4.jpg",
+    status: "",
   },
   {
     id: 5,
     name: "Influenciador 5",
     description: "Descrição do Influenciador 5",
     image: "/static/images/cards/image5.jpg",
+    status: "",
   },
   {
     id: 6,
     name: "Influenciador 6",
     description: "Descrição do Influenciador 6",
     image: "/static/images/cards/image6.jpg",
+    status: "",
   },
   {
     id: 7,
     name: "Influenciador 7",
     description: "Descrição do Influenciador 7",
     image: "/static/images/cards/image7.jpg",
+    status: "",
   },
   {
     id: 8,
     name: "Influenciador 8",
     description: "Descrição do Influenciador 8",
     image: "/static/images/cards/image8.jpg",
+    status: "",
   },
   {
     id: 9,
     name: "Influenciador 9",
     description: "Descrição do Influenciador 9",
     image: "/static/images/cards/image9.jpg",
+    status: "",
   },
 ];
 

@@ -15,20 +15,11 @@ import {
   Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  getAllCompaniesPageable,
-  getNumbersOfCompanies,
-} from "../../services/company";
+import { getAllCompaniesPageable, getNumbersOfCompanies } from "../../services/company";
 import numberOfPages from "../../utils/numbersOfPages";
-import CompanyDetailModal from "./CompanyDetailModal"; 
-
-interface Company {
-  name: string;
-  description: string;
-  id: number;
-  image: string;
-  logo?: string;
-}
+import CompanyDetailModal from "./CompanyDetailModal";
+import Company from "../../types/company";
+import { CompareArrows } from "@mui/icons-material";
 
 const mockDefaultCompanies: Company[] = [
   {
@@ -36,60 +27,77 @@ const mockDefaultCompanies: Company[] = [
     name: "Empresa 1",
     description: "Descrição da Empresa 1",
     image: "/static/images/cards/image1.jpg",
+    status: "active",
   },
   {
     id: 2,
     name: "Empresa 2",
     description: "Descrição da Empresa 2",
     image: "/static/images/cards/image2.jpg",
+    status: "active",
   },
   {
     id: 3,
     name: "Empresa 3",
     description: "Descrição da Empresa 3",
     image: "/static/images/cards/image3.jpg",
+    status: "active",
   },
   {
     id: 4,
     name: "Empresa 4",
     description: "Descrição da Empresa 4",
     image: "/static/images/cards/image4.jpg",
+    status: "active",
   },
   {
     id: 5,
     name: "Empresa 5",
     description: "Descrição da Empresa 5",
     image: "/static/images/cards/image5.jpg",
+    status: "active",
   },
   {
     id: 6,
     name: "Empresa 6",
     description: "Descrição da Empresa 6",
     image: "/static/images/cards/image6.jpg",
+    status: "active",
   },
   {
     id: 7,
     name: "Empresa 7",
     description: "Descrição da Empresa 7",
     image: "/static/images/cards/image7.jpg",
+    status: "active",
   },
   {
     id: 8,
     name: "Empresa 8",
     description: "Descrição da Empresa 8",
     image: "/static/images/cards/image8.jpg",
+    status: "active",
   },
   {
     id: 9,
     name: "Empresa 9",
     description: "Descrição da Empresa 9",
     image: "/static/images/cards/image9.jpg",
+    status: "active",
   },
 ];
 
-const CompanyCard: React.FC<{ company: Company; onViewDetails: (company: Company) => void }> = ({ company, onViewDetails }) => (
+const CompanyCard: React.FC<{
+  company: Company;
+  onViewDetails: (company: Company) => void;
+}> = ({ company, onViewDetails }) => (
   <Card sx={{ maxWidth: 345 }}>
-    <CardMedia component="img" alt={company.name} height="140" image={company.logo || company.image} />
+    <CardMedia
+      component="img"
+      alt={company.name}
+      height="140"
+      image={company.profileLogo || company.image}
+    />
     <CardContent>
       <Typography gutterBottom variant="h5" component="div">
         {company.name}
@@ -99,7 +107,9 @@ const CompanyCard: React.FC<{ company: Company; onViewDetails: (company: Company
       </Typography>
     </CardContent>
     <CardActions>
-      <Button size="small" onClick={() => onViewDetails(company)}>Ver Empresa</Button>
+      <Button size="small" onClick={() => onViewDetails(company)}>
+        Ver Empresa
+      </Button>
     </CardActions>
   </Card>
 );
@@ -119,6 +129,7 @@ const HomePageCompany: React.FC = () => {
       const count = await getNumbersOfCompanies();
       if (companies) {
         setMockCompanies(companies);
+        console.log(companies);
         setCountOfPages(numberOfPages(count, pageSize));
       }
     }
