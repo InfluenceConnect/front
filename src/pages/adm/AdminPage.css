@@ -15,7 +15,7 @@
   text-decoration: none;
   color: black;
   width: 100%;
-  max-width: 250px; /* Limitando largura máxima dos cards */
+  max-width: 250px; 
   transition: transform 0.2s;
 }
 

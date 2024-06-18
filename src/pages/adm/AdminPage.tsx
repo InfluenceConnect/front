@@ -32,7 +32,7 @@ const AdminPage = () => {
   };
 
   useEffect(() => {
-    setPage(0); // Reset page to 0 on search term or user type change
+    setPage(0); 
   }, [searchTerm, userType]);
 
   useEffect(() => {
@@ -74,14 +74,14 @@ const AdminPage = () => {
             <Button
               variant={userType === 'influencer' ? 'contained' : 'outlined'}
               onClick={() => handleUserTypeChange('influencer')}
-              sx={{ width: '50%' }} // Ajuste de largura para alinhar corretamente
+              sx={{ width: '50%' }} 
             >
               Influencer
             </Button>
             <Button
               variant={userType === 'company' ? 'contained' : 'outlined'}
               onClick={() => handleUserTypeChange('company')}
-              sx={{ width: '50%' }} // Ajuste de largura para alinhar corretamente
+              sx={{ width: '50%' }} 
             >
               Company
             </Button>
