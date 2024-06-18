@@ -95,8 +95,7 @@ export default function LoginPage() {
         userLoginType,
         resLogin.user.influencer?.status ?? ""
       );
-      const where = userLoginType == "influencer" ? "/accountStatus" : "/homeCompany";
-      navigate(where);
+      navigate("/");
     }
 
     setLoading(false);
