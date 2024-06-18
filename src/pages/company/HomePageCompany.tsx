@@ -20,12 +20,13 @@ import {
   getNumbersOfInfluencers,
 } from "../../services/influence";
 import numberOfPages from "../../utils/numbersOfPages";
+import InfluencerDetailModal from "./InfluencerDetailModal"; 
 
 interface Influencer {
   name: string;
   description: string;
   id: number;
-  image: string; // Adicionando campo de imagem
+  image: string;
   profilePhoto?: string;
 }
 
@@ -86,20 +87,19 @@ const mockDefaultInfluencers: Influencer[] = [
   },
 ];
 
-const InfluencerCard: React.FC<Influencer> = ({ name, description, profilePhoto }) => (
+const InfluencerCard: React.FC<{ influencer: Influencer; onViewDetails: (influencer: Influencer) => void }> = ({ influencer, onViewDetails }) => (
   <Card sx={{ maxWidth: 345 }}>
-    <CardMedia component="img" alt={name} height="140" image={profilePhoto} />
+    <CardMedia component="img" alt={influencer.name} height="140" image={influencer.profilePhoto || influencer.image} />
     <CardContent>
       <Typography gutterBottom variant="h5" component="div">
-        {name}
+        {influencer.name}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {description}
+        {influencer.description}
       </Typography>
     </CardContent>
     <CardActions>
-      <Button size="small">Ver Influenciador</Button>
-      {/* <Button size="small">Learn More</Button> */}
+      <Button size="small" onClick={() => onViewDetails(influencer)}>Ver Influenciador</Button>
     </CardActions>
   </Card>
 );
@@ -110,6 +110,8 @@ const HomePageCompany: React.FC = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [countOfPages, setCountOfPages] = useState(10);
+  const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
 
   useEffect(() => {
     async function setInfluencersFromDB() {
@@ -117,18 +119,26 @@ const HomePageCompany: React.FC = () => {
       const count = await getNumbersOfInfluencers();
       if (influencers) {
         setMockInfluencers(influencers);
-
         setCountOfPages(numberOfPages(count, pageSize));
       }
     }
-
     setInfluencersFromDB();
   }, [page, pageSize]);
+
+  const handleViewDetails = (influencer: Influencer) => {
+    setSelectedInfluencer(influencer);
+    setDetailModalOpen(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setSelectedInfluencer(null);
+    setDetailModalOpen(false);
+  };
 
   const filteredInfluencers = mockInfluencers.filter(
     (influencer) =>
       influencer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      influencer.description.toLowerCase().includes(searchTerm.toLowerCase()) // SE ATENTAR AOS PARAMETROS DE PESQUISA !!!
+      influencer.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -178,10 +188,15 @@ const HomePageCompany: React.FC = () => {
         <Grid container spacing={2}>
           {filteredInfluencers.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <InfluencerCard {...item} />
+              <InfluencerCard influencer={item} onViewDetails={handleViewDetails} />
             </Grid>
           ))}
         </Grid>
+        <InfluencerDetailModal
+          influencer={selectedInfluencer}
+          open={detailModalOpen}
+          onClose={handleCloseDetailModal}
+        />
       </Box>
     </Container>
   );

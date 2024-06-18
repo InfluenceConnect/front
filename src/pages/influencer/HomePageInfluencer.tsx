@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -11,18 +11,23 @@ import {
   Button,
   TextField,
   InputAdornment,
-  Pagination,
   NativeSelect,
+  Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { getAllCompaniesPageable, getNumbersOfCompanies } from "../../services/company";
+import {
+  getAllCompaniesPageable,
+  getNumbersOfCompanies,
+} from "../../services/company";
 import numberOfPages from "../../utils/numbersOfPages";
+import CompanyDetailModal from "./CompanyDetailModal"; 
 
 interface Company {
   name: string;
   description: string;
   id: number;
-  profileLogo: string;
+  image: string;
+  logo?: string;
 }
 
 const mockDefaultCompanies: Company[] = [
@@ -30,97 +35,105 @@ const mockDefaultCompanies: Company[] = [
     id: 1,
     name: "Empresa 1",
     description: "Descrição da Empresa 1",
-    profileLogo: "/static/images/cards/image1.jpg",
+    image: "/static/images/cards/image1.jpg",
   },
   {
     id: 2,
     name: "Empresa 2",
     description: "Descrição da Empresa 2",
-    profileLogo: "/static/images/cards/image2.jpg",
+    image: "/static/images/cards/image2.jpg",
   },
   {
     id: 3,
     name: "Empresa 3",
     description: "Descrição da Empresa 3",
-    profileLogo: "/static/images/cards/image3.jpg",
+    image: "/static/images/cards/image3.jpg",
   },
   {
     id: 4,
     name: "Empresa 4",
     description: "Descrição da Empresa 4",
-    profileLogo: "/static/images/cards/image4.jpg",
+    image: "/static/images/cards/image4.jpg",
   },
   {
     id: 5,
     name: "Empresa 5",
     description: "Descrição da Empresa 5",
-    profileLogo: "/static/images/cards/image5.jpg",
+    image: "/static/images/cards/image5.jpg",
   },
   {
     id: 6,
     name: "Empresa 6",
     description: "Descrição da Empresa 6",
-    profileLogo: "/static/images/cards/image6.jpg",
+    image: "/static/images/cards/image6.jpg",
   },
   {
     id: 7,
     name: "Empresa 7",
     description: "Descrição da Empresa 7",
-    profileLogo: "/static/images/cards/image7.jpg",
+    image: "/static/images/cards/image7.jpg",
   },
   {
     id: 8,
     name: "Empresa 8",
     description: "Descrição da Empresa 8",
-    profileLogo: "/static/images/cards/image8.jpg",
+    image: "/static/images/cards/image8.jpg",
   },
   {
     id: 9,
     name: "Empresa 9",
     description: "Descrição da Empresa 9",
-    profileLogo: "/static/images/cards/image9.jpg",
+    image: "/static/images/cards/image9.jpg",
   },
 ];
 
-const CompanyCard: React.FC<Company> = ({ name, description, profileLogo }) => (
+const CompanyCard: React.FC<{ company: Company; onViewDetails: (company: Company) => void }> = ({ company, onViewDetails }) => (
   <Card sx={{ maxWidth: 345 }}>
-    <CardMedia component="img" alt={name} height="140" image={profileLogo} />
+    <CardMedia component="img" alt={company.name} height="140" image={company.logo || company.image} />
     <CardContent>
       <Typography gutterBottom variant="h5" component="div">
-        {name}
+        {company.name}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {description}
+        {company.description}
       </Typography>
     </CardContent>
     <CardActions>
-      <Button size="small">Ver detalhes</Button>
-      {/* <Button size="small">Learn More</Button> */}
+      <Button size="small" onClick={() => onViewDetails(company)}>Ver Empresa</Button>
     </CardActions>
   </Card>
 );
 
-const HomePageInfluencer: React.FC = () => {
+const HomePageCompany: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [mockCompanies, setMockCompanies] = useState(mockDefaultCompanies);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [countOfPages, setCountOfPages] = useState(10);
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
 
   useEffect(() => {
     async function setCompaniesFromDB() {
       const companies = await getAllCompaniesPageable(page, pageSize);
       const count = await getNumbersOfCompanies();
-
       if (companies) {
         setMockCompanies(companies);
-
         setCountOfPages(numberOfPages(count, pageSize));
       }
     }
-
     setCompaniesFromDB();
   }, [page, pageSize]);
+
+  const handleViewDetails = (company: Company) => {
+    setSelectedCompany(company);
+    setDetailModalOpen(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setSelectedCompany(null);
+    setDetailModalOpen(false);
+  };
 
   const filteredCompanies = mockCompanies.filter(
     (company) =>
@@ -155,7 +168,7 @@ const HomePageInfluencer: React.FC = () => {
           <NativeSelect
             defaultValue={pageSize}
             inputProps={{
-              name: "nº de influencers",
+              name: "nº de empresas",
               id: "uncontrolled-native",
             }}
             onChange={(evt) => setPageSize(Number(evt.target.value))}
@@ -175,13 +188,18 @@ const HomePageInfluencer: React.FC = () => {
         <Grid container spacing={2}>
           {filteredCompanies.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <CompanyCard {...item} />
+              <CompanyCard company={item} onViewDetails={handleViewDetails} />
             </Grid>
           ))}
         </Grid>
+        <CompanyDetailModal
+          company={selectedCompany}
+          open={detailModalOpen}
+          onClose={handleCloseDetailModal}
+        />
       </Box>
     </Container>
   );
 };
 
-export default HomePageInfluencer;
+export default HomePageCompany;
