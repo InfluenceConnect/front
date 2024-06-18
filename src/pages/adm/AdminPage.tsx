@@ -37,7 +37,7 @@ const AdminPage = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, [page, userType, searchTerm]); // Trigger fetchUsers when page, userType, or searchTerm changes
+  }, [page, userType, searchTerm]);
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
@@ -70,16 +70,18 @@ const AdminPage = () => {
             width: '100%',
           }}
         >
-          <ButtonGroup variant="contained" sx={{ mb: 2 }}>
+          <ButtonGroup variant="contained" sx={{ mb: 2, width: '100%' }}>
             <Button
               variant={userType === 'influencer' ? 'contained' : 'outlined'}
               onClick={() => handleUserTypeChange('influencer')}
+              sx={{ width: '50%' }} // Ajuste de largura para alinhar corretamente
             >
               Influencer
             </Button>
             <Button
               variant={userType === 'company' ? 'contained' : 'outlined'}
               onClick={() => handleUserTypeChange('company')}
+              sx={{ width: '50%' }} // Ajuste de largura para alinhar corretamente
             >
               Company
             </Button>
@@ -104,19 +106,25 @@ const AdminPage = () => {
           {error && <Typography color="error">{error}</Typography>}
           
           <div className="user-cards-container">
-            {users.map((user) => (
-              <Link to={`/user/${user.id}`} key={user.id} className="user-card">
-                <div className="card-content">
-                  <h3>{user.name}</h3>
-                  <p>{user.email}</p>
-                </div>
-              </Link>
-            ))}
+            {users.length === 0 && !isLoading ? (
+              <Typography variant="body1" mt={2}>
+                No users found.
+              </Typography>
+            ) : (
+              users.map((user) => (
+                <Link to={`/user/${user.id}`} key={user.id} className="user-card">
+                  <div className="card-content">
+                    <h3>{user.name}</h3>
+                    <p>{user.email}</p>
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
           
           {isLoading && <CircularProgress />}
           
-          {!isLoading && (
+          {!isLoading && users.length > 0 && (
             <Button
               onClick={handleLoadMore}
               variant="contained"
