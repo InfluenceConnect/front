@@ -25,8 +25,6 @@ const AdmRoutes = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login/:mode" element={<LoginPage />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/registerNicheCompany" element={<RegisterNicheCompany />} />
-      <Route path="/registerMarketing" element={<RegisterMarketing />} />
       <Route path="/updateInfluencer" element={<UpdateInfluencer />} />
       <Route path="/registerCampaign" element={<RegisterCampaign />} />
       <Route path="*" element={<NotFound />} />

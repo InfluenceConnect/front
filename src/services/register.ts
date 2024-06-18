@@ -26,7 +26,7 @@ const registerInfluencer = async (infData: RequestSaveInfluencer) => {
 
 const registerCompany = async (compData: RequestSaveCompany) => {
   try {
-    let res = await api.post("/companys", compData);
+    let res = await api.post("/companies", compData);
     return res;
   } catch (error) {
     console.log(error);
