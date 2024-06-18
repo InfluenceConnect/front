@@ -14,11 +14,13 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { useSessionContext } from "../../contexts/SessionContext";
 import Influencer from "../../types/influencer";
+import { activeInfluencer, desactiveInfluencer } from "../../services/influence";
 
 interface InfluencerDetailModalProps {
   influencer: Influencer | null;
   open: boolean;
   onClose: () => void;
+  refresh: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const style = {
@@ -39,6 +41,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
   influencer,
   open,
   onClose,
+  refresh,
 }) => {
   if (!influencer) return null;
 
@@ -88,12 +91,30 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
         <Stack spacing={1} direction={"row"}>
           <Button variant="outlined">Convidar para campanha</Button>
           {influencer.status == "ACTIVE" ? (
-            <Button variant="outlined" color="error">
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={async () => {
+                await desactiveInfluencer(influencer.id);
+                influencer.status = "INACTIVE";
+                refresh((prevV) => prevV + 1);
+              }}
+            >
               {" "}
               Desativar{" "}
             </Button>
           ) : (
-            <Button variant="outlined"> Ativar </Button>
+            <Button
+              variant="outlined"
+              onClick={async () => {
+                await activeInfluencer(influencer.id);
+                influencer.status = "ACTIVE";
+                refresh((prevV) => prevV + 1);
+              }}
+            >
+              {" "}
+              Ativar{" "}
+            </Button>
           )}
           {userType == "adm" ? <Button variant="contained">Editar</Button> : <></>}
         </Stack>

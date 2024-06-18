@@ -115,6 +115,7 @@ const HomePageCompany: React.FC = () => {
   const [countOfPages, setCountOfPages] = useState(10);
   const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [contToRefresh,setContToRefresh ] = useState(0);
 
   useEffect(() => {
     async function setInfluencersFromDB() {
@@ -126,7 +127,7 @@ const HomePageCompany: React.FC = () => {
       }
     }
     setInfluencersFromDB();
-  }, [page, pageSize]);
+  }, [page, pageSize, contToRefresh]);
 
   const handleViewDetails = (influencer: Influencer) => {
     setSelectedInfluencer(influencer);
@@ -189,7 +190,7 @@ const HomePageCompany: React.FC = () => {
         <Grid container spacing={2}>
           {filteredInfluencers.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <InfluencerCard influencer={item} onViewDetails={handleViewDetails} />
+              <InfluencerCard influencer={item} onViewDetails={handleViewDetails}  />
             </Grid>
           ))}
         </Grid>
@@ -197,6 +198,7 @@ const HomePageCompany: React.FC = () => {
           influencer={selectedInfluencer}
           open={detailModalOpen}
           onClose={handleCloseDetailModal}
+          refresh={setContToRefresh}
         />
       </Box>
     </Container>

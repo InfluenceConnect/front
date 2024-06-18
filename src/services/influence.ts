@@ -30,4 +30,27 @@ const getNumbersOfInfluencers = async () => {
   }
 };
 
-export { getAllInfluencers, getAllInfluencersPageable, getNumbersOfInfluencers };
+const desactiveInfluencer = async (id: number) => {
+  changeInfluencerStatus(id, "INACTIVE");
+};
+
+const activeInfluencer = async (id: number) => {
+  changeInfluencerStatus(id, "ACTIVE");
+};
+
+const changeInfluencerStatus = async (id: number, status: string) => {
+  try {
+    const res = await api.patch(`/influencers/status/${id}`, { statusType: status });
+    console.log(res);
+  } catch (error) {
+    console.log(`Error updating influencer ${id} status: ${error}`);
+  }
+};
+
+export {
+  getAllInfluencers,
+  getAllInfluencersPageable,
+  getNumbersOfInfluencers,
+  desactiveInfluencer,
+  activeInfluencer,
+};
