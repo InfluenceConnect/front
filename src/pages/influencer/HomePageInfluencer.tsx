@@ -19,69 +19,59 @@ import { getAllCompaniesPageable, getNumbersOfCompanies } from "../../services/c
 import numberOfPages from "../../utils/numbersOfPages";
 import CompanyDetailModal from "./CompanyDetailModal";
 import Company from "../../types/company";
-import { CompareArrows } from "@mui/icons-material";
 
 const mockDefaultCompanies: Company[] = [
   {
     id: 1,
     name: "Empresa 1",
-    description: "Descrição da Empresa 1",
     image: "/static/images/cards/image1.jpg",
     status: "active",
   },
   {
     id: 2,
     name: "Empresa 2",
-    description: "Descrição da Empresa 2",
     image: "/static/images/cards/image2.jpg",
     status: "active",
   },
   {
     id: 3,
     name: "Empresa 3",
-    description: "Descrição da Empresa 3",
     image: "/static/images/cards/image3.jpg",
     status: "active",
   },
   {
     id: 4,
     name: "Empresa 4",
-    description: "Descrição da Empresa 4",
     image: "/static/images/cards/image4.jpg",
     status: "active",
   },
   {
     id: 5,
     name: "Empresa 5",
-    description: "Descrição da Empresa 5",
     image: "/static/images/cards/image5.jpg",
     status: "active",
   },
   {
     id: 6,
     name: "Empresa 6",
-    description: "Descrição da Empresa 6",
     image: "/static/images/cards/image6.jpg",
     status: "active",
   },
   {
     id: 7,
     name: "Empresa 7",
-    description: "Descrição da Empresa 7",
     image: "/static/images/cards/image7.jpg",
     status: "active",
   },
   {
     id: 8,
     name: "Empresa 8",
-    description: "Descrição da Empresa 8",
     image: "/static/images/cards/image8.jpg",
     status: "active",
   },
   {
     id: 9,
     name: "Empresa 9",
-    description: "Descrição da Empresa 9",
     image: "/static/images/cards/image9.jpg",
     status: "active",
   },
@@ -103,7 +93,7 @@ const CompanyCard: React.FC<{
         {company.name}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {company.description}
+        {company.status}
       </Typography>
     </CardContent>
     <CardActions>
@@ -146,10 +136,8 @@ const HomePageCompany: React.FC = () => {
     setDetailModalOpen(false);
   };
 
-  const filteredCompanies = mockCompanies.filter(
-    (company) =>
-      company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      company.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCompanies = mockCompanies.filter((company) =>
+    company.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

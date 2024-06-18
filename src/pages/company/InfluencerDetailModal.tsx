@@ -71,7 +71,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
           color="text.secondary"
           id="influencer-modal-description"
         >
-          {influencer.description}
+          {influencer.status}
         </Typography>
         <Box sx={{ mt: 2 }}>
           <IconButton href={`https://facebook.com/${influencer.id}`} target="_blank">

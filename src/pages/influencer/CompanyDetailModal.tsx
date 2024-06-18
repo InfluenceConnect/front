@@ -67,7 +67,7 @@ const CompanyDetailModal: React.FC<CompanyDetailModalProps> = ({
           {company.name}
         </Typography>
         <Typography variant="body2" color="text.secondary" id="company-modal-description">
-          {company.description}
+          {company.status}
         </Typography>
         <Box sx={{ mt: 2 }}>
           <IconButton href={`https://facebook.com/${company.id}`} target="_blank">
