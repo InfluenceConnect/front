@@ -19,7 +19,7 @@ const SessionContextProvider = ({ children }: { children: ReactNode }) => {
     const userRole_LC = userRole.toLowerCase();
 
     if (userRole_LC == "influencer") {
-      if (status == "inactive" || status == "pending") {
+      if (status == "INACTIVE" || status == "PENDING") {
         setUserType("inactiveInfluencer");
         return "inactiveInfluencer";
       }
