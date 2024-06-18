@@ -1,295 +1,356 @@
-import React, { useState, useEffect, useRef, ChangeEvent, FormEvent } from "react";
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  Grid,
-  Box,
-  Typography,
-  Container,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  CircularProgress,
-  ButtonGroup,
-} from "@mui/material";
-import { IMaskInput } from "react-imask";
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { Avatar, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container, MenuItem, CircularProgress } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-const states = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
+const lightTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#14C0DE",
+      contrastText: "#fff"
+    },
+    secondary: {
+      main: "#343a40",
+      contrastText: "#fff"
+    }
+  },
+  typography: {
+    fontSize: 12
+  }
+});
 
-interface TextMaskCustomProps {
-  mask: string;
-  inputRef: React.Ref<HTMLInputElement>;
+interface UserProfile {
+  name: string;
+  cpf: string;
+  state: string;
+  email: string;
+  niche: string;
+  birthdate: string;
+  facebook: string;
+  instagram: string;
+  tiktok: string;
+  youtube: string;
+  status: string;
+  profilePic?: File | null;
 }
 
-const TextMaskCustom = React.forwardRef<HTMLInputElement, TextMaskCustomProps>(
-  function TextMaskCustom(props, ref) {
-    const { mask, ...other } = props;
-    return (
-      <IMaskInput
-        {...other}
-        mask={mask}
-        definitions={{
-          "#": /[0-9]/,
-        }}
-        inputRef={ref}
-      />
-    );
-  }
-);
+const checkboxOptions = [
+  { name: 'esporte', label: 'Esportes' },
+  { name: 'musica', label: 'Música' },
+  { name: 'moda', label: 'Moda' },
+  { name: 'saude-bem-estar', label: 'Saúde e bem estar' },
+  { name: 'negocios', label: 'Negócios' },
+  { name: 'design-interior', label: 'Design de interiores' },
+  { name: 'tecnologia', label: 'Tecnologia' },
+  { name: 'fotografia', label: 'Fotografia' },
+  { name: 'culinaria', label: 'Culinária' },
+  { name: 'educacao', label: 'Educação' },
+  { name: 'games', label: 'Games' },
+  { name: 'sustentabilidade', label: 'Sustentabilidade' },
+  { name: 'automoveis', label: 'Automóveis' },
+  { name: 'viagens', label: 'Viagens' },
+  { name: 'pets', label: 'Pets' },
+  { name: 'vida', label: 'Vida' },
+  { name: 'politica-ativismo', label: 'Política e Ativismo' },
+  { name: 'outros', label: 'Outros' },
+];
 
 const UpdateInfluencer: React.FC = () => {
-  const [userType, setUserType] = useState<string>("creatingInfluencer");
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [state, setState] = useState<string>("");
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = useState(false);
-  const [loadingImage, setLoadingImage] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [status, setStatus] = useState<string>('Em análise');
-  const [isEditable, setIsEditable] = useState<boolean>(false);
+  const [profile, setProfile] = useState<UserProfile>({
+    name: '',
+    cpf: '',
+    state: '',
+    email: '',
+    niche: '',
+    birthdate: '',
+    facebook: '',
+    instagram: '',
+    tiktok: '',
+    youtube: '',
+    status: 'active',
+    profilePic: null,
+  });
 
-  useEffect(() => {
-    // Simulate loading user data
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setIsEditable(status === 'Ativo');
-    }, 1000);
-  }, [status]);
+  const [profilePicPreview, setProfilePicPreview] = useState<string | null>(null);
+  const [loadingImage, setLoadingImage] = useState<boolean>(false);
+  const [selectedNiches, setSelectedNiches] = useState<string[]>([]);
 
-  const handlePictureChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] || null;
-    setProfilePicture(file);
-    if (file) {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProfile({ ...profile, [name]: value });
+  };
+
+  const handleProfilePicChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
       setLoadingImage(true);
+      const file = event.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result as string);
+        setProfilePicPreview(reader.result as string);
+        setProfile({ ...profile, profilePic: file });
         setLoadingImage(false);
       };
       reader.readAsDataURL(file);
-    } else {
-      setPreview(null);
     }
   };
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
+  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setProfile({ ...profile, status: value });
   };
 
-  const handleStatusChange = (event: ChangeEvent<{ value: unknown }>) => {
-    const newStatus = event.target.value as string;
-    setStatus(newStatus);
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    // Simular envio para o backend
+    console.log('Profile:', profile);
+    console.log('Profile Pic:', profile.profilePic);
+
+    // Limpar formulário após envio bem-sucedido
+    setProfile({
+      name: '',
+      cpf: '',
+      state: '',
+      email: '',
+      niche: '',
+      birthdate: '',
+      facebook: '',
+      instagram: '',
+      tiktok: '',
+      youtube: '',
+      status: 'active',
+      profilePic: null,
+    });
+    setProfilePicPreview(null);
+    setSelectedNiches([]);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    // "Realizar validação"
-    // Simular envio de dados para o backend"
-    setTimeout(() => {
-      setLoading(false);
-      alert("Dados enviados com sucesso!"); 
-    }, 1500);
-  };
-
-  const renderInfluencerFields = () => (
-    <>
-      <Grid item xs={12}>
-        <TextField
-          required
-          fullWidth
-          id="name"
-          label="Nome"
-          name="name"
-          autoComplete="name"
-          disabled={!isEditable}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          required
-          fullWidth
-          id="cpf"
-          name="cpf"
-          label="CPF"
-          InputProps={{
-            inputComponent: TextMaskCustom as any,
-            inputProps: { mask: "000.000.000-00" },
-          }}
-          disabled={!isEditable}
-        />
-        {errors.cpf && <Typography color="error">{errors.cpf}</Typography>}
-      </Grid>
-      <Grid item xs={12}>
-        <FormControl fullWidth required>
-          <InputLabel id="state-label">Estado</InputLabel>
-          <Select
-            labelId="state-label"
-            id="state"
-            name="state"
-            value={state}
-            onChange={(e) => setState(e.target.value as string)}
-            label="Estado"
-            disabled={!isEditable}
-          >
-            {states.map((state) => (
-              <MenuItem key={state} value={state}>
-                {state}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          required
-          fullWidth
-          id="email"
-          label="E-mail"
-          name="email"
-          autoComplete="email"
-          disabled={!isEditable}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          required
-          fullWidth
-          id="birthdate"
-          label="Data de Nascimento"
-          name="birthdate"
-          type="date"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          disabled={!isEditable}
-        />
-      </Grid>
-    </>
-  );
+  const isEditable = profile.status === 'active';
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography component="h1" variant="h4" fontWeight="bold">
-          Editar Perfil
-        </Typography>
-        <ButtonGroup variant="contained" aria-label="Basic button group">
-          <Button
-            variant={userType === "creatingInfluencer" ? "contained" : "outlined"}
-            onClick={() => setUserType("creatingInfluencer")}
-          >
-            Influenciador
-          </Button>
-          <Button
-            variant={userType === "creatingCompany" ? "contained" : "outlined"}
-            onClick={() => setUserType("creatingCompany")}
-            disabled
-          >
-            Empresa
-          </Button>
-        </ButtonGroup>
-
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <Grid container spacing={2}>
-            <Grid
-              item
-              xs={12}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                textAlign: "center",
-              }}
-            >
-              <input
-                accept="image/*"
-                style={{ display: "none" }}
-                id="profilePicture"
-                type="file"
-                onChange={handlePictureChange}
-                disabled={loadingImage || !isEditable}
+    <ThemeProvider theme={lightTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div style={{ marginTop: lightTheme.spacing(8), display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="profilePicture"
+            type="file"
+            onChange={handleProfilePicChange}
+            disabled={loadingImage || !isEditable}
+          />
+          <label htmlFor="profilePicture" style={{ textAlign: 'center' }}>
+            {loadingImage ? (
+              <CircularProgress style={{ width: 100, height: 100 }} />
+            ) : (
+              <Avatar
+                alt="Profile Picture"
+                src={profilePicPreview || undefined}
+                sx={{ width: 100, height: 100, cursor: isEditable ? 'pointer' : 'default' }}
               />
-              <label
-                aria-disabled={loadingImage || !isEditable}
-                htmlFor="profilePicture"
-                style={{ textAlign: "center" }}
-              >
-                {loadingImage ? (
-                  <div style={{ width: 100, height: 100, textAlign: "center" }}>
-                    {loadingImage && (
-                      <CircularProgress style={{ justifyContent: "center" }} />
-                    )}
-                  </div>
-                ) : (
-                  <Avatar
-                    src={preview || undefined}
-                    sx={{ width: 100, height: 100, cursor: isEditable ? "pointer" : "default" }}
-                  />
-                )}
-              </label>
-            </Grid>
-            {renderInfluencerFields()}
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={status}
-                  onChange={(e) => handleStatusChange(e)}
+            )}
+          </label>
+          <Typography component="h1" variant="h5">
+            Editar Perfil
+          </Typography>
+          <form style={{ width: '100%', marginTop: lightTheme.spacing(3) }} noValidate onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
                   variant="outlined"
-                  disabled={userType === "creatingInfluencer" ? !isEditable : false}
+                  required
+                  fullWidth
+                  id="name"
+                  label="Nome"
+                  name="name"
+                  autoComplete="name"
+                  value={profile.name}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="cpf"
+                  label="CPF"
+                  name="cpf"
+                  autoComplete="cpf"
+                  value={profile.cpf}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="state"
+                  label="Estado"
+                  name="state"
+                  autoComplete="state"
+                  value={profile.state}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="E-mail"
+                  name="email"
+                  autoComplete="email"
+                  value={profile.email}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="birthdate"
+                  label="Data de nascimento"
+                  name="birthdate"
+                  autoComplete="birthdate"
+                  value={profile.birthdate}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="facebook"
+                  label="Facebook"
+                  name="facebook"
+                  autoComplete="facebook"
+                  value={profile.facebook}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="instagram"
+                  label="Instagram"
+                  name="instagram"
+                  autoComplete="instagram"
+                  value={profile.instagram}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="tiktok"
+                  label="Tiktok"
+                  name="tiktok"
+                  autoComplete="tiktok"
+                  value={profile.tiktok}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="youtube"
+                  label="Youtube"
+                  name="youtube"
+                  autoComplete="youtube"
+                  value={profile.youtube}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  select
+                  id="status"
+                  label="Status"
+                  name="status"
+                  value={profile.status}
+                  onChange={handleStatusChange}
                 >
-                  <MenuItem value="Em análise">Em análise</MenuItem>
-                  <MenuItem value="Ativo">Ativo</MenuItem>
-                  <MenuItem value="Inativo">Inativo</MenuItem>
-                </Select>
-              </FormControl>
+                  <MenuItem value="active">Ativo</MenuItem>
+                  <MenuItem value="inactive">Inativo</MenuItem>
+                  <MenuItem value="pending">Em análise</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="niche"
+                  label="Nicho de atuação"
+                  name="niche"
+                  select
+                  SelectProps={{
+                    multiple: true,
+                    value: selectedNiches,
+                    onChange: (e) => setSelectedNiches(e.target.value as string[]),
+                    renderValue: (selected) => (selected as string[]).join(', '),
+                  }}
+                  disabled={!isEditable}
+                >
+                  {checkboxOptions.map(option => (
+                    <MenuItem key={option.name} value={option.name}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                color="primary"
-                disabled={loading || !isEditable}
-              >
-                {loading && <CircularProgress sx={{ position: "absolute" }} />}
-                Salvar Alterações
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid container justifyContent="center">
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  setIsEditable(false);
-                  setStatus('Em análise');
-                }}
-              >
-                Cancelar
-              </Button>
-            </Grid>
-          </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ marginTop: lightTheme.spacing(3) }}
+              disabled={!isEditable}
+            >
+              Salvar
+            </Button>
+          </form>
+        </div>
+        <Box mt={5}>
+          <Typography variant="body2" color="textSecondary" align="center">
+            {'Direitos Autorais © '}
+            <Link color="inherit" href="https://mui.com/">
+              Seu Site
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+          </Typography>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </ThemeProvider>
   );
 };
 
 export default UpdateInfluencer;
+
+                 
+
