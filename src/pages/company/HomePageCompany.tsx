@@ -98,7 +98,7 @@ const InfluencerCard: React.FC<{ influencer: Influencer; onViewDetails: (influen
         {influencer.name}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {influencer.description}
+        Status: {influencer.status}
       </Typography>
     </CardContent>
     <CardActions>
