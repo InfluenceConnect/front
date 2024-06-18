@@ -1,0 +1,52 @@
+.user-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  
+  .user-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: left;
+    text-decoration: none;
+    color: black;
+    width: 250px;
+    transition: transform 0.2s;
+  }
+  
+  .user-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-content h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+  }
+  
+  .card-content p {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+  }
+  
+  main {
+    flex: 1;
+  }
+  
+  footer {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+  }
+  

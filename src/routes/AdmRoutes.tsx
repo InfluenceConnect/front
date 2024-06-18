@@ -8,6 +8,8 @@ import Register from "../pages/register/Register";
 import RegisterNicheCompany from "../pages/company/register/RegisterNiche";
 import RegisterMarketing from "../pages/company/register/RegisterMarketing";
 import UpdateInfluencer from "../pages/influencer/UpdateInfluencer";
+import AdminPage from "../pages/adm/AdminPage";
+import UserDetail from "../pages/adm/UserDetails";
 
 const AdmRoutes = () => {
   return (
@@ -16,6 +18,8 @@ const AdmRoutes = () => {
       <Route path="/homeInfluencer" element={<HomePageInfluencer />} />
       <Route path="/homeCompany" element={<HomePageCompany />} />
       <Route path="/accountStatus" element={<AccountStatus />} />
+      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/user/:id" element={<UserDetail />} />
       <Route path="/" element={<LoginPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login/:mode" element={<LoginPage />} />
