@@ -23,6 +23,10 @@ const admPages: Page[] = [
     name: "Campanhas",
     path: "/campaigns",
   },
+  {
+    name: "Nova Campanha",
+    path: "/registerCampaign"
+  },
 ];
 
 const companyPages: Page[] = [
@@ -33,6 +37,10 @@ const companyPages: Page[] = [
   {
     name: "Campanhas",
     path: "/campaigns",
+  },
+  {
+    name: "Nova Campanha",
+    path: "/registerCampaign"
   },
 ];
 

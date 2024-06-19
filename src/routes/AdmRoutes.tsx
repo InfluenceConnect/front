@@ -3,7 +3,7 @@ import AccountStatus from "../pages/influencer/AccountStatus";
 import HomePageInfluencer from "../pages/influencer/HomePageInfluencer";
 import NotFound from "../pages/not_found";
 import HomePageCompany from "../pages/company/HomePageCompany";
-import LoginPage from "../pages/login/Login"
+import LoginPage from "../pages/login/Login";
 import Register from "../pages/register/Register";
 import RegisterNicheCompany from "../pages/company/register/RegisterNiche";
 import RegisterMarketing from "../pages/company/register/RegisterMarketing";
@@ -11,6 +11,7 @@ import UpdateInfluencer from "../pages/influencer/UpdateInfluencer";
 import AdminPage from "../pages/adm/AdminPage";
 import UserDetail from "../pages/adm/UserDetails";
 import RegisterCampaign from "../pages/company/register/RegisterCampaign";
+import Campaigns from "../pages/company/Campaigns";
 
 const AdmRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AdmRoutes = () => {
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/user/:id" element={<UserDetail />} />
       <Route path="/" element={<LoginPage />} />
+      {/* Retirar login e registro no final do projeto APENAS PARA TESTE */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login/:mode" element={<LoginPage />} />
       <Route path="/register" element={<Register />} />
@@ -29,6 +31,7 @@ const AdmRoutes = () => {
       <Route path="/registerMarketing" element={<RegisterMarketing />} />
       <Route path="/updateInfluencer" element={<UpdateInfluencer />} />
       <Route path="/registerCampaign" element={<RegisterCampaign />} />
+      <Route path="/campaigns" element={<Campaigns />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

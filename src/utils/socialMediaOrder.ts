@@ -6,4 +6,14 @@ const socialMediaOrder = {
   5: "twitter"
 }
 
+const socialMediaOrderSwapped = {
+  "facebook": 1,
+  "instagram": 2,
+  "youtube": 3,
+  "tiktok": 4,
+  "twitter": 5
+}
+
+
+export {socialMediaOrderSwapped}
 export default socialMediaOrder

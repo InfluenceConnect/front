@@ -1,6 +1,6 @@
 // Define a interface Campaign (Campanha) com as propriedades esperadas
 interface Campaign {
-  id: number, 
+  id?: number, 
   name: string; 
   description: string; 
   startDate: string; 

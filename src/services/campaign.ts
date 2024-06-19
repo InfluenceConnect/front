@@ -5,6 +5,7 @@ import Campaign from "../types/campaign";
 const createCampaign = async (campaign: Campaign) => {
   try {
     const res = await api.post("/campaigns", campaign);
+    console.log(res);
     return res.data;
   } catch (error) {
     console.log(error);

@@ -1,5 +1,6 @@
-import api from "./api";
 import Influencer from "../types/influencer";
+import api from "./api";
+//import Influencer from "../types/influencer";
 
 
 
@@ -74,6 +75,17 @@ const getInfluencerById = async (id: number) => {
   }
 };
 
+//Função para obter influenciadores ativos
+const getActivesInfluencers = async()=>{
+  try {
+    const res = await api.get("/influencers/getAllActives");
+    console.log(res);
+    return (res.data as Influencer[])
+  } catch (error) {
+    console.log("Error on getActivesInfluencers: " + error)
+  }
+}
+
 export {
  
   updateInfluencer,
@@ -83,4 +95,5 @@ export {
   getNumbersOfInfluencers,
   desactiveInfluencer,
   activeInfluencer,
+  getActivesInfluencers
 };
