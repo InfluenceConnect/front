@@ -1,15 +1,27 @@
 import api from "./api";
+import Influencer from "../types/influencer";
 
+// Função para registrar um influenciador
+const registerInfluencer = async (influencer: Influencer) => {
+  try {
+    const res = await api.post("/influencers", influencer);
+    return res.data;
+  } catch (error) {
+    console.log("Error registering influencer: " + error);
+  }
+};
+
+// Função para obter todos os influenciadores
 const getAllInfluencers = async () => {
   try {
     const res = await api.get("/influencers");
-    //console.log(res.data);
     return res.data;
   } catch (error) {
     console.log(error);
   }
 };
 
+// Função para obter todos os influenciadores de forma paginada
 const getAllInfluencersPageable = async (page: number, pageSize: number) => {
   try {
     const res = await api.get(`/influencers/pageable?page=${page}&pageSize=${pageSize}`);
@@ -20,24 +32,27 @@ const getAllInfluencersPageable = async (page: number, pageSize: number) => {
   }
 };
 
+// Função para obter o número de influenciadores
 const getNumbersOfInfluencers = async () => {
   try {
     const res = await api.get("/influencers/count");
-    //console.log(res);
     return res.data;
   } catch (error) {
     console.log("Error getting numbers of influencers: " + error);
   }
 };
 
+// Função para desativar um influenciador
 const desactiveInfluencer = async (id: number) => {
   changeInfluencerStatus(id, "INACTIVE");
 };
 
+// Função para ativar um influenciador
 const activeInfluencer = async (id: number) => {
   changeInfluencerStatus(id, "ACTIVE");
 };
 
+// Função para mudar o status de um influenciador
 const changeInfluencerStatus = async (id: number, status: string) => {
   try {
     const res = await api.patch(`/influencers/status/${id}`, { statusType: status });
@@ -47,7 +62,30 @@ const changeInfluencerStatus = async (id: number, status: string) => {
   }
 };
 
+// Função para atualizar um influenciador
+const updateInfluencer = async (id: number, influencer: Influencer) => {
+  try {
+    const res = await api.put(`/influencers/${id}`, influencer);
+    return res.data;
+  } catch (error) {
+    console.log(`Error updating influencer with id ${id}: ${error}`);
+  }
+};
+
+// Função para obter um influenciador pelo ID
+const getInfluencerById = async (id: number) => {
+  try {
+    const res = await api.get(`/influencers/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(`Error getting influencer with id ${id}: ${error}`);
+  }
+};
+
 export {
+  registerInfluencer,
+  updateInfluencer,
+  getInfluencerById,
   getAllInfluencers,
   getAllInfluencersPageable,
   getNumbersOfInfluencers,
