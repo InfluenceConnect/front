@@ -2,6 +2,7 @@ import RequestSaveCompany from "../types/requestSaveCompany";
 import api from "./api";
 import RequestSaveInfluencer from "../types/requestSaveInfluencer";
 
+// Função para verificar se o email está disponível
 const verifyEmailIsAvailable = async (email: string) => {
   try {
     const req = { email: email };
@@ -15,6 +16,7 @@ const verifyEmailIsAvailable = async (email: string) => {
   }
 };
 
+// Função para registrar um influenciador
 const registerInfluencer = async (infData: RequestSaveInfluencer) => {
   try {
     let res = await api.post("/influencers", infData);
@@ -24,6 +26,7 @@ const registerInfluencer = async (infData: RequestSaveInfluencer) => {
   }
 };
 
+// Função para registrar uma empresa
 const registerCompany = async (compData: RequestSaveCompany) => {
   try {
     let res = await api.post("/companies", compData);
@@ -32,4 +35,9 @@ const registerCompany = async (compData: RequestSaveCompany) => {
     console.log(error);
   }
 };
-export { verifyEmailIsAvailable, registerInfluencer, registerCompany };
+
+export {
+  verifyEmailIsAvailable,
+  registerInfluencer,
+  registerCompany
+};
