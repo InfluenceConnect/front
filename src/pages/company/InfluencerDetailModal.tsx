@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   Box,
@@ -20,15 +20,15 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import { useSessionContext } from "../../contexts/SessionContext";
 import Influencer from "../../types/influencer";
 import { activeInfluencer, desactiveInfluencer } from "../../services/influence";
-import { getAllCampaign } from "../../services/campaign";
 import Campaign from "../../types/campaign";
+import { addInfluencerToCampaign } from "../../services/campaign";
 
 interface InfluencerDetailModalProps {
   influencer: Influencer | null;
   open: boolean;
   onClose: () => void;
   refresh: React.Dispatch<React.SetStateAction<number>>;
-  campaigns: Campaign[]
+  campaigns: Campaign[];
 }
 
 const style = {
@@ -45,35 +45,21 @@ const style = {
   pb: 3,
 };
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const names = [
-  "Influencer1",
-  "Influencer2",
-  "Influencer3",
-  "Influencer4",
-  "Influencer5",
-  "Influencer6",
-  "Influencer7",
-];
-
-
-
+const influencerCampaignsItems = (campaigns: Campaign) => (
+  <Typography
+    variant="body2"
+    color="text.secondary"
+    sx={{ border: "0.3px solid gray", borderRadius: 1, paddingInline: 1 }}
+  >
+    {campaigns.name}
+  </Typography>
+);
 const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
   influencer,
   open,
   onClose,
   refresh,
-  campaigns
+  campaigns,
 }) => {
   if (!influencer) return null;
 
@@ -116,6 +102,29 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
         >
           {influencer.status}
         </Typography>
+        <Stack>
+          {influencer.influencerCampaigns?.length != 0 ? (
+            <Stack direction={"row"} spacing={1}>
+              <Typography variant="body2" color="text.secondary">
+                Campanhas:
+              </Typography>
+              <Stack direction={"row"} spacing={1}>
+                {influencer.influencerCampaigns?.map((c, i) =>
+                  influencerCampaignsItems(c)
+                )}
+              </Stack>
+            </Stack>
+          ) : (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              id="influencer-modal-description"
+            >
+              {" "}
+              Não é ativo em campanhas
+            </Typography>
+          )}
+        </Stack>
         <Box sx={{ mt: 2 }}>
           <IconButton href={`https://facebook.com/${influencer.id}`} target="_blank">
             <FacebookIcon />
@@ -129,7 +138,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
         </Box>
 
         <Stack spacing={2} marginTop={1}>
-          <FormControl fullWidth  sx={{display: "flex", flexDirection: "row" ,gap: 1}}>
+          <FormControl fullWidth sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
             <InputLabel id="demo-simple-select-label">Campanha</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -139,9 +148,24 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
               onChange={handleCampaignChange}
               fullWidth
             >
-              {campaigns.map((c)=> <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)}
+              {campaigns.map((c) => (
+                <MenuItem key={c.id} value={c.id}>
+                  {c.name}
+                </MenuItem>
+              ))}
             </Select>
-            <Button variant="outlined" onClick={()=>console.log(selectedCampaignId)}>Adicionar a Campanha</Button>
+            <Button
+              variant="outlined"
+              disabled={influencer.status == "PENDING" || influencer.status == "INACTIVE"} 
+              onClick={async () => {
+                if (typeof selectedCampaignId == typeof []) return;
+
+                await addInfluencerToCampaign(Number(selectedCampaignId), influencer.id);
+                refresh((p) => p + 1);
+              }}
+            >
+              Adicionar a Campanha
+            </Button>
           </FormControl>
           <Stack spacing={1} direction={"row"}>
             {userType == "adm" ? (
