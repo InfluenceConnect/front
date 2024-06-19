@@ -17,6 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { YouTube } from "@mui/icons-material";
 import { useSessionContext } from "../../contexts/SessionContext";
 import Influencer from "../../types/influencer";
 import { activeInfluencer, desactiveInfluencer } from "../../services/influence";
@@ -46,7 +47,7 @@ const style = {
   pb: 3,
 };
 
-const influencerCampaignsItems = (campaigns: Campaign, index:number) => (
+const influencerCampaignsItems = (campaigns: Campaign, index: number) => (
   <Typography
     key={index}
     variant="body2"
@@ -67,7 +68,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
 
   const { userType } = useSessionContext();
   const [selectedCampaignId, setSelectedCampaignId] = useState<string[]>([]);
-  const socialMedias = formatSocialMedia(influencer.influencerSocialMedia??[])
+  const socialMedias = formatSocialMedia(influencer.influencerSocialMedia ?? []);
 
   const handleCampaignChange = (event: SelectChangeEvent<string[]>) => {
     const {
@@ -113,7 +114,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
               </Typography>
               <Stack direction={"row"} spacing={1}>
                 {influencer.influencerCampaigns?.map((c, i) =>
-                  influencerCampaignsItems(c,i)
+                  influencerCampaignsItems(c, i)
                 )}
               </Stack>
             </Stack>
@@ -129,15 +130,41 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
           )}
         </Stack>
         <Box sx={{ mt: 2 }}>
-          <IconButton href={socialMedias.facebook} target="_blank">
-            <FacebookIcon />
-          </IconButton>
-          <IconButton href={socialMedias.instagram} target="_blank">
-            <InstagramIcon />
-          </IconButton>
-          <IconButton href={socialMedias.twitter} target="_blank">
-            <TwitterIcon />
-          </IconButton>
+          {socialMedias.facebook.length > 0 ? (
+            <IconButton href={socialMedias.facebook} target="_blank">
+              <FacebookIcon />
+            </IconButton>
+          ) : (
+            <></>
+          )}
+          {socialMedias.instagram.length > 0 ? (
+            <IconButton href={socialMedias.instagram} target="_blank">
+              <InstagramIcon />
+            </IconButton>
+          ) : (
+            <></>
+          )}
+          {socialMedias.twitter.length > 0 ? (
+            <IconButton href={socialMedias.twitter} target="_blank">
+              <TwitterIcon />
+            </IconButton>
+          ) : (
+            <></>
+          )}
+          {socialMedias.youtube.length > 0 ? (
+            <IconButton href={socialMedias.youtube} target="_blank">
+              <YouTube />
+            </IconButton>
+          ) : (
+            <></>
+          )}
+          {socialMedias.tiktok.length > 0 ? (
+            <IconButton href={socialMedias.tiktok} target="_blank">
+              <Typography color="text.secondary">🎵</Typography>
+            </IconButton>
+          ) : (
+            <></>
+          )}
         </Box>
 
         <Stack spacing={2} marginTop={1}>
@@ -159,7 +186,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
             </Select>
             <Button
               variant="outlined"
-              disabled={influencer.status == "PENDING" || influencer.status == "INACTIVE"} 
+              disabled={influencer.status == "PENDING" || influencer.status == "INACTIVE"}
               onClick={async () => {
                 if (typeof selectedCampaignId == typeof []) return;
 
