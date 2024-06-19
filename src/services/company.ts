@@ -69,7 +69,7 @@ const deleteCompany = async (id: number) => {
 };
 
 export {
-  createCompany,
+ 
   getCompanyById,
   getAllCompanies,
   getAllCompaniesPageable,

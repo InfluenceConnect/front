@@ -75,7 +75,7 @@ const getInfluencerById = async (id: number) => {
 };
 
 export {
-  registerInfluencer,
+ 
   updateInfluencer,
   getInfluencerById,
   getAllInfluencers,
