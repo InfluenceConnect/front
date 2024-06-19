@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   Box,
@@ -7,6 +7,13 @@ import {
   IconButton,
   Stack,
   Button,
+  Select,
+  OutlinedInput,
+  Chip,
+  MenuItem,
+  SelectChangeEvent,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -37,6 +44,27 @@ const style = {
   pb: 3,
 };
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  "Influencer1",
+  "Influencer2",
+  "Influencer3",
+  "Influencer4",
+  "Influencer5",
+  "Influencer6",
+  "Influencer7",
+];
+
 const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
   influencer,
   open,
@@ -46,6 +74,14 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
   if (!influencer) return null;
 
   const { userType } = useSessionContext();
+  const [campaign, setCampaign] = useState<string[]>([]);
+
+  const handleCampaignChange = (event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setCampaign(typeof value === "string" ? value.split(",") : value);
+  };
 
   return (
     <Modal
@@ -88,35 +124,58 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
           </IconButton>
         </Box>
 
-        <Stack spacing={1} direction={"row"}>
-          <Button variant="outlined">Convidar para campanha</Button>
-          {influencer.status == "ACTIVE" ? (
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={async () => {
-                await desactiveInfluencer(influencer.id);
-                influencer.status = "INACTIVE";
-                refresh((prevV) => prevV + 1);
-              }}
+        <Stack spacing={2} marginTop={1}>
+          <FormControl fullWidth  sx={{display: "flex", flexDirection: "row" ,gap: 1}}>
+            <InputLabel id="demo-simple-select-label">Campanha</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={campaign}
+              label="Campanha"
+              onChange={handleCampaignChange}
+              fullWidth
             >
-              {" "}
-              Desativar{" "}
-            </Button>
-          ) : (
-            <Button
-              variant="outlined"
-              onClick={async () => {
-                await activeInfluencer(influencer.id);
-                influencer.status = "ACTIVE";
-                refresh((prevV) => prevV + 1);
-              }}
-            >
-              {" "}
-              Ativar{" "}
-            </Button>
-          )}
-          {userType == "adm" ? <Button variant="contained">Editar</Button> : <></>}
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
+            <Button variant="outlined">Adicionar a Campanha</Button>
+          </FormControl>
+          <Stack spacing={1} direction={"row"}>
+            {userType == "adm" ? (
+              <>
+                <Button variant="contained">Editar</Button>{" "}
+                {influencer.status == "ACTIVE" ? (
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={async () => {
+                      await desactiveInfluencer(influencer.id);
+                      influencer.status = "INACTIVE";
+                      refresh((prevV) => prevV + 1);
+                    }}
+                  >
+                    {" "}
+                    Desativar{" "}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={async () => {
+                      await activeInfluencer(influencer.id);
+                      influencer.status = "ACTIVE";
+                      refresh((prevV) => prevV + 1);
+                    }}
+                  >
+                    {" "}
+                    Ativar{" "}
+                  </Button>
+                )}
+              </>
+            ) : (
+              <></>
+            )}
+          </Stack>
         </Stack>
       </Box>
     </Modal>
