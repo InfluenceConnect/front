@@ -23,7 +23,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login } from "../../services/login";
 import { useSessionContext } from "../../contexts/SessionContext";
-
 export default function LoginPage() {
   const navigate = useNavigate();
   const sessionCtx = useSessionContext();
@@ -106,6 +105,8 @@ export default function LoginPage() {
   };
 
   const handleTypeUser = () => {
+
+
     navigate("/Register");
   };
 
