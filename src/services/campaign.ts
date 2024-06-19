@@ -1,16 +1,8 @@
-import { Campaign } from "@mui/icons-material";
-import api from "./api";
 
-interface Campaign {
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  budget: number;
-  expecLikes: number;
-  expecComments: number;
-  expecSaves: number;
-}
+import api from "./api";
+import Campaign from "../types/campaign";
+
+
 
 const createCampaign = async (campaign: Campaign) => {
   try {
