@@ -1,13 +1,14 @@
+// Define a interface Campaign (Campanha) com as propriedades esperadas
 interface Campaign {
-  id: number,
-  name: string;
-  description: string;
+  id: number, 
+  name: string; 
+  description: string; 
   startDate: string; 
   endDate: string; 
-  budget: number;
-  expecLikes: number;
+  budget: number; 
+  expecLikes: number; 
   expecComments: number;
-  expecSaves: number;
+  expecSaves: number; 
 }
 
 export default Campaign;

@@ -1,19 +1,21 @@
 import Campaign from "./campaign";
 
+// Define a interface Influencer (Influenciador) com as propriedades esperadas
 interface Influencer {
-  name: string;
-  id: number;
-  image: string;
+  name: string; 
+  id: number; 
+  image: string; 
   profilePhoto?: string;
-  status: string;
-  influencerCampaigns?: Campaign[];
+  status: string; 
+  influencerCampaigns?: Campaign[]; 
   influencerSocialMedia?: SocialMedia[];
 }
+export default Influencer;
 
-interface SocialMedia {
-  socialMediaId: number,
-  link: string
+// Define a interface SocialMedia (Rede Social) com as propriedades esperadas
+export interface SocialMedia {
+  socialMediaId: number; 
+  link: string; 
 }
 
 
-export default Influencer;
