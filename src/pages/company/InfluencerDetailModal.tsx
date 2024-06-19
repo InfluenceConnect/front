@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Box,
@@ -8,8 +8,6 @@ import {
   Stack,
   Button,
   Select,
-  OutlinedInput,
-  Chip,
   MenuItem,
   SelectChangeEvent,
   InputLabel,
@@ -22,12 +20,15 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import { useSessionContext } from "../../contexts/SessionContext";
 import Influencer from "../../types/influencer";
 import { activeInfluencer, desactiveInfluencer } from "../../services/influence";
+import { getAllCampaign } from "../../services/campaign";
+import Campaign from "../../types/campaign";
 
 interface InfluencerDetailModalProps {
   influencer: Influencer | null;
   open: boolean;
   onClose: () => void;
   refresh: React.Dispatch<React.SetStateAction<number>>;
+  campaigns: Campaign[]
 }
 
 const style = {
@@ -65,22 +66,25 @@ const names = [
   "Influencer7",
 ];
 
+
+
 const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
   influencer,
   open,
   onClose,
   refresh,
+  campaigns
 }) => {
   if (!influencer) return null;
 
   const { userType } = useSessionContext();
-  const [campaign, setCampaign] = useState<string[]>([]);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string[]>([]);
 
   const handleCampaignChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
-    setCampaign(typeof value === "string" ? value.split(",") : value);
+    setSelectedCampaignId(typeof value === "string" ? value.split(",") : value);
   };
 
   return (
@@ -130,16 +134,14 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={campaign}
+              value={selectedCampaignId}
               label="Campanha"
               onChange={handleCampaignChange}
               fullWidth
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {campaigns.map((c)=> <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)}
             </Select>
-            <Button variant="outlined">Adicionar a Campanha</Button>
+            <Button variant="outlined" onClick={()=>console.log(selectedCampaignId)}>Adicionar a Campanha</Button>
           </FormControl>
           <Stack spacing={1} direction={"row"}>
             {userType == "adm" ? (

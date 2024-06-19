@@ -22,6 +22,8 @@ import {
 import numberOfPages from "../../utils/numbersOfPages";
 import InfluencerDetailModal from "./InfluencerDetailModal";
 import Influencer from "../../types/influencer";
+import { getAllCampaign } from "../../services/campaign";
+import Campaign from "../../types/campaign";
 
 const mockDefaultInfluencers: Influencer[] = [
   {
@@ -117,6 +119,18 @@ const HomePageCompany: React.FC = () => {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [contToRefresh,setContToRefresh ] = useState(0);
 
+  const [campaigns, setCampaigns] = useState([] as Campaign[]);
+
+  useEffect(()=>{
+    const setAllCampaignsOnState = async() =>{
+      const camps = await getAllCampaign();
+
+      setCampaigns(camps);
+    }
+
+    setAllCampaignsOnState();
+  },[])
+
   useEffect(() => {
     async function setInfluencersFromDB() {
       const influencers = await getAllInfluencersPageable(page, pageSize);
@@ -199,6 +213,7 @@ const HomePageCompany: React.FC = () => {
           open={detailModalOpen}
           onClose={handleCloseDetailModal}
           refresh={setContToRefresh}
+          campaigns={campaigns}
         />
       </Box>
     </Container>
