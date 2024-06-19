@@ -22,6 +22,7 @@ import Influencer from "../../types/influencer";
 import { activeInfluencer, desactiveInfluencer } from "../../services/influence";
 import Campaign from "../../types/campaign";
 import { addInfluencerToCampaign } from "../../services/campaign";
+import formatSocialMedia from "../../utils/socialMediaFormatter";
 
 interface InfluencerDetailModalProps {
   influencer: Influencer | null;
@@ -45,8 +46,9 @@ const style = {
   pb: 3,
 };
 
-const influencerCampaignsItems = (campaigns: Campaign) => (
+const influencerCampaignsItems = (campaigns: Campaign, index:number) => (
   <Typography
+    key={index}
     variant="body2"
     color="text.secondary"
     sx={{ border: "0.3px solid gray", borderRadius: 1, paddingInline: 1 }}
@@ -65,6 +67,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
 
   const { userType } = useSessionContext();
   const [selectedCampaignId, setSelectedCampaignId] = useState<string[]>([]);
+  const socialMedias = formatSocialMedia(influencer.influencerSocialMedia??[])
 
   const handleCampaignChange = (event: SelectChangeEvent<string[]>) => {
     const {
@@ -110,7 +113,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
               </Typography>
               <Stack direction={"row"} spacing={1}>
                 {influencer.influencerCampaigns?.map((c, i) =>
-                  influencerCampaignsItems(c)
+                  influencerCampaignsItems(c,i)
                 )}
               </Stack>
             </Stack>
@@ -126,13 +129,13 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
           )}
         </Stack>
         <Box sx={{ mt: 2 }}>
-          <IconButton href={`https://facebook.com/${influencer.id}`} target="_blank">
+          <IconButton href={socialMedias.facebook} target="_blank">
             <FacebookIcon />
           </IconButton>
-          <IconButton href={`https://instagram.com/${influencer.id}`} target="_blank">
+          <IconButton href={socialMedias.instagram} target="_blank">
             <InstagramIcon />
           </IconButton>
-          <IconButton href={`https://twitter.com/${influencer.id}`} target="_blank">
+          <IconButton href={socialMedias.twitter} target="_blank">
             <TwitterIcon />
           </IconButton>
         </Box>
