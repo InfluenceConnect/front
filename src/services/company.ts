@@ -45,15 +45,7 @@ const getNumbersOfCompanies = async () => {
   }
 };
 
-// Função para criar uma nova empresa
-const createCompany = async (company: Company) => {
-  try {
-    const res = await api.post("/companies", company);
-    return res.data;
-  } catch (error) {
-    console.log("Erro ao criar empresa: " + error);
-  }
-};
+
 
 // Função para atualizar uma empresa existente
 const updateCompany = async (id: number, company: Company) => {

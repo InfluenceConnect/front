@@ -1,15 +1,7 @@
 import api from "./api";
 import Influencer from "../types/influencer";
 
-// Função para registrar um influenciador
-const registerInfluencer = async (influencer: Influencer) => {
-  try {
-    const res = await api.post("/influencers", influencer);
-    return res.data;
-  } catch (error) {
-    console.log("Error registering influencer: " + error);
-  }
-};
+
 
 // Função para obter todos os influenciadores
 const getAllInfluencers = async () => {
