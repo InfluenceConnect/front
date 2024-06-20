@@ -107,7 +107,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
           {influencer.status}
         </Typography>
         <Stack>
-          {influencer.influencerCampaigns?.length != 0 ? (
+          {(influencer.influencerCampaigns?.length != 0 && influencer.status != "INACTIVE") ? (
             <Stack direction={"row"} spacing={1}>
               <Typography variant="body2" color="text.secondary">
                 Campanhas:

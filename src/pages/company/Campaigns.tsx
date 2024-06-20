@@ -187,12 +187,11 @@ const Campaigns: React.FC = () => {
 
   useEffect(() => {
     async function setCampaignsFromDB() {
-      const campaigns = await getAllCampaignPageable(page, pageSize);
-      const count = await getNumbersOfCampaigns();
-      if (campaigns) {
-        setMockCampaigns(campaigns);
-        console.log(campaigns);
-        setCountOfPages(numberOfPages(count, pageSize));
+      const pageCampaigns = await getAllCampaignPageable(page, pageSize);
+      if (pageCampaigns) {
+        setMockCampaigns(pageCampaigns.content);
+        console.log(pageCampaigns);
+        setCountOfPages(pageCampaigns.totalPages);
       }
     }
     setCampaignsFromDB();

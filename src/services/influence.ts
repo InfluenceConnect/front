@@ -2,8 +2,6 @@ import Influencer from "../types/influencer";
 import api from "./api";
 //import Influencer from "../types/influencer";
 
-
-
 // Função para obter todos os influenciadores
 const getAllInfluencers = async () => {
   try {
@@ -76,18 +74,17 @@ const getInfluencerById = async (id: number) => {
 };
 
 //Função para obter influenciadores ativos
-const getActivesInfluencers = async()=>{
+const getActivesInfluencers = async () => {
   try {
-    const res = await api.get("/influencers/getAllActives");
+    const res = await api.get("/influencers/active");
     console.log(res);
-    return (res.data as Influencer[])
+    return res.data as Influencer[];
   } catch (error) {
-    console.log("Error on getActivesInfluencers: " + error)
+    console.log("Error on getActivesInfluencers: " + error);
   }
-}
+};
 
 export {
- 
   updateInfluencer,
   getInfluencerById,
   getAllInfluencers,
@@ -95,5 +92,5 @@ export {
   getNumbersOfInfluencers,
   desactiveInfluencer,
   activeInfluencer,
-  getActivesInfluencers
+  getActivesInfluencers,
 };

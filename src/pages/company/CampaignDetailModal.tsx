@@ -103,43 +103,11 @@ const CampaignDetailModal: React.FC<CampaignDetailModalProps> = ({
         <Typography variant="body2" color="text.secondary">
           Orçamento: R$ {campaign.budget.toFixed(2)}
         </Typography>
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Adicionar Influenciador à Campanha:
-          </Typography>
-          <FormControl fullWidth sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
-            <InputLabel id="influencer-select-label">Influenciador</InputLabel>
-            <Select
-              labelId="influencer-select-label"
-              id="influencer-select"
-              value={selectedInfluencerId}
-              label="Influenciador"
-              onChange={handleInfluencerChange}
-              fullWidth
-            >
-              {influencers.map((influencer) => (
-                <MenuItem key={influencer.id} value={influencer.id}>
-                  {influencer.name}
-                </MenuItem>
-              ))}
-            </Select>
-            <Button
-              variant="outlined"
-              onClick={async () => {
-                if (selectedInfluencerId) {
-                  await addInfluencerToCampaign(Number(selectedInfluencerId), campaign.id!);
-                }
-              }}
-            >
-              Adicionar Influenciador
-            </Button>
-          </FormControl>
-        </Box>
         {userType === "adm" && (
           <Stack spacing={2} direction={"row"} marginTop={1}>
-            <Button variant="contained">Editar</Button>
+            {/* <Button variant="contained">Editar</Button> */}
             <Button variant="outlined" color="error">
-              Excluir
+              Desativar
             </Button>
           </Stack>
         )}
