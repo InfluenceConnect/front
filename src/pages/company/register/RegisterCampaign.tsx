@@ -19,6 +19,7 @@ import { createCampaign } from "../../../services/campaign";
 import Influencer from "../../../types/influencer";
 import { getActivesInfluencers } from "../../../services/influence";
 import { useNavigate } from "react-router-dom";
+import AvatarImage from "../../../components/AvatarImage";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -133,6 +134,10 @@ export default function RegisterCampaign() {
   });
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
+  //FUNÇÕES PARA CAPTURAR IMAGEM DA CAMPANHA
+  const [preview, setPreview] = useState<string | null>(null);
+
+
   const campaingData: CampaignData = {
     name: name,
     startDate: startDate,
@@ -150,7 +155,7 @@ export default function RegisterCampaign() {
     expecSaves: Number(shares),
     companyId: 1,
     influencerIds: selectedInfluencers.map((i) => i.id),
-    logo: ""
+    logo: preview??""
   };
   const [activeInfluencers, setActiveInfluencers] = useState([] as Influencer[]);
 
@@ -350,6 +355,9 @@ export default function RegisterCampaign() {
       <Typography variant="h4" gutterBottom align="center">
         Registrar Campanha
       </Typography>
+      <Box m={1}>
+        <AvatarImage preview= {preview} setPreview={setPreview} />
+      </Box>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
