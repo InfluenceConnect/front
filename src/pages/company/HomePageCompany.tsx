@@ -25,63 +25,20 @@ import Influencer from "../../types/influencer";
 import { getAllCampaign } from "../../services/campaign";
 import Campaign from "../../types/campaign";
 
+// Mock de influenciadores para uso inicial
 const mockDefaultInfluencers: Influencer[] = [
-  {
-    id: 1,
-    name: "Influenciador 1",
-    image: "/static/images/cards/image1.jpg",
-    status: "",
-  },
-  {
-    id: 2,
-    name: "Influenciador 2",
-    image: "/static/images/cards/image2.jpg",
-    status: "",
-  },
-  {
-    id: 3,
-    name: "Influenciador 3",
-    image: "/static/images/cards/image3.jpg",
-    status: "",
-  },
-  {
-    id: 4,
-    name: "Influenciador 4",
-    image: "/static/images/cards/image4.jpg",
-    status: "",
-  },
-  {
-    id: 5,
-    name: "Influenciador 5",
-    image: "/static/images/cards/image5.jpg",
-    status: "",
-  },
-  {
-    id: 6,
-    name: "Influenciador 6",
-    image: "/static/images/cards/image6.jpg",
-    status: "",
-  },
-  {
-    id: 7,
-    name: "Influenciador 7",
-    image: "/static/images/cards/image7.jpg",
-    status: "",
-  },
-  {
-    id: 8,
-    name: "Influenciador 8",
-    image: "/static/images/cards/image8.jpg",
-    status: "",
-  },
-  {
-    id: 9,
-    name: "Influenciador 9",
-    image: "/static/images/cards/image9.jpg",
-    status: "",
-  },
+  { id: 1, name: "Influenciador 1", image: "/static/images/cards/image1.jpg", status: "" },
+  { id: 2, name: "Influenciador 2", image: "/static/images/cards/image2.jpg", status: "" },
+  { id: 3, name: "Influenciador 3", image: "/static/images/cards/image3.jpg", status: "" },
+  { id: 4, name: "Influenciador 4", image: "/static/images/cards/image4.jpg", status: "" },
+  { id: 5, name: "Influenciador 5", image: "/static/images/cards/image5.jpg", status: "" },
+  { id: 6, name: "Influenciador 6", image: "/static/images/cards/image6.jpg", status: "" },
+  { id: 7, name: "Influenciador 7", image: "/static/images/cards/image7.jpg", status: "" },
+  { id: 8, name: "Influenciador 8", image: "/static/images/cards/image8.jpg", status: "" },
+  { id: 9, name: "Influenciador 9", image: "/static/images/cards/image9.jpg", status: "" },
 ];
 
+// Componente de card de influenciador
 const InfluencerCard: React.FC<{
   influencer: Influencer;
   onViewDetails: (influencer: Influencer) => void;
@@ -109,7 +66,9 @@ const InfluencerCard: React.FC<{
   </Card>
 );
 
+// Componente principal da página da empresa
 const HomePageCompany: React.FC = () => {
+  // Estado de controle
   const [searchTerm, setSearchTerm] = useState("");
   const [mockInfluencers, setMockInfluencers] = useState(mockDefaultInfluencers);
   const [page, setPage] = useState(0);
@@ -117,20 +76,19 @@ const HomePageCompany: React.FC = () => {
   const [countOfPages, setCountOfPages] = useState(10);
   const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [contToRefresh,setContToRefresh ] = useState(0);
-
+  const [contToRefresh, setContToRefresh] = useState(0);
   const [campaigns, setCampaigns] = useState([] as Campaign[]);
 
-  useEffect(()=>{
-    const setAllCampaignsOnState = async() =>{
+  // Carrega todas as campanhas
+  useEffect(() => {
+    const setAllCampaignsOnState = async () => {
       const camps = await getAllCampaign();
-
       setCampaigns(camps);
     }
-
     setAllCampaignsOnState();
-  },[])
+  }, []);
 
+  // Carrega os influenciadores da base de dados
   useEffect(() => {
     async function setInfluencersFromDB() {
       const influencers = await getAllInfluencersPageable(page, pageSize);
@@ -143,16 +101,19 @@ const HomePageCompany: React.FC = () => {
     setInfluencersFromDB();
   }, [page, pageSize, contToRefresh]);
 
+  // Manipula a exibição dos detalhes do influenciador
   const handleViewDetails = (influencer: Influencer) => {
     setSelectedInfluencer(influencer);
     setDetailModalOpen(true);
   };
 
+  // Fecha o modal de detalhes do influenciador
   const handleCloseDetailModal = () => {
     setSelectedInfluencer(null);
     setDetailModalOpen(false);
   };
 
+  // Filtra os influenciadores com base no termo de busca
   const filteredInfluencers = mockInfluencers.filter((influencer) =>
     influencer.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -204,7 +165,7 @@ const HomePageCompany: React.FC = () => {
         <Grid container spacing={2}>
           {filteredInfluencers.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <InfluencerCard influencer={item} onViewDetails={handleViewDetails}  />
+              <InfluencerCard influencer={item} onViewDetails={handleViewDetails} />
             </Grid>
           ))}
         </Grid>
