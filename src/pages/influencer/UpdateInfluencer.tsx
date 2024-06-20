@@ -192,23 +192,24 @@ const UpdateInfluencer: React.FC<UpdateInfluencerProps> = ({ }) => {
             </Grid>
             {/* Estado */}
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="state-label">Estado</InputLabel>
-                <Select
-                  labelId="state-label"
-                  id="state"
-                  name="state"
-                  value={state}
-                  onChange={handleChange}
-                >
-                  {states.map((state) => (
-                    <MenuItem key={state} value={state}>
-                      {state}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                  <FormControl fullWidth required>
+                    <InputLabel id="state-label">Estado</InputLabel>
+                    <Select
+                      labelId="state-label"
+                      id="state"
+                      name="state"
+                      value={state}
+                      onChange={(e) => setState(e.target.value as string)}
+                      label="Estado"
+                    >
+                      {states.map((state) => (
+                        <MenuItem key={state} value={state}>
+                          {state}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
             {/* Data de Nascimento */}
             <Grid item xs={12}>
               <TextField
