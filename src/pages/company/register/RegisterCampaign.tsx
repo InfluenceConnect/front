@@ -155,15 +155,25 @@ export default function RegisterCampaign() {
   const theme = useTheme();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+    const newValue = event.target.value;
+    setName(newValue);
+    if (newValue.length >= 3) {
+      setErrors((prevErrors) => ({ ...prevErrors, name: false }));
+    }
   };
 
   const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(event.target.value);
+    if (event.target.value) {
+      setErrors((prevErrors) => ({ ...prevErrors, startDate: false }));
+    }
   };
 
   const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(event.target.value);
+    if (event.target.value) {
+      setErrors((prevErrors) => ({ ...prevErrors, endDate: false }));
+    }
   };
 
   useEffect(() => {
@@ -176,22 +186,28 @@ export default function RegisterCampaign() {
   }, [startDate, endDate]);
 
   const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(event.target.value);
-    setCharacterCount(event.target.value.length);
+    const newValue = event.target.value;
+    setDescription(newValue);
+    setCharacterCount(newValue.length);
+    if (newValue.length >= 20) {
+      setErrors((prevErrors) => ({ ...prevErrors, description: false }));
+    }
   };
 
   const handleNichesChange = (event: SelectChangeEvent<string>) => {
-    const {
-      target: { value },
-    } = event;
+    const { target: { value } } = event;
     setSelectedNiche(value);
-  };
+    if (value) {
+      setErrors((prevErrors) => ({ ...prevErrors, niches: false }));
+    }
+  }
 
   const handleSocialMediaChange = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
+    const { target: { value } } = event;
     setSelectedSocialMedia(typeof value === "string" ? value.split(",") : value);
+    if (value.length > 0) {
+      setErrors((prevErrors) => ({ ...prevErrors, socialMedia: false }));
+    }
   };
 
   const handleStatusChange = (event: SelectChangeEvent<string>) => {
@@ -201,21 +217,22 @@ export default function RegisterCampaign() {
   const handleBudgetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value.replace(/[^\d]/g, "");
     if (value.length > 0) {
-      value =
-        "R$ " +
-        (parseInt(value, 10) / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+      value = "R$ " + (parseInt(value, 10) / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
     } else {
       value = "R$ 0,00";
     }
     setBudget(value);
-  };
-
-  const handleBudgetFocus = () => {
-    if (budget === "Orçamento") {
-      setBudget("R$ 0,00");
+    if (value !== "R$ 0,00") {
+      setErrors((prevErrors) => ({ ...prevErrors, budget: false }));
     }
   };
 
+  const handleBudgetFocus = () => {
+    if (budget === "Orçamento" || budget === "") {
+      setBudget("R$ 0,00");
+    }
+  };
+  
   const handleBudgetBlur = () => {
     if (budget === "R$ 0,00") {
       setBudget("Orçamento");
@@ -233,6 +250,9 @@ export default function RegisterCampaign() {
       value = parseInt(value).toLocaleString("pt-BR");
     }
     setLikes(value);
+    if (value) {
+      setErrors((prevErrors) => ({ ...prevErrors, likes: false }));
+    }
   };
 
   const handleCommentsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -241,6 +261,9 @@ export default function RegisterCampaign() {
       value = parseInt(value).toLocaleString("pt-BR");
     }
     setComments(value);
+    if (value) {
+      setErrors((prevErrors) => ({ ...prevErrors, comments: false }));
+    }
   };
 
   const handleSharesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -249,6 +272,9 @@ export default function RegisterCampaign() {
       value = parseInt(value).toLocaleString("pt-BR");
     }
     setShares(value);
+    if (value) {
+      setErrors((prevErrors) => ({ ...prevErrors, shares: false }));
+    }
   };
 
   const validateForm = () => {
