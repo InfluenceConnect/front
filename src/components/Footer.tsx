@@ -7,6 +7,7 @@ import {
 import FacebookIcon from "@mui/icons-material/Facebook";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import HelpIcon from "@mui/icons-material/Help";
+import { useNavigate } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -19,6 +20,8 @@ function Copyright() {
 }
 
 const Footer = () => {
+
+  const navigate = useNavigate()
   return (
     <Box
       component="footer"
@@ -57,12 +60,10 @@ const Footer = () => {
             <Link tabIndex={0} sx={{ textDecoration: "none", display: "block", marginBottom: "0.5rem" }}>
               Sobre
             </Link>
-            <Link tabIndex={0} sx={{ textDecoration: "none", display: "block", marginBottom: "0.5rem" }}>
+            <Link tabIndex={0} sx={{ textDecoration: "none", display: "block", marginBottom: "0.5rem"  }} onClick={()=>navigate('/policy-privacy')}>
               Política de Privacidade
             </Link>
-            <Link tabIndex={0} sx={{ textDecoration: "none", display: "block" }}>
-              Whatsapp
-            </Link>
+            
           </Box>
 
           <Box display={"flex"} flexDirection={"column"}>

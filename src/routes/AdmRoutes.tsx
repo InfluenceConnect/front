@@ -12,10 +12,12 @@ import AdminPage from "../pages/adm/AdminPage";
 import UserDetail from "../pages/adm/UserDetails";
 import RegisterCampaign from "../pages/company/register/RegisterCampaign";
 import Campaigns from "../pages/company/Campaigns";
+import PolicyPrivacy from "../pages/policyPrivacy";
 
 const AdmRoutes = () => {
   return (
     <Routes>
+      
       <Route path="/" element={<>Página do adm</>} />
       <Route path="/homeInfluencer" element={<HomePageInfluencer />} />
       <Route path="/homeCompany" element={<HomePageCompany />} />
@@ -33,6 +35,7 @@ const AdmRoutes = () => {
       <Route path="/registerCampaign" element={<RegisterCampaign />} />
       <Route path="/campaigns" element={<Campaigns />} />
       <Route path="*" element={<NotFound />} />
+      
     </Routes>
   );
 };

@@ -5,6 +5,7 @@ import RegisterSocialMedia from "../pages/influencer/register/RegisterSocialMedi
 import NotFound from "../pages/not_found";
 import LoginPage from "../pages/login/Login";
 import Register from "../pages/register/Register";
+import PrivacyPolicy from "../pages/policyPrivacy";
 
 const CreatingInfluencerRoutes = () => {
   return (
@@ -15,6 +16,7 @@ const CreatingInfluencerRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/registerNicheInfluencer" element={<RegisterNicheInfluencer />} />
       <Route path="/registerSocialMedia" element={<RegisterSocialMedia />} />
+      <Route path="/policy-privacy" element={<PrivacyPolicy/>}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

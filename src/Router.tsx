@@ -25,6 +25,7 @@ const Router = () => {
         maxWidth="xl"
         sx={{ minHeight: "69vh", paddingLeft: "0", paddingRight: "0" }}
       >
+         
         {userType == "adm" ? <AdmRoutes /> : <></>}
         {userType == "influencer" ? <InfluencerRoutes /> : <></>}
         {userType == "company" ? <CompanyRoutes /> : <></>}
