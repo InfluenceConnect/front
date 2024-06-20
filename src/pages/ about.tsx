@@ -15,7 +15,7 @@ const About: React.FC<AboutProps> = () => {
   return (
     <Container>
       <Box mt={isMobile ? 2 : 5} mb={isMobile ? 2 : 5}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" gutterBottom  tabIndex={0}>
           Sobre Nós
         </Typography>
         <Tabs
