@@ -33,6 +33,11 @@ const getAllCampaignPageable = async (page: number, pageSize: number) => {
   }
 };
 
+// Código para buscar o número total de campanhas da API
+export const getNumbersOfCampaigns = async () => {
+  
+};
+
 // Função para adicionar um influenciador a uma campanha
 const addInfluencerToCampaign = async (idCampaign: number, idInfluencer: number) => {
   try {
