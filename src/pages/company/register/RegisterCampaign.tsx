@@ -13,7 +13,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
+// import { useTheme } from "@mui/material/styles";
 import { socialMediaOrderSwapped } from "../../../utils/socialMediaOrder";
 import { createCampaign } from "../../../services/campaign";
 import Influencer from "../../../types/influencer";
@@ -44,6 +44,8 @@ interface CampaignData {
   marketingChannelIds: number[];
   companyId: number;
   influencerIds: number[];
+  status: "ACTIVE" | "INACTIVE" | "FINISHED",
+  logo: string;
 }
 
 const checkboxOptionsArr = [
@@ -90,7 +92,15 @@ const checkboxOptions = [
 
 const socialMediaOptions = ["facebook", "instagram", "youtube", "tiktok", "twitter"];
 
+type StatusValues = "Ativo" | "Paralisado" | "Finalizado";
+type StatusBackend = "ACTIVE" | "INACTIVE" | "FINISHED";
+const statusBackend = {
+  "Ativo": "ACTIVE",
+  "Paralisado": "INACTIVE",
+  "Finalizado": "FINISHED"
+}
 const statusOptions = ["Ativo", "Paralisado", "Finalizado"];
+
 
 export default function RegisterCampaign() {
   const navigate = useNavigate();
@@ -101,7 +111,7 @@ export default function RegisterCampaign() {
   const [description, setDescription] = useState("");
   const [selectedNiche, setSelectedNiche] = useState<string>("");
   const [selectedSocialMedia, setSelectedSocialMedia] = useState<string[]>([]);
-  const [status, setStatus] = useState("Ativo");
+  const [status, setStatus] = useState("Ativo" as StatusValues);
   const [budget, setBudget] = useState("Orçamento");
   const [selectedInfluencers, setSelectedInfluencers] = useState<Influencer[]>([]);
   const [likes, setLikes] = useState("");
@@ -133,13 +143,14 @@ export default function RegisterCampaign() {
       // @ts-ignore eu sei que tem os mesmos campos
       (smName) => socialMediaOrderSwapped[smName]
     ),
-    //status: status,
+    status: statusBackend[status] as StatusBackend,
     budget: Number(budget.replace("R$", "").replace(",", ".")),
     expecLikes: Number(likes),
     expecComments: Number(comments),
     expecSaves: Number(shares),
     companyId: 1,
     influencerIds: selectedInfluencers.map((i) => i.id),
+    logo: ""
   };
   const [activeInfluencers, setActiveInfluencers] = useState([] as Influencer[]);
 
@@ -153,7 +164,7 @@ export default function RegisterCampaign() {
     setAllInfluencers();
   }, []);
 
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -218,7 +229,7 @@ export default function RegisterCampaign() {
   };
 
   const handleStatusChange = (event: SelectChangeEvent<string>) => {
-    setStatus(event.target.value);
+    setStatus(event.target.value as StatusValues);
   };
 
   const handleBudgetChange = (event: React.ChangeEvent<HTMLInputElement>) => {

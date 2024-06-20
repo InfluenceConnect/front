@@ -10,8 +10,8 @@ interface Campaign {
   expecComments: number;
   expecSaves: number; 
   status: string;
-  image: string;
-  profileLogo?: string;
+  image?: string;
+  logo?: string;
 }
 
 export default Campaign;

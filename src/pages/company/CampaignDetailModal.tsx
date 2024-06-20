@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Modal,
   Box,
@@ -7,18 +7,10 @@ import {
   IconButton,
   Stack,
   Button,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  InputLabel,
-  FormControl,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSessionContext } from "../../contexts/SessionContext";
 import Campaign from "../../types/campaign";
-import Influencer from "../../types/influencer";
-import { addInfluencerToCampaign } from "../../services/campaign";
-import { getAllInfluencers } from "../../services/influence";
 
 interface CampaignDetailModalProps {
   campaign: Campaign | null;
@@ -46,23 +38,6 @@ const CampaignDetailModal: React.FC<CampaignDetailModalProps> = ({
   onClose,
 }) => {
   const { userType } = useSessionContext();
-  const [selectedInfluencerId, setSelectedInfluencerId] = useState<string>("");
-  const [influencers, setInfluencers] = useState<Influencer[]>([]);
-
-  useEffect(() => {
-    if (open) {
-      fetchInfluencers();
-    }
-  }, [open]);
-
-  const fetchInfluencers = async () => {
-    const influencers = await getAllInfluencers();
-    setInfluencers(influencers);
-  };
-
-  const handleInfluencerChange = (event: SelectChangeEvent<string>) => {
-    setSelectedInfluencerId(event.target.value);
-  };
 
   if (!campaign) return null;
 
