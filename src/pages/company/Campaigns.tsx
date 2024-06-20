@@ -16,10 +16,11 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { getAllCampaignPageable } from "../../services/campaign";
+
 import CampaignDetailModal from "./CampaignDetailModal";
 import Campaign from "../../types/campaign";
 
-// Mock de campanhas para uso inicial
+// Dados mockados de campanhas
 const mockDefaultCampaigns: Campaign[] = [
   {
     id: 1,
@@ -35,10 +36,121 @@ const mockDefaultCampaigns: Campaign[] = [
     image: "/static/images/cards/campaign1.jpg",
     logo: "/static/images/cards/campaign1-logo.jpg",
   },
-  // ... outros mocks de campanhas
+  {
+    id: 2,
+    name: "Campanha 2",
+    description: "Descrição da Campanha 2",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    budget: 20000,
+    expecLikes: 600,
+    expecComments: 120,
+    expecSaves: 60,
+    status: "active",
+    image: "/static/images/cards/campaign2.jpg",
+    logo: "/static/images/cards/campaign2-logo.jpg",
+  },
+  {
+    id: 3,
+    name: "Campanha 3",
+    description: "Descrição da Campanha 3",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    budget: 30000,
+    expecLikes: 700,
+    expecComments: 140,
+    expecSaves: 70,
+    status: "active",
+    image: "/static/images/cards/campaign3.jpg",
+    logo: "/static/images/cards/campaign3-logo.jpg",
+  },
+  {
+    id: 4,
+    name: "Campanha 4",
+    description: "Descrição da Campanha 4",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    budget: 40000,
+    expecLikes: 800,
+    expecComments: 160,
+    expecSaves: 80,
+    status: "active",
+    image: "/static/images/cards/campaign4.jpg",
+    logo: "/static/images/cards/campaign4-logo.jpg",
+  },
+  {
+    id: 5,
+    name: "Campanha 5",
+    description: "Descrição da Campanha 5",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    budget: 50000,
+    expecLikes: 900,
+    expecComments: 180,
+    expecSaves: 90,
+    status: "active",
+    image: "/static/images/cards/campaign5.jpg",
+    logo: "/static/images/cards/campaign5-logo.jpg",
+  },
+  {
+    id: 6,
+    name: "Campanha 6",
+    description: "Descrição da Campanha 6",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    budget: 60000,
+    expecLikes: 1000,
+    expecComments: 200,
+    expecSaves: 100,
+    status: "active",
+    image: "/static/images/cards/campaign6.jpg",
+    logo: "/static/images/cards/campaign6-logo.jpg",
+  },
+  {
+    id: 7,
+    name: "Campanha 7",
+    description: "Descrição da Campanha 7",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    budget: 70000,
+    expecLikes: 1100,
+    expecComments: 220,
+    expecSaves: 110,
+    status: "active",
+    image: "/static/images/cards/campaign7.jpg",
+    logo: "/static/images/cards/campaign7-logo.jpg",
+  },
+  {
+    id: 8,
+    name: "Campanha 8",
+    description: "Descrição da Campanha 8",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    budget: 80000,
+    expecLikes: 1200,
+    expecComments: 240,
+    expecSaves: 120,
+    status: "active",
+    image: "/static/images/cards/campaign8.jpg",
+    logo: "/static/images/cards/campaign8-logo.jpg",
+  },
+  {
+    id: 9,
+    name: "Campanha 9",
+    description: "Descrição da Campanha 9",
+    startDate: "2024-01-01",
+    endDate: "2024-12-31",
+    budget: 90000,
+    expecLikes: 1300,
+    expecComments: 260,
+    expecSaves: 130,
+    status: "active",
+    image: "/static/images/cards/campaign9.jpg",
+    logo: "/static/images/cards/campaign9-logo.jpg",
+  },
 ];
 
-// Componente de card de campanha
+// Componente para exibir uma campanha
 const CampaignCard: React.FC<{
   campaign: Campaign;
   onViewDetails: (campaign: Campaign) => void;
@@ -68,7 +180,7 @@ const CampaignCard: React.FC<{
 
 // Componente principal da página de campanhas
 const Campaigns: React.FC = () => {
-  // Estado de controle
+  // Estados do componente
   const [searchTerm, setSearchTerm] = useState("");
   const [mockCampaigns, setMockCampaigns] = useState(mockDefaultCampaigns);
   const [page, setPage] = useState(0);
@@ -77,25 +189,26 @@ const Campaigns: React.FC = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
 
-  // Carrega as campanhas da base de dados
+  // Efeito para buscar campanhas do backend quando a página ou o tamanho da página mudar
   useEffect(() => {
     async function setCampaignsFromDB() {
       const pageCampaigns = await getAllCampaignPageable(page, pageSize);
       if (pageCampaigns) {
         setMockCampaigns(pageCampaigns.content);
+        console.log(pageCampaigns);
         setCountOfPages(pageCampaigns.totalPages);
       }
     }
     setCampaignsFromDB();
   }, [page, pageSize]);
 
-  // Manipula a exibição dos detalhes da campanha
+  // Função para visualizar detalhes da campanha
   const handleViewDetails = (campaign: Campaign) => {
     setSelectedCampaign(campaign);
     setDetailModalOpen(true);
   };
 
-  // Fecha o modal de detalhes da campanha
+  // Função para fechar o modal de detalhes da campanha
   const handleCloseDetailModal = () => {
     setSelectedCampaign(null);
     setDetailModalOpen(false);
