@@ -121,6 +121,7 @@ export default function RegisterCampaign() {
     comments: false,
     shares: false,
   });
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const campaingData: CampaignData = {
     name: name,
@@ -157,8 +158,11 @@ export default function RegisterCampaign() {
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setName(newValue);
-    if (newValue.length >= 3) {
-      setErrors((prevErrors) => ({ ...prevErrors, name: false }));
+    if (attemptedSubmit) {
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            name: newValue.length < 3 || newValue.length > 100,
+        }));
     }
   };
 
@@ -189,8 +193,11 @@ export default function RegisterCampaign() {
     const newValue = event.target.value;
     setDescription(newValue);
     setCharacterCount(newValue.length);
-    if (newValue.length >= 20) {
-      setErrors((prevErrors) => ({ ...prevErrors, description: false }));
+    if (attemptedSubmit) {
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            description: newValue.length < 20 || newValue.length > 300,
+        }));
     }
   };
 
@@ -219,14 +226,14 @@ export default function RegisterCampaign() {
     if (value.length > 0) {
       value = "R$ " + (parseInt(value, 10) / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
     } else {
-      value = "R$ 0,00";
+      value = "";
     }
     setBudget(value);
-    if (value !== "R$ 0,00") {
+    if (value !== "") {
       setErrors((prevErrors) => ({ ...prevErrors, budget: false }));
     }
   };
-
+  
   const handleBudgetFocus = () => {
     if (budget === "Orçamento" || budget === "") {
       setBudget("R$ 0,00");
@@ -234,10 +241,11 @@ export default function RegisterCampaign() {
   };
   
   const handleBudgetBlur = () => {
-    if (budget === "R$ 0,00") {
+    if (budget === "") {
       setBudget("Orçamento");
     }
   };
+  
 
   const handleInfluencersChange = (event: SelectChangeEvent<string[]>) => {
     const value = event.target.value;
@@ -279,10 +287,10 @@ export default function RegisterCampaign() {
 
   const validateForm = () => {
     const newErrors = {
-      name: !name,
+      name: name.length < 3 || name.length > 100,
       startDate: !startDate,
       endDate: !endDate || new Date(startDate) > new Date(endDate),
-      description: !description || description.length > 300,
+      description: description.length < 20 || description.length > 300,
       niches: selectedNiche.length === 0,
       socialMedia: selectedSocialMedia.length === 0,
       status: !status,
@@ -297,11 +305,15 @@ export default function RegisterCampaign() {
     return Object.values(newErrors).every((error) => !error);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!validateForm()) {
-      return;
+    setAttemptedSubmit(true);
+    const isFormValid = validateForm();
+
+    if (!isFormValid) {
+        return;
     }
+
     console.log(campaingData);
     await createCampaign(campaingData);
     navigate("/campaigns");
@@ -336,7 +348,7 @@ export default function RegisterCampaign() {
             value={name}
             onChange={handleNameChange}
             error={errors.name}
-            helperText={errors.name && "Campo obrigatório"}
+            helperText={errors.name && "Campo obrigatório e deve ter entre 3 e 100 caracteres"}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -383,7 +395,7 @@ export default function RegisterCampaign() {
             error={errors.description}
             helperText={
               errors.description
-                ? "Campo obrigatório e deve ter no máximo 300 caracteres"
+                ? "Campo obrigatório e deve ter entre 20 e 300 caracteres"
                 : `${characterCount}/300`
             }
           />
@@ -437,6 +449,7 @@ export default function RegisterCampaign() {
             fullWidth
             required
             label="Orçamento"
+            variant="outlined"
             value={budget}
             onChange={handleBudgetChange}
             onBlur={handleBudgetBlur}
