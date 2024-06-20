@@ -25,6 +25,7 @@ import Campaign from "../../types/campaign";
 import { addInfluencerToCampaign } from "../../services/campaign";
 import formatSocialMedia from "../../utils/socialMediaFormatter";
 
+// Interface que define as propriedades do modal de detalhes do influenciador
 interface InfluencerDetailModalProps {
   influencer: Influencer | null;
   open: boolean;
@@ -33,6 +34,7 @@ interface InfluencerDetailModalProps {
   campaigns: Campaign[];
 }
 
+// Estilo do modal
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -47,6 +49,7 @@ const style = {
   pb: 3,
 };
 
+// Função para renderizar itens de campanhas de influenciadores
 const influencerCampaignsItems = (campaigns: Campaign, index: number) => (
   <Typography
     key={index}
@@ -57,6 +60,8 @@ const influencerCampaignsItems = (campaigns: Campaign, index: number) => (
     {campaigns.name}
   </Typography>
 );
+
+// Componente de modal de detalhes do influenciador
 const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
   influencer,
   open,
@@ -64,12 +69,15 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
   refresh,
   campaigns,
 }) => {
+  // Se não houver influenciador selecionado, retorna null
   if (!influencer) return null;
 
+  // Obtenção do tipo de usuário do contexto da sessão
   const { userType } = useSessionContext();
   const [selectedCampaignId, setSelectedCampaignId] = useState<string[]>([]);
   const socialMedias = formatSocialMedia(influencer.influencerSocialMedia ?? []);
 
+  // Função para lidar com a mudança na seleção de campanha
   const handleCampaignChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
@@ -85,17 +93,22 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
       aria-describedby="influencer-modal-description"
     >
       <Box sx={style}>
+        {/* Botão para fechar o modal */}
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Box>
+
+        {/* Imagem do perfil do influenciador */}
         <CardMedia
           component="img"
           alt={influencer.name}
           height="200"
           image={influencer.profilePhoto || influencer.image}
         />
+
+        {/* Nome e status do influenciador */}
         <Typography id="influencer-modal-title" variant="h5" component="div">
           {influencer.name}
         </Typography>
@@ -106,6 +119,8 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
         >
           {influencer.status}
         </Typography>
+
+        {/* Lista de campanhas do influenciador */}
         <Stack>
           {(influencer.influencerCampaigns?.length != 0 && influencer.status != "INACTIVE") ? (
             <Stack direction={"row"} spacing={1}>
@@ -129,44 +144,37 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
             </Typography>
           )}
         </Stack>
+
+        {/* Ícones de redes sociais do influenciador */}
         <Box sx={{ mt: 2 }}>
           {socialMedias.facebook.length > 0 ? (
             <IconButton href={socialMedias.facebook} target="_blank">
               <FacebookIcon />
             </IconButton>
-          ) : (
-            <></>
-          )}
+          ) : null}
           {socialMedias.instagram.length > 0 ? (
             <IconButton href={socialMedias.instagram} target="_blank">
               <InstagramIcon />
             </IconButton>
-          ) : (
-            <></>
-          )}
+          ) : null}
           {socialMedias.twitter.length > 0 ? (
             <IconButton href={socialMedias.twitter} target="_blank">
               <TwitterIcon />
             </IconButton>
-          ) : (
-            <></>
-          )}
+          ) : null}
           {socialMedias.youtube.length > 0 ? (
             <IconButton href={socialMedias.youtube} target="_blank">
               <YouTube />
             </IconButton>
-          ) : (
-            <></>
-          )}
+          ) : null}
           {socialMedias.tiktok.length > 0 ? (
             <IconButton href={socialMedias.tiktok} target="_blank">
               <Typography color="text.secondary">🎵</Typography>
             </IconButton>
-          ) : (
-            <></>
-          )}
+          ) : null}
         </Box>
 
+        {/* Formulário para adicionar influenciador a uma campanha */}
         <Stack spacing={2} marginTop={1}>
           <FormControl fullWidth sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
             <InputLabel id="demo-simple-select-label">Campanha</InputLabel>
@@ -197,10 +205,12 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
               Adicionar a Campanha
             </Button>
           </FormControl>
+
+          {/* Botões de editar, ativar e desativar influenciador */}
           <Stack spacing={1} direction={"row"}>
             {userType == "adm" ? (
               <>
-                <Button variant="contained">Editar</Button>{" "}
+                <Button variant="contained">Editar</Button>
                 {influencer.status == "ACTIVE" ? (
                   <Button
                     variant="outlined"
@@ -228,9 +238,7 @@ const InfluencerDetailModal: React.FC<InfluencerDetailModalProps> = ({
                   </Button>
                 )}
               </>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </Stack>
         </Stack>
       </Box>
