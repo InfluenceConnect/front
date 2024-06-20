@@ -9,6 +9,9 @@ interface Campaign {
   expecLikes: number; 
   expecComments: number;
   expecSaves: number; 
+  status: string;
+  image: string;
+  profileLogo?: string;
 }
 
 export default Campaign;
