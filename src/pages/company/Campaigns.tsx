@@ -15,8 +15,8 @@ import {
   Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { getAllCampaignPageable, getNumbersOfCampaigns } from "../../services/campaign";
-import numberOfPages from "../../utils/numbersOfPages";
+import { getAllCampaignPageable } from "../../services/campaign";
+
 import CampaignDetailModal from "./CampaignDetailModal";
 import Campaign from "../../types/campaign";
 
@@ -33,7 +33,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 50,
     status: "active",
     image: "/static/images/cards/campaign1.jpg",
-    profileLogo: "/static/images/cards/campaign1-logo.jpg",
+    logo: "/static/images/cards/campaign1-logo.jpg",
   },
   {
     id: 2,
@@ -47,7 +47,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 60,
     status: "active",
     image: "/static/images/cards/campaign2.jpg",
-    profileLogo: "/static/images/cards/campaign2-logo.jpg",
+    logo: "/static/images/cards/campaign2-logo.jpg",
   },
   {
     id: 3,
@@ -61,7 +61,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 70,
     status: "active",
     image: "/static/images/cards/campaign3.jpg",
-    profileLogo: "/static/images/cards/campaign3-logo.jpg",
+    logo: "/static/images/cards/campaign3-logo.jpg",
   },
   {
     id: 4,
@@ -75,7 +75,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 80,
     status: "active",
     image: "/static/images/cards/campaign4.jpg",
-    profileLogo: "/static/images/cards/campaign4-logo.jpg",
+    logo: "/static/images/cards/campaign4-logo.jpg",
   },
   {
     id: 5,
@@ -89,7 +89,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 90,
     status: "active",
     image: "/static/images/cards/campaign5.jpg",
-    profileLogo: "/static/images/cards/campaign5-logo.jpg",
+    logo: "/static/images/cards/campaign5-logo.jpg",
   },
   {
     id: 6,
@@ -103,7 +103,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 100,
     status: "active",
     image: "/static/images/cards/campaign6.jpg",
-    profileLogo: "/static/images/cards/campaign6-logo.jpg",
+    logo: "/static/images/cards/campaign6-logo.jpg",
   },
   {
     id: 7,
@@ -117,7 +117,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 110,
     status: "active",
     image: "/static/images/cards/campaign7.jpg",
-    profileLogo: "/static/images/cards/campaign7-logo.jpg",
+    logo: "/static/images/cards/campaign7-logo.jpg",
   },
   {
     id: 8,
@@ -131,7 +131,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 120,
     status: "active",
     image: "/static/images/cards/campaign8.jpg",
-    profileLogo: "/static/images/cards/campaign8-logo.jpg",
+    logo: "/static/images/cards/campaign8-logo.jpg",
   },
   {
     id: 9,
@@ -145,7 +145,7 @@ const mockDefaultCampaigns: Campaign[] = [
     expecSaves: 130,
     status: "active",
     image: "/static/images/cards/campaign9.jpg",
-    profileLogo: "/static/images/cards/campaign9-logo.jpg",
+    logo: "/static/images/cards/campaign9-logo.jpg",
   },
 ];
 
@@ -158,7 +158,7 @@ const CampaignCard: React.FC<{
       component="img"
       alt={campaign.name}
       height="140"
-      image={campaign.profileLogo || campaign.image}
+      image={campaign.logo || campaign.image}
     />
     <CardContent>
       <Typography gutterBottom variant="h5" component="div">
