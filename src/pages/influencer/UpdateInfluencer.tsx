@@ -13,17 +13,9 @@ import {
   FormControl,
   InputLabel,
   Select,
-  IconButton,
   Avatar,
 } from "@mui/material";
-import {
-  PhotoCamera,
-  Facebook,
-  Instagram,
-  YouTube,
-  Twitter,
-  Search,
-} from "@mui/icons-material";
+import { Facebook, Instagram, YouTube, Twitter, Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { IMaskInput } from "react-imask";
 import { states } from "../../data/states"; // Importa lista de estados
@@ -55,10 +47,10 @@ const niches = [
   { name: "outros", label: "Outros" },
 ];
 
-const UpdateInfluencer: React.FC<UpdateInfluencerProps> = ({ userType }) => {
+const UpdateInfluencer: React.FC<UpdateInfluencerProps> = ({ }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [loadingImage, setLoadingImage] = useState(false);
+  const [loadingImage] = useState(false);
   const [preview, setPreview] = useState<string | undefined>(undefined);
   const [socialMedia, setSocialMedia] = useState({
     facebook: "",
@@ -124,7 +116,7 @@ const UpdateInfluencer: React.FC<UpdateInfluencerProps> = ({ userType }) => {
       return;
     }
 
-    // Simulação de envio de dados
+    //  envio de dados
     setTimeout(() => {
       setLoading(false);
       navigate("/profile"); // Redireciona para a página de perfil
@@ -141,9 +133,6 @@ const UpdateInfluencer: React.FC<UpdateInfluencerProps> = ({ userType }) => {
           <Grid container spacing={2}>
             {/* Foto/Avatar */}
             <Grid item xs={12}>
-              <Typography component="h2" variant="h6">
-              </Typography>
-              {/* Input para escolher a foto/avatar */}
               <input
                 accept="image/*"
                 style={{ display: "none" }}
@@ -153,12 +142,15 @@ const UpdateInfluencer: React.FC<UpdateInfluencerProps> = ({ userType }) => {
                 disabled={loadingImage}
               />
               <label
-                aria-disabled={loadingImage}
                 htmlFor="profilePicture"
-                style={{ textAlign: "center" }}
+                style={{
+                  display: "flex", /* Torna o label um container flexível */
+                  justifyContent: "center", /* Centraliza o conteúdo horizontalmente */
+                  textAlign: "center" /* Alinha o texto centralmente */
+                }}
               >
                 {loadingImage ? (
-                  <div style={{ width: 100, height: 100, textAlign: "center" }}>
+                  <div style={{ width: 100, height: 100 }}>
                     {loadingImage && (
                       <CircularProgress style={{ justifyContent: "center" }} />
                     )}
@@ -275,8 +267,7 @@ const UpdateInfluencer: React.FC<UpdateInfluencerProps> = ({ userType }) => {
                 Links das Redes Sociais
               </Typography>
             </Grid>
-                        {/* Redes Sociais */}
-                        <Grid item xs={12}>
+            <Grid item xs={12}>
               <TextField
                 fullWidth
                 id="facebook"
@@ -370,15 +361,11 @@ interface TextMaskCustomProps {
   inputRef: React.Ref<HTMLInputElement>;
 }
 
-const TextMaskCustom = React.forwardRef<HTMLInputElement, TextMaskCustomProps>((props, ref) => {
-  const { mask, ...other } = props;
-  return <IMaskInput {...other} mask={mask} inputRef={ref} />;
-});
-
 const CPFMaskCustom = React.forwardRef<HTMLInputElement, TextMaskCustomProps>((props, ref) => {
   const { ...other } = props;
   return <IMaskInput {...other} mask="000.000.000-00" inputRef={ref} />;
 });
 
 export default UpdateInfluencer;
+
 
