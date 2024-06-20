@@ -25,9 +25,10 @@ import { login } from "../../services/login";
 import { useSessionContext } from "../../contexts/SessionContext";
 export default function LoginPage() {
   const navigate = useNavigate();
-  const sessionCtx = useSessionContext();
+  const sessionCtx = useSessionContext(); // Hook de acesso ao contexto do login como usuario
   const { userType, setUserType } = sessionCtx;
 
+  //States locais 
   const [loading, setLoading] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success");
@@ -36,6 +37,7 @@ export default function LoginPage() {
 
   const { mode } = useParams();
 
+   // useEffect de exibição de mensagens baseadas no parâmetro 'mode'
   React.useEffect(() => {
     if (mode == "registered") {
       setAlertMessage("😎 Cadastrado com sucesso");
@@ -54,7 +56,7 @@ export default function LoginPage() {
     console.log(event);
     setOpenSnackbar(false);
   };
-
+  // Função para manipular o submit do formulário de login
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -63,6 +65,7 @@ export default function LoginPage() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
+     //Validação do email
     if (!email.includes("@")) {
       setAlertSeverity("error");
       setAlertMessage("O email deve conter o caractere '@'.");
@@ -71,6 +74,7 @@ export default function LoginPage() {
       return;
     }
 
+     //Validação de senha
     if (password.length < 8) {
       setAlertSeverity("error");
       setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
@@ -79,12 +83,15 @@ export default function LoginPage() {
       return;
     }
 
+    //Chamada para a função do login
     const resLogin = await login(email, password);
 
+     // Configuração da mensagem de alerta baseada na resposta do login
     setAlertSeverity(resLogin.sucess == "true" ? "success" : "error");
     setAlertMessage(resLogin.message);
     setOpenSnackbar(true);
 
+    // Se o login for bem-sucedido, muda o tipo de usuário e navega para a página principal
     if (resLogin.sucess == "true") {
       const userLoginType = resLogin.user.role.type.toLowerCase() as
         | "influencer"
@@ -100,16 +107,17 @@ export default function LoginPage() {
     setLoading(false);
   };
 
+  //Função do olho mágico de visible on e off da senha
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
+ // Função para navegar para a página de registro
   const handleTypeUser = () => {
 
 
     navigate("/Register");
   };
-
+//Renderizando o componente
   return (
     <Grid
       container
