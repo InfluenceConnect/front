@@ -23,21 +23,24 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login } from "../../services/login";
 import { useSessionContext } from "../../contexts/SessionContext";
+import { setUserLocalStorage, setUserSessionStorage } from "../../utils/storage";
+import UserData from "../../types/userData";
 export default function LoginPage() {
   const navigate = useNavigate();
   const sessionCtx = useSessionContext(); // Hook de acesso ao contexto do login como usuario
   const { userType, setUserType } = sessionCtx;
 
-  //States locais 
+  //States locais
   const [loading, setLoading] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success");
   const [alertMessage, setAlertMessage] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
+  const [rememberCheckboxChecked, setRememberCheckboxChecked] = React.useState(false);
 
   const { mode } = useParams();
 
-   // useEffect de exibição de mensagens baseadas no parâmetro 'mode'
+  // useEffect de exibição de mensagens baseadas no parâmetro 'mode'
   React.useEffect(() => {
     if (mode == "registered") {
       setAlertMessage("😎 Cadastrado com sucesso");
@@ -65,7 +68,7 @@ export default function LoginPage() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-     //Validação do email
+    //Validação do email
     if (!email.includes("@")) {
       setAlertSeverity("error");
       setAlertMessage("O email deve conter o caractere '@'.");
@@ -74,7 +77,7 @@ export default function LoginPage() {
       return;
     }
 
-     //Validação de senha
+    //Validação de senha
     if (password.length < 8) {
       setAlertSeverity("error");
       setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
@@ -86,7 +89,7 @@ export default function LoginPage() {
     //Chamada para a função do login
     const resLogin = await login(email, password);
 
-     // Configuração da mensagem de alerta baseada na resposta do login
+    // Configuração da mensagem de alerta baseada na resposta do login
     setAlertSeverity(resLogin.sucess == "true" ? "success" : "error");
     setAlertMessage(resLogin.message);
     setOpenSnackbar(true);
@@ -101,6 +104,24 @@ export default function LoginPage() {
         userLoginType,
         resLogin.user.influencer?.status ?? ""
       );
+
+      console.log(resLogin.user.company);
+
+      const photo =
+        userLoginType == "influencer"
+          ? resLogin.user.influencer.profilePhoto
+          : resLogin.user.company.profileLogo ?? "";
+
+      const userData: UserData = {
+        id: Number(resLogin.user.id),
+        name: resLogin.user.name,
+        userType: userLoginType,
+        profilePhoto: photo,
+      };
+
+      if (rememberCheckboxChecked) setUserLocalStorage(userData);
+      else setUserSessionStorage(userData);
+
       navigate("/");
     }
 
@@ -111,13 +132,11 @@ export default function LoginPage() {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
- // Função para navegar para a página de registro
+  // Função para navegar para a página de registro
   const handleTypeUser = () => {
-
-
     navigate("/Register");
   };
-//Renderizando o componente
+  //Renderizando o componente
   return (
     <Grid
       container
@@ -236,6 +255,8 @@ export default function LoginPage() {
                   inputProps={{
                     "aria-label": "Lembrar-me",
                   }}
+                  checked={rememberCheckboxChecked}
+                  onChange={(e) => setRememberCheckboxChecked(e.target.checked)}
                 />
               }
               label="Lembrar me"
