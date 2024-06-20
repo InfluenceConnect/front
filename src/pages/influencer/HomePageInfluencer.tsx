@@ -20,6 +20,7 @@ import numberOfPages from "../../utils/numbersOfPages";
 import CompanyDetailModal from "./CompanyDetailModal";
 import Company from "../../types/company";
 
+// Mock de empresas para exibição inicial
 const mockDefaultCompanies: Company[] = [
   {
     id: 1,
@@ -77,6 +78,7 @@ const mockDefaultCompanies: Company[] = [
   },
 ];
 
+// Componente para exibir o card da empresa
 const CompanyCard: React.FC<{
   company: Company;
   onViewDetails: (company: Company) => void;
@@ -105,6 +107,7 @@ const CompanyCard: React.FC<{
 );
 
 const HomePageCompany: React.FC = () => {
+  // Estados locais
   const [searchTerm, setSearchTerm] = useState("");
   const [mockCompanies, setMockCompanies] = useState(mockDefaultCompanies);
   const [page, setPage] = useState(0);
@@ -113,6 +116,7 @@ const HomePageCompany: React.FC = () => {
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
 
+  // useEffect para buscar empresas do banco de dados
   useEffect(() => {
     async function setCompaniesFromDB() {
       const companies = await getAllCompaniesPageable(page, pageSize);
@@ -126,16 +130,19 @@ const HomePageCompany: React.FC = () => {
     setCompaniesFromDB();
   }, [page, pageSize]);
 
+  // Função para exibir detalhes da empresa
   const handleViewDetails = (company: Company) => {
     setSelectedCompany(company);
     setDetailModalOpen(true);
   };
 
+  // Função para fechar o modal de detalhes da empresa
   const handleCloseDetailModal = () => {
     setSelectedCompany(null);
     setDetailModalOpen(false);
   };
 
+  // Filtra empresas com base no termo de busca
   const filteredCompanies = mockCompanies.filter((company) =>
     company.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
