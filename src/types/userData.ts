@@ -6,6 +6,7 @@ interface UserData {
   name: string;
   userType?: usersType
   profilePhoto?: string;
+  status: string
 }
 
 export default UserData;

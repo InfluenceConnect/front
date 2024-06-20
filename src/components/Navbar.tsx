@@ -53,6 +53,10 @@ const influencerPages: Page[] = [
     name: "Campanhas",
     path: "/campaigns",
   },
+  {
+    name: "Conta",
+    path: "/accountStatus"
+  }
 ];
 
 const handleChangePages = (userType: usersType) => {
@@ -66,6 +70,7 @@ const handleChangePages = (userType: usersType) => {
 const Navbar = () => {
   const navigate = useNavigate();
   const { userType } = useSessionContext();
+  // console.log("userType: " + userType)
   const [pages, setPages] = React.useState<Page[]>(() => handleChangePages(userType));
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 

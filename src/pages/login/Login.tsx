@@ -25,6 +25,7 @@ import { login } from "../../services/login";
 import { useSessionContext } from "../../contexts/SessionContext";
 import { setUserLocalStorage, setUserSessionStorage } from "../../utils/storage";
 import UserData from "../../types/userData";
+import { usersType } from "../../types/users";
 export default function LoginPage() {
   const navigate = useNavigate();
   const sessionCtx = useSessionContext(); // Hook de acesso ao contexto do login como usuario
@@ -100,7 +101,7 @@ export default function LoginPage() {
         | "influencer"
         | "company"
         | "adm";
-      sessionCtx.handleChangeUserType(
+      const actualUserType = sessionCtx.handleChangeUserType(
         userLoginType,
         resLogin.user.influencer?.status ?? ""
       );
@@ -111,14 +112,20 @@ export default function LoginPage() {
         userLoginType == "influencer"
           ? resLogin.user.influencer.profilePhoto
           : resLogin.user.company.profileLogo ?? "";
+      const status =
+        userLoginType == "influencer"
+          ? resLogin.user.influencer.status
+          : resLogin.user.company.status;
 
       const userData: UserData = {
         id: Number(resLogin.user.id),
         name: resLogin.user.name,
-        userType: userLoginType,
+        userType: actualUserType as usersType,
         profilePhoto: photo,
+        status: status,
       };
 
+      sessionCtx.setUserData(userData)
       if (rememberCheckboxChecked) setUserLocalStorage(userData);
       else setUserSessionStorage(userData);
 
