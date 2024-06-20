@@ -4,6 +4,7 @@ import NotFound from "../pages/not_found";
 import RegisterCampaign from "../pages/company/register/RegisterCampaign";
 import Campaigns from "../pages/company/Campaigns";
 import PrivacyPolicy from "../pages/policyPrivacy";
+import About from "../pages/ about";
 
 
 const CompanyRoutes = () => {
@@ -13,7 +14,8 @@ const CompanyRoutes = () => {
       <Route path="/homeCompany" element={<HomePageCompany />} />
       <Route path="/registerCampaign" element={<RegisterCampaign />} />
       <Route path="/campaigns" element={<Campaigns />} />
-        <Route path="/policy-privacy" element={<PrivacyPolicy/>}/>
+      <Route path="/about" element={<About/>}/>
+      <Route path="/policy-privacy" element={<PrivacyPolicy/>}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

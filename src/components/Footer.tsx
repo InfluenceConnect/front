@@ -57,7 +57,7 @@ const Footer = () => {
             >
               Links
             </Typography>
-            <Link tabIndex={0} sx={{ textDecoration: "none", display: "block", marginBottom: "0.5rem" }}>
+            <Link tabIndex={0} sx={{ textDecoration: "none", display: "block", marginBottom: "0.5rem" }} onClick={()=> navigate('/about')}>
               Sobre
             </Link>
             <Link tabIndex={0} sx={{ textDecoration: "none", display: "block", marginBottom: "0.5rem"  }} onClick={()=>navigate('/policy-privacy')}>
