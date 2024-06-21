@@ -22,7 +22,6 @@ import { getAllCampaignPageable } from "../../services/campaign";
 import CampaignDetailModal from "./CampaignDetailModal";
 import Campaign from "../../types/campaign";
 
-// Dados mockados de campanhas
 const mockDefaultCampaigns: Campaign[] = [
   {
     id: 1,
@@ -68,7 +67,6 @@ const mockDefaultCampaigns: Campaign[] = [
   },
 ];
 
-// Componente para exibir uma campanha
 const CampaignCard: React.FC<{
   campaign: Campaign;
   onViewDetails: (campaign: Campaign) => void;
@@ -96,9 +94,7 @@ const CampaignCard: React.FC<{
   </Card>
 );
 
-// Componente principal da página de campanhas
 const Campaigns: React.FC = () => {
-  // Estados do componente
   const [searchTerm, setSearchTerm] = useState("");
   const [mockCampaigns, setMockCampaigns] = useState(mockDefaultCampaigns);
   const [page, setPage] = useState(0);
@@ -107,7 +103,6 @@ const Campaigns: React.FC = () => {
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
 
-  // Efeito para buscar campanhas do backend quando a página ou o tamanho da página mudar
   useEffect(() => {
     async function setCampaignsFromDB() {
       const pageCampaigns = await getAllCampaignPageable(page, pageSize);
@@ -119,24 +114,20 @@ const Campaigns: React.FC = () => {
     setCampaignsFromDB();
   }, [page, pageSize]);
 
-  // Função para visualizar detalhes da campanha
   const handleViewDetails = (campaign: Campaign) => {
     setSelectedCampaign(campaign);
     setDetailModalOpen(true);
   };
 
-  // Função para fechar o modal de detalhes da campanha
   const handleCloseDetailModal = () => {
     setSelectedCampaign(null);
     setDetailModalOpen(false);
   };
 
-  // Filtra as campanhas com base no termo de busca
   const filteredCampaigns = mockCampaigns.filter((campaign) =>
     campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Função para mudar a página e rolar até o topo
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value - 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -146,7 +137,7 @@ const Campaigns: React.FC = () => {
     <Container maxWidth="lg">
       <Box sx={{ flexGrow: 1, padding: 2 }}>
         <Typography variant="h4" gutterBottom>
-          Lista de Campanhas
+         
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 4, gap: 2 }}>
           <TextField

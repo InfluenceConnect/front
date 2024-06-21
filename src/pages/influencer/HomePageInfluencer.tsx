@@ -160,7 +160,7 @@ const HomePageCompany: React.FC = () => {
     <Container maxWidth="lg">
       <Box sx={{ flexGrow: 1, padding: 2 }}>
         <Typography variant="h4" gutterBottom>
-          Lista de Empresas
+          
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 4, gap: 2 }}>
           <TextField

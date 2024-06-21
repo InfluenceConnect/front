@@ -28,7 +28,6 @@ import Influencer from "../../types/influencer";
 import { getAllCampaign } from "../../services/campaign";
 import Campaign from "../../types/campaign";
 
-// Mock de influenciadores para uso inicial
 const mockDefaultInfluencers: Influencer[] = [
   { id: 1, name: "Influenciador 1", image: "/static/images/cards/image1.jpg", status: "" },
   { id: 2, name: "Influenciador 2", image: "/static/images/cards/image2.jpg", status: "" },
@@ -41,7 +40,6 @@ const mockDefaultInfluencers: Influencer[] = [
   { id: 9, name: "Influenciador 9", image: "/static/images/cards/image9.jpg", status: "" },
 ];
 
-// Componente de card de influenciador
 const InfluencerCard: React.FC<{
   influencer: Influencer;
   onViewDetails: (influencer: Influencer) => void;
@@ -69,12 +67,10 @@ const InfluencerCard: React.FC<{
   </Card>
 );
 
-// Componente principal da página da empresa
 const HomePageCompany: React.FC = () => {
-  // Estado de controle
   const [searchTerm, setSearchTerm] = useState("");
   const [mockInfluencers, setMockInfluencers] = useState(mockDefaultInfluencers);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1); // Alterado para iniciar na página 1
   const [pageSize, setPageSize] = useState(50);
   const [countOfPages, setCountOfPages] = useState(10);
   const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
@@ -82,7 +78,6 @@ const HomePageCompany: React.FC = () => {
   const [contToRefresh, setContToRefresh] = useState(0);
   const [campaigns, setCampaigns] = useState([] as Campaign[]);
 
-  // Carrega todas as campanhas
   useEffect(() => {
     const setAllCampaignsOnState = async () => {
       const camps = await getAllCampaign();
@@ -91,7 +86,6 @@ const HomePageCompany: React.FC = () => {
     setAllCampaignsOnState();
   }, []);
 
-  // Carrega os influenciadores da base de dados
   useEffect(() => {
     async function setInfluencersFromDB() {
       const influencers = await getAllInfluencersPageable(page, pageSize);
@@ -104,26 +98,22 @@ const HomePageCompany: React.FC = () => {
     setInfluencersFromDB();
   }, [page, pageSize, contToRefresh]);
 
-  // Manipula a exibição dos detalhes do influenciador
   const handleViewDetails = (influencer: Influencer) => {
     setSelectedInfluencer(influencer);
     setDetailModalOpen(true);
   };
 
-  // Fecha o modal de detalhes do influenciador
   const handleCloseDetailModal = () => {
     setSelectedInfluencer(null);
     setDetailModalOpen(false);
   };
 
-  // Filtra os influenciadores com base no termo de busca
   const filteredInfluencers = mockInfluencers.filter((influencer) =>
     influencer.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Manipula a mudança de página e rola a tela para o topo
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value - 1);
+    setPage(value);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -131,7 +121,7 @@ const HomePageCompany: React.FC = () => {
     <Container maxWidth="lg">
       <Box sx={{ flexGrow: 1, padding: 2 }}>
         <Typography variant="h4" gutterBottom>
-          Lista de Influenciadores
+         
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 4, gap: 2 }}>
           <TextField
@@ -170,6 +160,7 @@ const HomePageCompany: React.FC = () => {
           <Pagination
             count={countOfPages}
             color="primary"
+            page={page} // Adicionado para sincronizar a paginação
             onChange={handlePageChange}
           />
         </Box>
@@ -184,6 +175,7 @@ const HomePageCompany: React.FC = () => {
           <Pagination
             count={countOfPages}
             color="primary"
+            page={page} // Adicionado para sincronizar a paginação
             onChange={handlePageChange}
           />
         </Box>
