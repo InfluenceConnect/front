@@ -13,6 +13,10 @@ import {
   InputAdornment,
   NativeSelect,
   Pagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import {
@@ -124,7 +128,7 @@ const HomePageCompany: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           Lista de Influenciadores
         </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 4, gap: 2 }}>
           <TextField
             label="Buscar Influenciador"
             variant="outlined"
@@ -140,22 +144,24 @@ const HomePageCompany: React.FC = () => {
               ),
             }}
           />
+          <FormControl variant="outlined" sx={{ minWidth: 120 }}>
+            <InputLabel id="select-page-size-label">Quantidade</InputLabel>
+            <Select
+              labelId="select-page-size-label"
+              id="select-page-size"
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              label="Quantidade"
+            >
+              <MenuItem value={5}>5</MenuItem>
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={25}>25</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "center", marginBlock: 2 }}>
-          <NativeSelect
-            defaultValue={pageSize}
-            inputProps={{
-              name: "nº de influencers",
-              id: "uncontrolled-native",
-            }}
-            onChange={(evt) => setPageSize(Number(evt.target.value))}
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </NativeSelect>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <Pagination
             count={countOfPages}
             color="primary"
@@ -169,6 +175,13 @@ const HomePageCompany: React.FC = () => {
             </Grid>
           ))}
         </Grid>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <Pagination
+            count={countOfPages}
+            color="primary"
+            onChange={(_, i) => setPage(i - 1)}
+          />
+        </Box>
         <InfluencerDetailModal
           influencer={selectedInfluencer}
           open={detailModalOpen}
