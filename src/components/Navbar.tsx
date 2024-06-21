@@ -2,8 +2,18 @@ import React from "react";
 import { usersType } from "../types/users";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSessionContext } from "../contexts/SessionContext";
-import { Box, Button, IconButton, Menu, MenuItem, Typography, Link, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+  Link,
+  Stack,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import LogoutButton from "./LogoutButton";
 
 interface Page {
   name: string;
@@ -25,7 +35,7 @@ const admPages: Page[] = [
   },
   {
     name: "Nova Campanha",
-    path: "/registerCampaign"
+    path: "/registerCampaign",
   },
 ];
 
@@ -40,7 +50,7 @@ const companyPages: Page[] = [
   },
   {
     name: "Nova Campanha",
-    path: "/registerCampaign"
+    path: "/registerCampaign",
   },
 ];
 
@@ -55,8 +65,8 @@ const influencerPages: Page[] = [
   },
   {
     name: "Conta",
-    path: "/accountStatus"
-  }
+    path: "/accountStatus",
+  },
 ];
 
 const handleChangePages = (userType: usersType) => {
@@ -100,7 +110,7 @@ const Navbar = () => {
         }}
       >
         {pages.map((page, index) => (
-          <Stack key={index} onClick={()=>navigate(page.path)}>
+          <Stack key={index} onClick={() => navigate(page.path)}>
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
@@ -114,6 +124,7 @@ const Navbar = () => {
             </Button>
           </Stack>
         ))}
+        <LogoutButton />
       </Box>
       {/* Telas pequenas xs=flex */}
       <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -150,6 +161,7 @@ const Navbar = () => {
               </MenuItem>
             </div>
           ))}
+          <LogoutButton />
         </Menu>
       </Box>
       <IconButton
