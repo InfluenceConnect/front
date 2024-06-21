@@ -11,12 +11,11 @@ import {
   Button,
   TextField,
   InputAdornment,
-  NativeSelect,
-  Pagination,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import {
@@ -122,6 +121,12 @@ const HomePageCompany: React.FC = () => {
     influencer.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Manipula a mudança de página e rola a tela para o topo
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value - 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ flexGrow: 1, padding: 2 }}>
@@ -165,7 +170,7 @@ const HomePageCompany: React.FC = () => {
           <Pagination
             count={countOfPages}
             color="primary"
-            onChange={(_, i) => setPage(i - 1)}
+            onChange={handlePageChange}
           />
         </Box>
         <Grid container spacing={2}>
@@ -179,7 +184,7 @@ const HomePageCompany: React.FC = () => {
           <Pagination
             count={countOfPages}
             color="primary"
-            onChange={(_, i) => setPage(i - 1)}
+            onChange={handlePageChange}
           />
         </Box>
         <InfluencerDetailModal
