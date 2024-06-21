@@ -75,7 +75,7 @@ const HomePageCompany: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [mockInfluencers, setMockInfluencers] = useState(mockDefaultInfluencers);
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(50);
   const [countOfPages, setCountOfPages] = useState(10);
   const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);

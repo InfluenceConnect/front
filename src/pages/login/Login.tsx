@@ -9,10 +9,9 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
@@ -29,7 +28,6 @@ import { usersType } from "../../types/users";
 export default function LoginPage() {
   const navigate = useNavigate();
   const sessionCtx = useSessionContext(); // Hook de acesso ao contexto do login como usuario
-  const { userType, setUserType } = sessionCtx;
 
   //States locais
   const [loading, setLoading] = React.useState(false);
@@ -39,25 +37,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [rememberCheckboxChecked, setRememberCheckboxChecked] = React.useState(false);
 
-  const { mode } = useParams();
-
-  // useEffect de exibição de mensagens baseadas no parâmetro 'mode'
-  React.useEffect(() => {
-    if (mode == "registered") {
-      setAlertMessage("😎 Cadastrado com sucesso");
-      setOpenSnackbar(true);
-    } else if (mode == "registerError") {
-      setAlertMessage("☹️ Erro ao cadastrar, tente mais tarde!");
-      setAlertSeverity("error");
-      setOpenSnackbar(true);
-    }
-  }, []);
-
   const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
-    console.log(event);
     setOpenSnackbar(false);
   };
   // Função para manipular o submit do formulário de login
@@ -105,8 +88,6 @@ export default function LoginPage() {
         userLoginType,
         resLogin.user.influencer?.status ?? ""
       );
-
-      console.log(resLogin.user.company);
 
       const photo =
         userLoginType == "influencer"
@@ -193,23 +174,6 @@ export default function LoginPage() {
             gap: "2rem",
           }}
         >
-          <ButtonGroup variant="contained">
-            <Button
-              variant={userType === "creatingInfluencer" ? "contained" : "outlined"}
-              onClick={() => setUserType("creatingInfluencer")}
-              aria-label="selecionar influenciador"
-            >
-              Influencer
-            </Button>
-            <Button
-              variant={userType === "creatingCompany" ? "contained" : "outlined"}
-              onClick={() => setUserType("creatingCompany")}
-              aria-label="selecionar empresa"
-            >
-              Empresa
-            </Button>
-          </ButtonGroup>
-
           <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
             <LockOutlinedIcon />
           </Avatar>

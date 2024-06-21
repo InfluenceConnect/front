@@ -114,7 +114,7 @@ const HomePageCompany: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [mockCompanies, setMockCompanies] = useState(mockDefaultCompanies);
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(50);
   const [countOfPages, setCountOfPages] = useState(10);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
