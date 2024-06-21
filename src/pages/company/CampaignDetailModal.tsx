@@ -64,7 +64,7 @@ const CampaignDetailModal: React.FC<CampaignDetailModalProps> = ({
           component="img"
           alt={campaign.name}
           height="200"
-          image={campaign.image}
+          image={campaign.logo}
         />
         {/* Título da campanha */}
         <Typography id="campaign-modal-title" variant="h5" component="div">
