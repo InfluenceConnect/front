@@ -1,14 +1,6 @@
 import { InfluencerSocialMedia } from "../types/requestSaveInfluencer";
 import socialMediaOrder from "./socialMediaOrder";
 
-const socialMediaLinksObj = {
-  "facebook": "",
-  "instagram": "",
-  "youtube": "",
-  "tiktok" :"",
-  "twitter": "",
-}
-
 export interface FormatedSocialMediaObj{
   facebook: string;
   instagram: string;
@@ -18,6 +10,14 @@ export interface FormatedSocialMediaObj{
 }
 
 function formatSocialMedia (arr: InfluencerSocialMedia[]){
+  const socialMediaLinksObj = {
+    "facebook": "",
+    "instagram": "",
+    "youtube": "",
+    "tiktok" :"",
+    "twitter": "",
+  }
+  
   arr.forEach(sm=>{
     // @ts-ignore
     const whichSM = socialMediaOrder[sm.socialMediaId]
