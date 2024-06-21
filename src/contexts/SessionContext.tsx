@@ -16,7 +16,7 @@ const SessionContext = createContext({} as SessionContextData);
 const useSessionContext = () => useContext(SessionContext);
 
 const SessionContextProvider = ({ children }: { children: ReactNode }) => {
-  const  currentUser: usersType = "adm" //USAR ADM PARA TESTAR, NO FINAL TROCAR PARA "creatingUser" console.log()
+  const  currentUser: usersType = "creatingInfluencer" //USAR ADM PARA TESTAR, NO FINAL TROCAR PARA "creatingUser" console.log()
   const [userType, setUserType] = useState<usersType>(currentUser);
 
   const [userData, setUserData] = useState({} as UserData);
@@ -26,6 +26,8 @@ const SessionContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const storagedUser = getUserLocalStorage() ?? getUserSessionStorage() ?? null;
     
+    console.log(storagedUser);
+
     if(!!storagedUser) {
       setUserData(storagedUser)
       

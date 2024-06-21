@@ -6,6 +6,7 @@ function setUserSessionStorage(user: UserData) {
 
 function getUserSessionStorage() {
   const userJSON: string | null = sessionStorage.getItem("user");
+  console.log("user json "+ userJSON);
   let user: UserData | null = null;
 
   if (userJSON != null) user = JSON.parse(userJSON) as UserData;

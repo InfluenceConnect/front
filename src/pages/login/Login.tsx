@@ -93,12 +93,12 @@ export default function LoginPage() {
       const photo =
         userLoginType == "influencer"
           ? resLogin.user.influencer.profilePhoto
-          : resLogin.user.company.profileLogo ?? "";
+          : resLogin.user.company?.profileLogo ?? "";
       const status =
         userLoginType == "influencer"
           ? resLogin.user.influencer.status
-          : resLogin.user.company.status;
-
+          : resLogin.user.company?.status;
+      
       const userData: UserData = {
         id: Number(resLogin.user.id),
         name: resLogin.user.name,
