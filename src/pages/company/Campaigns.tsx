@@ -11,12 +11,14 @@ import {
   Button,
   TextField,
   InputAdornment,
-  NativeSelect,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { getAllCampaignPageable } from "../../services/campaign";
-
 import CampaignDetailModal from "./CampaignDetailModal";
 import Campaign from "../../types/campaign";
 
@@ -64,90 +66,6 @@ const mockDefaultCampaigns: Campaign[] = [
     image: "/static/images/cards/campaign3.jpg",
     logo: "/static/images/cards/campaign3-logo.jpg",
   },
-  {
-    id: 4,
-    name: "Campanha 4",
-    description: "Descrição da Campanha 4",
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    budget: 40000,
-    expecLikes: 800,
-    expecComments: 160,
-    expecSaves: 80,
-    status: "active",
-    image: "/static/images/cards/campaign4.jpg",
-    logo: "/static/images/cards/campaign4-logo.jpg",
-  },
-  {
-    id: 5,
-    name: "Campanha 5",
-    description: "Descrição da Campanha 5",
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    budget: 50000,
-    expecLikes: 900,
-    expecComments: 180,
-    expecSaves: 90,
-    status: "active",
-    image: "/static/images/cards/campaign5.jpg",
-    logo: "/static/images/cards/campaign5-logo.jpg",
-  },
-  {
-    id: 6,
-    name: "Campanha 6",
-    description: "Descrição da Campanha 6",
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    budget: 60000,
-    expecLikes: 1000,
-    expecComments: 200,
-    expecSaves: 100,
-    status: "active",
-    image: "/static/images/cards/campaign6.jpg",
-    logo: "/static/images/cards/campaign6-logo.jpg",
-  },
-  {
-    id: 7,
-    name: "Campanha 7",
-    description: "Descrição da Campanha 7",
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    budget: 70000,
-    expecLikes: 1100,
-    expecComments: 220,
-    expecSaves: 110,
-    status: "active",
-    image: "/static/images/cards/campaign7.jpg",
-    logo: "/static/images/cards/campaign7-logo.jpg",
-  },
-  {
-    id: 8,
-    name: "Campanha 8",
-    description: "Descrição da Campanha 8",
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    budget: 80000,
-    expecLikes: 1200,
-    expecComments: 240,
-    expecSaves: 120,
-    status: "active",
-    image: "/static/images/cards/campaign8.jpg",
-    logo: "/static/images/cards/campaign8-logo.jpg",
-  },
-  {
-    id: 9,
-    name: "Campanha 9",
-    description: "Descrição da Campanha 9",
-    startDate: "2024-01-01",
-    endDate: "2024-12-31",
-    budget: 90000,
-    expecLikes: 1300,
-    expecComments: 260,
-    expecSaves: 130,
-    status: "active",
-    image: "/static/images/cards/campaign9.jpg",
-    logo: "/static/images/cards/campaign9-logo.jpg",
-  },
 ];
 
 // Componente para exibir uma campanha
@@ -185,7 +103,7 @@ const Campaigns: React.FC = () => {
   const [mockCampaigns, setMockCampaigns] = useState(mockDefaultCampaigns);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
-  const [countOfPages, setCountOfPages] = useState(10);
+  const [countOfPages, setCountOfPages] = useState(1);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
 
@@ -195,7 +113,6 @@ const Campaigns: React.FC = () => {
       const pageCampaigns = await getAllCampaignPageable(page, pageSize);
       if (pageCampaigns) {
         setMockCampaigns(pageCampaigns.content);
-        console.log(pageCampaigns);
         setCountOfPages(pageCampaigns.totalPages);
       }
     }
@@ -219,13 +136,19 @@ const Campaigns: React.FC = () => {
     campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Função para mudar a página e rolar até o topo
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value - 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ flexGrow: 1, padding: 2 }}>
         <Typography variant="h4" gutterBottom>
           Lista de Campanhas
         </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 4, gap: 2 }}>
           <TextField
             label="Buscar Campanha"
             variant="outlined"
@@ -241,26 +164,28 @@ const Campaigns: React.FC = () => {
               ),
             }}
           />
+          <FormControl variant="outlined" sx={{ minWidth: 120 }}>
+            <InputLabel id="select-page-size-label">Quantidade</InputLabel>
+            <Select
+              labelId="select-page-size-label"
+              id="select-page-size"
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              label="Quantidade"
+            >
+              <MenuItem value={5}>5</MenuItem>
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={25}>25</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "center", marginBlock: 2 }}>
-          <NativeSelect
-            defaultValue={pageSize}
-            inputProps={{
-              name: "nº de campanhas",
-              id: "uncontrolled-native",
-            }}
-            onChange={(evt) => setPageSize(Number(evt.target.value))}
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </NativeSelect>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <Pagination
             count={countOfPages}
             color="primary"
-            onChange={(_, i) => setPage(i - 1)}
+            onChange={handlePageChange}
           />
         </Box>
         <Grid container spacing={2}>
@@ -270,6 +195,13 @@ const Campaigns: React.FC = () => {
             </Grid>
           ))}
         </Grid>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <Pagination
+            count={countOfPages}
+            color="primary"
+            onChange={handlePageChange}
+          />
+        </Box>
         <CampaignDetailModal
           campaign={selectedCampaign}
           open={detailModalOpen}
