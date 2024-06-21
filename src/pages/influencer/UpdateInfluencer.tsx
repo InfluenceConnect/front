@@ -20,9 +20,6 @@ import { useNavigate } from "react-router-dom";
 import { IMaskInput } from "react-imask";
 import { states } from "../../data/states"; // Importa lista de estados
 
-interface UpdateInfluencerProps {
-  userType: string;
-}
 
 const niches = [
   { name: "tecnologia", label: "Tecnologia" },
@@ -47,7 +44,7 @@ const niches = [
   { name: "outros", label: "Outros" },
 ];
 
-const UpdateInfluencer: React.FC<UpdateInfluencerProps> = ({ }) => {
+const UpdateInfluencer = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingImage] = useState(false);
