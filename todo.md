@@ -1,5 +1,7 @@
 ## A FAZER
 
+consertar bug das redes sociais em influencers.
+
 CADASTRAR CAMPANHA COM QUAL EMPRESA?
 
 - SELECT PARA ADM

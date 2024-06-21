@@ -9,6 +9,14 @@ const socialMediaLinksObj = {
   "twitter": "",
 }
 
+export interface FormatedSocialMediaObj{
+  facebook: string;
+  instagram: string;
+  youtube: string;
+  tiktok: string;
+  twitter: string;
+}
+
 function formatSocialMedia (arr: InfluencerSocialMedia[]){
   arr.forEach(sm=>{
     // @ts-ignore
