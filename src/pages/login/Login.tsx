@@ -12,6 +12,7 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
@@ -124,6 +125,19 @@ export default function LoginPage() {
   const handleTypeUser = () => {
     navigate("/Register");
   };
+  // Após a declaração dos estados locais
+const { mode } = useParams();
+
+React.useEffect(() => {
+  if (mode == "registered") {
+    setAlertMessage("😎 Cadastrado com sucesso");
+    setOpenSnackbar(true);
+  } else if (mode == "registerError") {
+    setAlertMessage("☹️ Erro ao cadastrar, tente mais tarde!");
+    setAlertSeverity("error");
+    setOpenSnackbar(true);
+  }
+}, []);
   //Renderizando o componente
   return (
     <Grid
