@@ -25,9 +25,15 @@ function getUserLocalStorage() {
   return user;
 }
 
+function emptyStorage(){
+  sessionStorage.clear()
+  localStorage.clear();
+}
+
 export {
   setUserLocalStorage,
   getUserLocalStorage,
   setUserSessionStorage,
   getUserSessionStorage,
+  emptyStorage
 };

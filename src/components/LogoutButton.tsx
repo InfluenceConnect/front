@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { useSessionContext } from "../contexts/SessionContext";
 import UserData from "../types/userData";
-import { setUserLocalStorage, setUserSessionStorage } from "../utils/storage";
+import { emptyStorage, setUserLocalStorage, setUserSessionStorage } from "../utils/storage";
 import { useNavigate } from "react-router-dom";
 
 const LogoutButton = () => {
@@ -16,8 +16,7 @@ const LogoutButton = () => {
       console.log(p);
       return p;
     });
-    setUserLocalStorage({} as UserData);
-    setUserSessionStorage({} as UserData);
+    emptyStorage();
 
     navigate("/");
   };
