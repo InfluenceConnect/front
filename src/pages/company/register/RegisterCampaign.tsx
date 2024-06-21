@@ -427,11 +427,11 @@ export default function RegisterCampaign() {
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth required error={errors.niches}>
-              <InputLabel>Nichos</InputLabel>
+              <InputLabel>Nicho</InputLabel>
               <Select
                 value={selectedNiche}
                 onChange={handleNichesChange}
-                input={<OutlinedInput label="Nichos" />}
+                input={<OutlinedInput label="Nicho" />}
                 renderValue={(selected) => selected}
                 MenuProps={MenuProps}
               >

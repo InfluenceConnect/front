@@ -14,11 +14,12 @@ import RegisterCampaign from "../pages/company/register/RegisterCampaign";
 import Campaigns from "../pages/company/Campaigns";
 import About from "../pages/ about";
 import PolicyPrivacy from "../pages/policyPrivacy";
+import AdmHomePage from "../pages/adm/AdmHomePage";
 
 const AdmRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<>Página do adm</>} />
+      <Route path="/" element={<AdmHomePage />} />
       <Route path="/homeInfluencer" element={<HomePageInfluencer />} />
       <Route path="/homeCompany" element={<HomePageCompany />} />
       <Route path="/accountStatus" element={<AccountStatus />} />

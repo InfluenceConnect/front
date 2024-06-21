@@ -7,6 +7,8 @@ CADASTRAR CAMPANHA COM QUAL EMPRESA?
 
 Integrar a página de update influenciador
 
+Desativar empresas
+
 ## CONCLUIDOS
 
 FEITO: INDICADOR PARA SABER SE ESTAMOS COMO ADM (Assim que ele logar, aparecer que ele é o adm)

@@ -259,11 +259,11 @@ React.useEffect(() => {
             </Button>
 
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link variant="body2" aria-label="Esqueceu sua senha?" tabIndex={0}>
                   Esqueceu sua senha?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Link
                   onClick={handleTypeUser}
