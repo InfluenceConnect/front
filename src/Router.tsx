@@ -12,7 +12,6 @@ import CreatingInfluencerRoutes from "./routes/CreatingInfluencerRoutes";
 import InfluencerRoutes from "./routes/InfluencerRoutes";
 import InactiveInfluencerRoutes from "./routes/InactiveInfluencer";
 import AdmRoutes from "./routes/AdmRoutes";
-import PublicRoutes from "./routes/PublicRoutes";
 
 const Router = () => {
   const { userType } = useSessionContext();
@@ -35,9 +34,6 @@ const Router = () => {
           {userType == "creatingInfluencer" ? <CreatingInfluencerRoutes /> : <></>}
           {userType == "creatingCompany" ? <CreatingCompanyRoutes /> : <></>}
         </RegisterContextProvider>
-
-        
-        <PublicRoutes />
       </Container>
       <Footer />
     </BrowserRouter>
