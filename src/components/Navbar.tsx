@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutButton from "./LogoutButton";
+import AdmAlert from "./AdmAlert";
 
 interface Page {
   name: string;
@@ -125,6 +126,7 @@ const Navbar = () => {
           </Stack>
         ))}
         <LogoutButton />
+        <AdmAlert />
       </Box>
       {/* Telas pequenas xs=flex */}
       <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -161,8 +163,14 @@ const Navbar = () => {
               </MenuItem>
             </div>
           ))}
-          <LogoutButton />
+          <hr />
+          <Box>
+            <LogoutButton />
+          </Box>
         </Menu>
+        <Stack ml={1}>
+          <AdmAlert />
+        </Stack>
       </Box>
       <IconButton
         size="large"
