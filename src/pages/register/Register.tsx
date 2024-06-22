@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useState, ForwardRefRenderFunction } from "react";
+import { useState, forwardRef } from "react";
 import {
   Avatar,
   Button,
@@ -16,46 +16,55 @@ import {
   InputLabel,
   ButtonGroup,
   CircularProgress,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { IMaskInput } from "react-imask";
-import { RegisterContext } from "../../contexts/registerContext";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useRegisterContext } from "../../contexts/registerContext";
 import { verifyEmailIsAvailable } from "../../services/register";
 import { states } from "../../data/states";
-
+import { useSessionContext } from "../../contexts/SessionContext";
 
 interface TextMaskCustomProps {
   mask: string;
-  inputRef: (ref: HTMLInputElement | null) => void;
+  inputRef: React.Ref<HTMLInputElement>;
 }
 
-const TextMaskCustom: ForwardRefRenderFunction<
-  HTMLDivElement,
-  TextMaskCustomProps
-> = (props) => {
-  const { mask, ...other } = props;
-  return (
-    <IMaskInput
-      {...other}
-      mask={mask}
-      definitions={{
-        "#": /[0-9]/,
-      }}
-    />
-  );
-};
+const TextMaskCustom = forwardRef<HTMLInputElement, TextMaskCustomProps>(
+  function TextMaskCustom(props, ref) {
+    const { mask, ...other } = props;
+    return (
+      <IMaskInput
+        {...other}
+        mask={mask}
+        definitions={{
+          "#": /[0-9]/,
+        }}
+        inputRef={ref}
+      />
+    );
+  }
+);
 
 const Register: React.FC = () => {
-  const { typeUser, setTypeUser } = useContext(RegisterContext);
   const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [state, setState] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = React.useState(false);
-  const [loadingImage, setLoadingImage] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Novo estado para a senha de confirmação
 
-  const registerInfCtx = useContext(RegisterContext);
+  const sessionCtx = useSessionContext();
+  const { userType, setUserType } = sessionCtx;
+  const registerInfCtx = useRegisterContext();
 
   const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -70,6 +79,14 @@ const Register: React.FC = () => {
       setLoadingImage(false);
     } else {
       setPreview(null);
+    }
+  };
+
+  const handleClickShowPassword = (field: string) => () => {
+    if (field === "password") {
+      setShowPassword((prev) => !prev);
+    } else if (field === "confirmPassword") {
+      setShowConfirmPassword((prev) => !prev);
     }
   };
 
@@ -89,8 +106,7 @@ const Register: React.FC = () => {
   };
 
   const validatePassword = (password: string) => {
-    const re =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return re.test(password);
   };
 
@@ -104,20 +120,24 @@ const Register: React.FC = () => {
 
     const email = data.get("email") as string;
     const password = data.get("password") as string;
+    const confirmPassword = data.get("confirmPassword") as string;
 
     const isAvailableEmailAtAPI = await verifyEmailIsAvailable(email);
 
     if (!validateEmail(email)) {
       formErrors.email = "E-mail inválido";
-    } else if (!isAvailableEmailAtAPI)
-      formErrors.email = "E-mail já está cadastrado.";
+    } else if (!isAvailableEmailAtAPI) formErrors.email = "E-mail já está cadastrado.";
 
     if (!validatePassword(password)) {
       formErrors.password =
         "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     }
 
-    if (typeUser === "influencer") {
+    if (password !== confirmPassword) {
+      formErrors.confirmPassword = "As senhas não coincidem";
+    }
+
+    if (userType === "creatingInfluencer") {
       const cpf = data.get("cpf") as string;
       if (!validateCPF(cpf)) {
         formErrors.cpf = "CPF inválido";
@@ -133,43 +153,42 @@ const Register: React.FC = () => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      if (typeUser === "influencer") {
-        console.log({
-          profilePicture: data.get("profilePicture"),
-          name: data.get("name"),
-          cpf: data.get("cpf"),
-          state: data.get("state"),
-          email: data.get("email"),
-          birthdate: data.get("birthdate"),
-          password: data.get("password"),
-        });
-
+      if (userType === "creatingInfluencer") {
         registerInfCtx.setInfluencerData(() => {
           const newInfluencerData = {
             ...registerInfCtx.influencerData,
             email: email,
+            name: data.get("name") as string,
             password: password,
             cpf: data.get("cpf") as string,
             profilePhoto: preview ?? "",
             stateId: states.indexOf(state) + 1, //+1 porque os id's no banco começam de 0
             birthdate: data.get("birthdate")?.toString() ?? "",
           };
-
-          console.log(newInfluencerData);
           return newInfluencerData;
         });
       } else {
-        console.log({
-          logo: data.get("profilePicture"),
-          companyName: data.get("companyName"),
-          email: data.get("email"),
-          cnpj: data.get("cnpj"),
-          password: data.get("password"),
+        registerInfCtx.setCompanyData(() => {
+          const newCompanyData = {
+            ...registerInfCtx.companyData,
+            email: email,
+            password: password,
+            cnpj: data.get("cnpj") as string,
+            name: data.get("companyName") as string,
+            profileLogo: preview ?? "",
+          };
+          return newCompanyData;
         });
       }
 
-      console.log(registerInfCtx.typeUser);
-      navigate("/registerNicheInfluencer");
+      if (userType === "creatingInfluencer") {
+        setUserType("creatingInfluencer");
+        navigate("/registerNicheInfluencer");
+      }
+      if (userType === "creatingCompany") {
+        setUserType("creatingCompany");
+        navigate("/registerNicheCompany");
+      }
     }
   };
 
@@ -189,14 +208,14 @@ const Register: React.FC = () => {
         </Typography>
         <ButtonGroup variant="contained" aria-label="Basic button group">
           <Button
-            variant={typeUser === "influencer" ? "contained" : "outlined"}
-            onClick={() => setTypeUser("influencer")}
+            variant={userType === "creatingInfluencer" ? "contained" : "outlined"}
+            onClick={() => setUserType("creatingInfluencer")}
           >
             Influencer
           </Button>
           <Button
-            variant={typeUser === "company" ? "contained" : "outlined"}
-            onClick={() => setTypeUser("company")}
+            variant={userType === "creatingCompany" ? "contained" : "outlined"}
+            onClick={() => setUserType("creatingCompany")}
           >
             Empresa
           </Button>
@@ -231,7 +250,7 @@ const Register: React.FC = () => {
                     {loadingImage && (
                       <CircularProgress style={{ justifyContent: "center" }} />
                     )}
-                  </div>
+                  </div                  >
                 ) : (
                   <Avatar
                     src={preview || undefined}
@@ -240,7 +259,7 @@ const Register: React.FC = () => {
                 )}
               </label>
             </Grid>
-            {typeUser === "influencer" ? (
+            {userType === "creatingInfluencer" ? (
               <>
                 <Grid item xs={12}>
                   <TextField
@@ -264,9 +283,7 @@ const Register: React.FC = () => {
                       inputProps: { mask: "000.000.000-00" },
                     }}
                   />
-                  {errors.cpf && (
-                    <Typography color="error">{errors.cpf}</Typography>
-                  )}
+                  {errors.cpf && <Typography color="error">{errors.cpf}</Typography>}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth required>
@@ -349,9 +366,7 @@ const Register: React.FC = () => {
                       inputProps: { mask: "00.000.000/0000-00" },
                     }}
                   />
-                  {errors.cnpj && (
-                    <Typography color="error">{errors.cnpj}</Typography>
-                  )}
+                  {errors.cnpj && <Typography color="error">{errors.cnpj}</Typography>}
                 </Grid>
               </>
             )}
@@ -361,11 +376,60 @@ const Register: React.FC = () => {
                 fullWidth
                 name="password"
                 label="Senha"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="new-password"
                 error={!!errors.password}
                 helperText={errors.password}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                        onClick={handleClickShowPassword("password")}
+                        edge="end"
+                        sx={{ color: "primary.main" }}
+                      >
+                        {showPassword ? (
+                          <VisibilityOff sx={{ color: "primary.main" }} />
+                        ) : (
+                          <Visibility sx={{ color: "primary.main" }} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirmar Senha"
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                autoComplete="new-password"
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={showConfirmPassword ? "Esconder senha" : "Mostrar senha"}
+                        onClick={handleClickShowPassword("confirmPassword")}
+                        edge="end"
+                        sx={{ color: "primary.main" }}
+                      >
+                        {showConfirmPassword ? (
+                          <VisibilityOff sx={{ color: "primary.main" }} />
+                        ) : (
+                          <Visibility sx={{ color: "primary.main" }} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
           </Grid>
@@ -394,3 +458,5 @@ const Register: React.FC = () => {
 };
 
 export default Register;
+
+

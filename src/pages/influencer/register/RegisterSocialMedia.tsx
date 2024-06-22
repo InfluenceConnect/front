@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { RegisterContext } from "../../../contexts/registerContext";
 import { registerInfluencer } from "../../../services/register";
+import { InfluencerSocialMedia } from "../../../types/requestSaveInfluencer";
 
 type SocialMediaLinks = {
   facebook: string;
@@ -75,7 +76,7 @@ export default function RegisterSocialMedia() {
     return formErrors;
   };
 
-  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const newSocialMedia: SocialMediaLinks = {
@@ -100,27 +101,24 @@ export default function RegisterSocialMedia() {
         })
         .filter((e) => e !== undefined) as InfluencerSocialMedia[];
 
-      registerInfCtx.setInfluencerData(() => {
-        const obj = {
-          ...registerInfCtx.influencerData,
-          influencerSocialMedia: socialMediaInfluencer,
-        };
-
-        console.log(obj);
-        return {
-          ...registerInfCtx.influencerData,
-          influencerSocialMedia: socialMediaInfluencer,
-        };
-      });
+      const newInfData = {
+        ...registerInfCtx.influencerData,
+        influencerSocialMedia: socialMediaInfluencer,
+      };
+      registerInfCtx.setInfluencerData(newInfData);
 
       setLoading(false);
 
-      try {
-        await registerInfluencer(registerInfCtx.influencerData);
-        navigate("/accountStatus");
-      } catch (error) {
-        console.log("Error)");
+      const res = await registerInfluencer(newInfData);
+
+      if(!!res){
+        navigate("/login/registered");
+      }else{
+        navigate("/login/registerError")
       }
+      
+      
+
     } else {
       setErrors(formErrors);
     }

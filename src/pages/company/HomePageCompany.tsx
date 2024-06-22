@@ -1,40 +1,192 @@
-// HomePageCompany.tsx
-import React from 'react';
-import { Box, Container, Typography, Paper, Grid } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Button,
+  TextField,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Pagination,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  getAllInfluencersPageable,
+  getNumbersOfInfluencers,
+} from "../../services/influence";
+import numberOfPages from "../../utils/numbersOfPages";
+import InfluencerDetailModal from "./InfluencerDetailModal";
+import Influencer from "../../types/influencer";
+import { getAllCampaign } from "../../services/campaign";
+import Campaign from "../../types/campaign";
 
-interface Influencer {
-  name: string;
-  description: string;
-}
-
-const mockInfluencers: Influencer[] = [
-  { name: 'Influenciador 1', description: 'Descrição do Influenciador 1' },
-  { name: 'Influenciador 2', description: 'Descrição do Influenciador 2' },
-  { name: 'Influenciador 3', description: 'Descrição do Influenciador 3' },
-  { name: 'Influenciador 4', description: 'Descrição do Influenciador 4' },
-  { name: 'Influenciador 5', description: 'Descrição do Influenciador 5' },
-  { name: 'Influenciador 6', description: 'Descrição do Influenciador 6' },
- 
+const mockDefaultInfluencers: Influencer[] = [
+  { id: 1, name: "Influenciador 1", image: "/static/images/cards/image1.jpg", status: "" },
+  { id: 2, name: "Influenciador 2", image: "/static/images/cards/image2.jpg", status: "" },
+  { id: 3, name: "Influenciador 3", image: "/static/images/cards/image3.jpg", status: "" },
+  { id: 4, name: "Influenciador 4", image: "/static/images/cards/image4.jpg", status: "" },
+  { id: 5, name: "Influenciador 5", image: "/static/images/cards/image5.jpg", status: "" },
+  { id: 6, name: "Influenciador 6", image: "/static/images/cards/image6.jpg", status: "" },
+  { id: 7, name: "Influenciador 7", image: "/static/images/cards/image7.jpg", status: "" },
+  { id: 8, name: "Influenciador 8", image: "/static/images/cards/image8.jpg", status: "" },
+  { id: 9, name: "Influenciador 9", image: "/static/images/cards/image9.jpg", status: "" },
 ];
 
+const InfluencerCard: React.FC<{
+  influencer: Influencer;
+  onViewDetails: (influencer: Influencer) => void;
+}> = ({ influencer, onViewDetails }) => (
+  <Card sx={{ maxWidth: 345 }}>
+    <CardMedia
+      component="img"
+      alt={influencer.name}
+      height="140"
+      image={influencer.profilePhoto || influencer.image}
+    />
+    <CardContent>
+      <Typography gutterBottom variant="h5" component="div">
+        {influencer.name}
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        Status: {influencer.status}
+      </Typography>
+    </CardContent>
+    <CardActions>
+      <Button size="small" onClick={() => onViewDetails(influencer)}>
+        Ver Influenciador
+      </Button>
+    </CardActions>
+  </Card>
+);
+
 const HomePageCompany: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [mockInfluencers, setMockInfluencers] = useState(mockDefaultInfluencers);
+  const [page, setPage] = useState(1); // Alterado para iniciar na página 1
+  const [pageSize, setPageSize] = useState(50);
+  const [countOfPages, setCountOfPages] = useState(10);
+  const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [contToRefresh, setContToRefresh] = useState(0);
+  const [campaigns, setCampaigns] = useState([] as Campaign[]);
+
+  useEffect(() => {
+    const setAllCampaignsOnState = async () => {
+      const camps = await getAllCampaign();
+      setCampaigns(camps);
+    }
+    setAllCampaignsOnState();
+  }, []);
+
+  useEffect(() => {
+    async function setInfluencersFromDB() {
+      const influencers = await getAllInfluencersPageable(page, pageSize);
+      const count = await getNumbersOfInfluencers();
+      if (influencers) {
+        setMockInfluencers(influencers);
+        setCountOfPages(numberOfPages(count, pageSize));
+      }
+    }
+    setInfluencersFromDB();
+  }, [page, pageSize, contToRefresh]);
+
+  const handleViewDetails = (influencer: Influencer) => {
+    setSelectedInfluencer(influencer);
+    setDetailModalOpen(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setSelectedInfluencer(null);
+    setDetailModalOpen(false);
+  };
+
+  const filteredInfluencers = mockInfluencers.filter((influencer) =>
+    influencer.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Container maxWidth="lg">
-      {/* Inicio do ListComponent */}
       <Box sx={{ flexGrow: 1, padding: 2 }}>
-        <Typography variant="h4" gutterBottom>Lista de Influenciadores</Typography>
+        <Typography variant="h4" gutterBottom>
+         
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 4, gap: 2 }}>
+          <TextField
+            label="Buscar Influenciador"
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            fullWidth
+            sx={{ maxWidth: 500 }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <FormControl variant="outlined" sx={{ minWidth: 120 }}>
+            <InputLabel id="select-page-size-label">Quantidade</InputLabel>
+            <Select
+              labelId="select-page-size-label"
+              id="select-page-size"
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              label="Quantidade"
+            >
+              <MenuItem value={5}>5</MenuItem>
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={25}>25</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+          <Pagination
+            count={countOfPages}
+            color="primary"
+            page={page} // Adicionado para sincronizar a paginação
+            onChange={handlePageChange}
+          />
+        </Box>
         <Grid container spacing={2}>
-          {mockInfluencers.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Paper elevation={3} sx={{ padding: 2 }}>
-                <Typography variant="h6">{item.name}</Typography>
-                <Typography variant="body2">{item.description}</Typography>
-              </Paper>
+          {filteredInfluencers.map((item) => (
+            <Grid item xs={12} sm={6} md={4} key={item.id}>
+              <InfluencerCard influencer={item} onViewDetails={handleViewDetails} />
             </Grid>
           ))}
         </Grid>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <Pagination
+            count={countOfPages}
+            color="primary"
+            page={page} // Adicionado para sincronizar a paginação
+            onChange={handlePageChange}
+          />
+        </Box>
+        <InfluencerDetailModal
+          influencer={selectedInfluencer}
+          open={detailModalOpen}
+          onClose={handleCloseDetailModal}
+          refresh={setContToRefresh}
+          campaigns={campaigns}
+        />
       </Box>
-      {/* Fim do ListComponent */}
     </Container>
   );
 };

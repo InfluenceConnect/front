@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,10 +9,10 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import img from "../../assets/socialmedia-icons.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
@@ -22,30 +21,31 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { RegisterContext } from "../../contexts/registerContext";
-
-export default function SignInSide() {
+import { login } from "../../services/login";
+import { useSessionContext } from "../../contexts/SessionContext";
+import { setUserLocalStorage, setUserSessionStorage } from "../../utils/storage";
+import UserData from "../../types/userData";
+import { usersType } from "../../types/users";
+export default function LoginPage() {
   const navigate = useNavigate();
+  const sessionCtx = useSessionContext(); // Hook de acesso ao contexto do login como usuario
 
-  const [changeLogin, setChangeLogin] = React.useState("influencer");
+  //States locais
   const [loading, setLoading] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [alertSeverity, setAlertSeverity] = React.useState<AlertColor>("success");
   const [alertMessage, setAlertMessage] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
-  const { setTypeUser } = useContext(RegisterContext);
+  const [rememberCheckboxChecked, setRememberCheckboxChecked] = React.useState(false);
 
-  const handleCloseSnackbar = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
+  const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
     setOpenSnackbar(false);
   };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // Função para manipular o submit do formulário de login
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
 
@@ -53,43 +53,92 @@ export default function SignInSide() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    setTimeout(() => {
-      setLoading(false);
-
-      if (!email.includes("@")) {
-        setAlertSeverity("error");
-        setAlertMessage("O email deve conter o caractere '@'.");
-        setOpenSnackbar(true);
-        return;
-      }
-
-      if (password.length < 8) {
-        setAlertSeverity("error");
-        setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
-        setOpenSnackbar(true);
-        return;
-      }
-
-      setAlertSeverity("success");
-      setAlertMessage("Login feito com sucesso!");
+    //Validação do email
+    if (!email.includes("@")) {
+      setAlertSeverity("error");
+      setAlertMessage("O email deve conter o caractere '@'.");
       setOpenSnackbar(true);
+      setLoading(false);
+      return;
+    }
 
-      console.log({
-        email: email,
-        password: password,
-      });
-    }, 2000);
+    //Validação de senha
+    if (password.length < 8) {
+      setAlertSeverity("error");
+      setAlertMessage("A senha deve ter no mínimo 8 caracteres.");
+      setOpenSnackbar(true);
+      setLoading(false);
+      return;
+    }
+
+    //Chamada para a função do login
+    const resLogin = await login(email, password);
+
+    // Configuração da mensagem de alerta baseada na resposta do login
+    setAlertSeverity(resLogin.sucess == "true" ? "success" : "error");
+    setAlertMessage(resLogin.message);
+    setOpenSnackbar(true);
+
+    // Se o login for bem-sucedido, muda o tipo de usuário e navega para a página principal
+    if (resLogin.sucess == "true") {
+      const userLoginType = resLogin.user.role.type.toLowerCase() as
+        | "influencer"
+        | "company"
+        | "adm";
+      const actualUserType = sessionCtx.handleChangeUserType(
+        userLoginType,
+        resLogin.user.influencer?.status ?? ""
+      );
+
+      const photo =
+        userLoginType == "influencer"
+          ? resLogin.user.influencer.profilePhoto
+          : resLogin.user.company?.profileLogo ?? "";
+      const status =
+        userLoginType == "influencer"
+          ? resLogin.user.influencer.status
+          : resLogin.user.company?.status;
+      
+      const userData: UserData = {
+        id: Number(resLogin.user.id),
+        name: resLogin.user.name,
+        userType: actualUserType as usersType,
+        profilePhoto: photo,
+        status: status,
+      };
+
+      sessionCtx.setUserData(userData)
+      if (rememberCheckboxChecked) setUserLocalStorage(userData);
+      else setUserSessionStorage(userData);
+
+      navigate("/");
+    }
+
+    setLoading(false);
   };
 
+  //Função do olho mágico de visible on e off da senha
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
+  // Função para navegar para a página de registro
   const handleTypeUser = () => {
-    setTypeUser(changeLogin);
-    navigate('/Register');
+    navigate("/Register");
   };
+  // Após a declaração dos estados locais
+const { mode } = useParams();
 
+React.useEffect(() => {
+  if (mode == "registered") {
+    setAlertMessage("😎 Cadastrado com sucesso");
+    setOpenSnackbar(true);
+  } else if (mode == "registerError") {
+    setAlertMessage("☹️ Erro ao cadastrar, tente mais tarde!");
+    setAlertSeverity("error");
+    setOpenSnackbar(true);
+  }
+}, []);
+  //Renderizando o componente
   return (
     <Grid
       container
@@ -139,29 +188,12 @@ export default function SignInSide() {
             gap: "2rem",
           }}
         >
-          <ButtonGroup variant="contained">
-            <Button
-              variant={changeLogin === "influencer" ? "contained" : "outlined"}
-              onClick={() => setChangeLogin("influencer")}
-              aria-label="selecionar influenciador"
-            >
-              Influencer
-            </Button>
-            <Button
-              variant={changeLogin === "company" ? "contained" : "outlined"}
-              onClick={() => setChangeLogin("company")}
-              aria-label="selecionar empresa"
-            >
-              Empresa
-            </Button>
-          </ButtonGroup>
-
           <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
 
           <Typography component="h1" variant="h5" fontWeight={"bold"}>
-            Login {changeLogin}
+            Faça o Login
           </Typography>
 
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -208,6 +240,8 @@ export default function SignInSide() {
                   inputProps={{
                     "aria-label": "Lembrar-me",
                   }}
+                  checked={rememberCheckboxChecked}
+                  onChange={(e) => setRememberCheckboxChecked(e.target.checked)}
                 />
               }
               label="Lembrar me"
@@ -220,18 +254,23 @@ export default function SignInSide() {
               disabled={loading}
               aria-label="Fazer login"
             >
-              {loading && <CircularProgress size={24} sx={{ position: 'absolute' }} />}
+              {loading && <CircularProgress size={24} sx={{ position: "absolute" }} />}
               Login
             </Button>
 
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link variant="body2" aria-label="Esqueceu sua senha?" tabIndex={0}>
                   Esqueceu sua senha?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
-                <Link onClick={handleTypeUser} variant="body2" aria-label="Criar uma nova conta" tabIndex={0}>
+                <Link
+                  onClick={handleTypeUser}
+                  variant="body2"
+                  aria-label="Criar uma nova conta"
+                  tabIndex={0}
+                >
                   {"Não tem uma conta? Inscreva-se"}
                 </Link>
               </Grid>
@@ -245,7 +284,11 @@ export default function SignInSide() {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={alertSeverity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={alertSeverity}
+          sx={{ width: "100%" }}
+        >
           {alertMessage}
         </Alert>
       </Snackbar>

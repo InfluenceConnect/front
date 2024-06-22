@@ -115,7 +115,7 @@ const ThemeContextProvider: React.FC<{ children: ReactNode }> = ({
           tagFont.indexOf("rem") == 0 ? 10 : tagFont.indexOf("rem")
         )
       );
-      console.log(number_tagFont, fontSizeFactor);
+      
       const factor = number_tagFont + fontSizeFactor;
       obj.fontSize = factor + "rem";
     });
